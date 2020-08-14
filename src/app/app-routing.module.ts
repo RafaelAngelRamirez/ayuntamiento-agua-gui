@@ -1,7 +1,6 @@
 import { Routes } from "@angular/router";
 import { LoginComponent } from "./login/login.component";
 import { FullComponent } from "./layouts/full/full.component";
-import { NoPageFoundComponent } from "./no-page-found/no-page-found.component";
 import { ValidaLoginGuard } from './guards/valida-login.guard';
 
 export const Approutes: Routes = [
@@ -10,7 +9,7 @@ export const Approutes: Routes = [
     component: LoginComponent,
   },
   {
-    path: "tablero",
+    path: "",
     component: FullComponent,
     canActivate: [ValidaLoginGuard],
     loadChildren: () =>

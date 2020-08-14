@@ -3,7 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FullComponent } from "../layouts/full/full.component";
 
-export const Approutes: Routes = [
+export const Pagesroutes: Routes = [
   { path: "", redirectTo: "/tablero", pathMatch: "full" },
   {
     path: "tablero",

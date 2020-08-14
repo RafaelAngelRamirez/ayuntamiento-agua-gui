@@ -12,9 +12,19 @@ export const ROUTES: RouteInfo[] = [
         submenu: []
     },
     {
-        path: '/dashboard',
-        title: 'Dashboard',
+        path: '/tablero',
+        title: 'Tablero',
         icon: 'mdi mdi-gauge',
+        class: '',
+        label: '',
+        labelClass: '',
+        extralink: false,
+        submenu: []
+    },
+    {
+        path: '/usuarios',
+        title: 'Usuarios',
+        icon: 'fas fa-users',
         class: '',
         label: '',
         labelClass: '',

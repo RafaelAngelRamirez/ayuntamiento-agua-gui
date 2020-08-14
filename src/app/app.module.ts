@@ -14,12 +14,13 @@ import { CommonModule } from "@angular/common";
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    RouterModule.forRoot(Approutes),
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    SharedModule,
+    SharedModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

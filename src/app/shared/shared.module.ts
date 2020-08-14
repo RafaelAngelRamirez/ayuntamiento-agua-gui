@@ -1,4 +1,4 @@
-import { NgModule } from "@angular/core";
+import { NgModule, ModuleWithProviders } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { SpinnerComponent } from "./spinner.component";
 import { FullComponent } from "app/layouts/full/full.component";
@@ -12,8 +12,8 @@ import { PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { LoginComponent } from "../login/login.component";
 import { NoPageFoundComponent } from "../no-page-found/no-page-found.component";
-import { RouterModule } from "@angular/router"
-import { Approutes } from "app/app-routing.module"
+import { RouterModule } from "@angular/router";
+import { Approutes } from "app/app-routing.module";
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
   wheelSpeed: 2,
@@ -39,20 +39,27 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LoginComponent,
     NoPageFoundComponent,
     RouterModule,
+    CommonModule,
   ],
 
   imports: [
-    RouterModule.forRoot(Approutes),
+    RouterModule,
     CommonModule,
     PerfectScrollbarModule,
     ChartsModule,
     NgbModule,
   ],
-  providers: [
-    {
-      provide: PERFECT_SCROLLBAR_CONFIG,
-      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
-    },
-  ],
 })
-export class SharedModule {}
+export class SharedModule {
+  static forRoot(): ModuleWithProviders<SharedModule> {
+    return {
+      ngModule: SharedModule,
+      providers: [
+        {
+          provide: PERFECT_SCROLLBAR_CONFIG,
+          useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
+        },
+      ],
+    };
+  }
+}
