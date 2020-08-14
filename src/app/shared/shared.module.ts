@@ -9,6 +9,11 @@ import { ChartsModule } from "ng2-charts";
 import { PerfectScrollbarModule } from "ngx-perfect-scrollbar";
 import { PERFECT_SCROLLBAR_CONFIG } from "ngx-perfect-scrollbar";
 import { PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { LoginComponent } from "../login/login.component";
+import { NoPageFoundComponent } from "../no-page-found/no-page-found.component";
+import { RouterModule } from "@angular/router"
+import { Approutes } from "app/app-routing.module"
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
   wheelSpeed: 2,
@@ -17,13 +22,32 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
   declarations: [
-    SpinnerComponent,
     FullComponent,
     NavigationComponent,
     BreadcrumbComponent,
     SidebarComponent,
+    SpinnerComponent,
+    LoginComponent,
+    NoPageFoundComponent,
   ],
-  imports: [CommonModule, PerfectScrollbarModule, ChartsModule],
+  exports: [
+    FullComponent,
+    NavigationComponent,
+    BreadcrumbComponent,
+    SidebarComponent,
+    SpinnerComponent,
+    LoginComponent,
+    NoPageFoundComponent,
+    RouterModule,
+  ],
+
+  imports: [
+    RouterModule.forRoot(Approutes),
+    CommonModule,
+    PerfectScrollbarModule,
+    ChartsModule,
+    NgbModule,
+  ],
   providers: [
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
