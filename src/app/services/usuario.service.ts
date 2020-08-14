@@ -2,12 +2,16 @@ import { Injectable } from "@angular/core";
 import { LocalStorageService } from "./local-storage.service";
 import { Usuario } from "../models/usuario.model";
 import { TokenService } from "./token.service";
+import { LoginService } from "./login.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class UsuarioService {
-  constructor(private tkService: TokenService) {}
+  constructor(
+    private loginService: LoginService,
+    private tkService: TokenService
+  ) {}
 
   /**
    *Solo lectura. Obtiene desde el localstorage el usuario
@@ -16,6 +20,8 @@ export class UsuarioService {
    * @memberof UsuarioService
    */
   obtenerUsuario(): Usuario {
-    return this.tkService.obtenerUsuario();
+    let usuario = this.tkService.obtenerUsuario();
+
+    throw usuario;
   }
 }

@@ -15,7 +15,7 @@
     <!-- Login Form -->
     <form>
       <input
-      #usuario
+        #usuario
         type="text"
         id="login"
         class="fadeIn second"
@@ -23,7 +23,7 @@
         placeholder="usuario"
       />
       <input
-      #password
+        #password
         type="password"
         id="password"
         class="fadeIn third"
@@ -31,20 +31,20 @@
         placeholder="contraseña"
       />
 
+      <br />
+      <br />
+      <i *ngIf="cargando"class="fas fa-sync fa-spin"></i>
+      <br />
+      <br />
+
       <input
-        (click)="login(usuario.value, password.value)"
+        (click)="login(usuario.value, password.value, $event)"
         type="submit"
         class="fadeIn fourth"
         value="Iniciar sesión"
         [disabled]="cargando"
         [ngClass]="{ 'btn btn-ligth': cargando }"
       />
-
-      <div *ngIf="cargando" class="row w-100 mb-5 animated fadeInUp faster">
-        <div class="col-12">
-          <i class="fas fa-spinner fa-spin"></i>
-        </div>
-      </div>
     </form>
   </div>
 </div>

@@ -26,9 +26,9 @@ export class LoginService {
 
   login(usuario: string, password: string) {
     return this.http.post(this.base, { usuario, password }).pipe(
-      map((resp:any)=>{
-        this.tkService.guardarToken(resp.token)
-        return true
+      map((resp: any) => {
+        this.tkService.guardarToken(resp.token);
+        return true;
       }),
       catchError((x: any) => {
         this.notiService.toast.error(x.error.err);

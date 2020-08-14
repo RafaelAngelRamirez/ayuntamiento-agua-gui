@@ -21,17 +21,26 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {}
 
-  login(usuario: string, password: string) {
+  login(usuario: string, password: string, e:any) {
+
+
+    e.preventDefault()
+    e.stopPropagation()
+
     if (!usuario || !password) {
       this.notiService.toast.error("Debes rellenar todos los campos");
       return;
     }
-
-    this.loginService.login(usuario, password).subscribe((correcto) => {
-      if (correcto) {
-        this.router.navigate(["/tablero"]);
-        return;
-      }
-    });
+    this.cargando = true;
+    this.loginService.login(usuario, password).subscribe(
+      (correcto) => {
+        this.cargando = false;
+        if (correcto) {
+          this.router.navigate(["/tablero"]);
+          return;
+        }
+      },
+      (_) => (this.cargando = false)
+    );
   }
 }

@@ -19,8 +19,6 @@ import { CommonModule } from "@angular/common";
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-
-    
     SharedModule,
   ],
   providers: [],
