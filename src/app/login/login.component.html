@@ -1,0 +1,50 @@
+<!-- class="wrapper fadeInDown animated fadeIn infinite" -->
+<div class="wrapper fadeInDown">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+    <!-- Icon -->
+    <div class="fadeIn first mt-3">
+      <img src="assets/images/logo-icon.png" />
+      <br />
+      <br />
+      <img src="assets/images/logo-text.png" />
+    </div>
+    <hr />
+
+    <!-- Login Form -->
+    <form>
+      <input
+      #usuario
+        type="text"
+        id="login"
+        class="fadeIn second"
+        name="login"
+        placeholder="usuario"
+      />
+      <input
+      #password
+        type="password"
+        id="password"
+        class="fadeIn third"
+        name="login"
+        placeholder="contraseña"
+      />
+
+      <input
+        (click)="login(usuario.value, password.value)"
+        type="submit"
+        class="fadeIn fourth"
+        value="Iniciar sesión"
+        [disabled]="cargando"
+        [ngClass]="{ 'btn btn-ligth': cargando }"
+      />
+
+      <div *ngIf="cargando" class="row w-100 mb-5 animated fadeInUp faster">
+        <div class="col-12">
+          <i class="fas fa-spinner fa-spin"></i>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
