@@ -3,6 +3,10 @@ import { LocalStorageService } from "./local-storage.service";
 import { Usuario } from "../models/usuario.model";
 import { TokenService } from "./token.service";
 import { LoginService } from "./login.service";
+import { HttpClient } from "@angular/common/http";
+import { URL_BASE } from "../../environments/config.prod";
+import { catchError } from "rxjs/operators";
+import { throwError } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -10,7 +14,8 @@ import { LoginService } from "./login.service";
 export class UsuarioService {
   constructor(
     private loginService: LoginService,
-    private tkService: TokenService
+    private tkService: TokenService,
+    private http: HttpClient
   ) {}
 
   /**
@@ -23,5 +28,15 @@ export class UsuarioService {
     let usuario = this.tkService.obtenerUsuario();
 
     throw usuario;
+  }
+
+  base = URL_BASE("usuario");
+
+  findAll() {
+    return this.http.get<Usuario[]>(this.base).pipe(
+      catchError((x) => {
+        return throwError(x);
+      })
+    );
   }
 }

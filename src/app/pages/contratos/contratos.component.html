@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h1>Contratos</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-12">
+  <div class="card">
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Contrato</th>
+            <th>Contribuyente</th>
+            <th>Poblacion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of contratos">
+            <td>{{ u.contrato }}</td>
+            <td>{{ u.contribuyente }}</td>
+            <td>{{ u.poblacion }}</td>
+            <td>
+              <a
+                (click)="alerta()"
+                class="btn btn-primary"
+                href="javascript:void(0)"
+                role="button"
+                ><i class="fas fa-edit"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
