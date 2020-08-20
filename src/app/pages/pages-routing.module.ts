@@ -14,7 +14,8 @@ export const Pagesroutes: Routes = [
   },
   {
     path: "usuario",
-    component: UsuarioComponent,
+    loadChildren: () =>
+      import("./usuario/usuario.module").then((m) => m.UsuarioModule),
   },
   {
     path: "contratos",
