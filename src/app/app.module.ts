@@ -6,11 +6,12 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { RouterModule } from "@angular/router";
 import { Approutes } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { LoginComponent } from "./login/login.component";
 import { SharedModule } from "./shared/shared.module";
 import { NoPageFoundComponent } from "./no-page-found/no-page-found.component";
 import { CommonModule } from "@angular/common";
 import { HttpConfigInterceptor } from "./interceptors/http-config.interceptor";
+import { ToastrModule } from "ngx-toastr";
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,9 +19,10 @@ import { HttpConfigInterceptor } from "./interceptors/http-config.interceptor";
     RouterModule.forRoot(Approutes),
     CommonModule,
     BrowserModule,
-    BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(), // ToastrModule added
     SharedModule.forRoot(),
   ],
   providers: [

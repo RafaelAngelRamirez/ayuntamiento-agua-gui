@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -o",
+    "start": "ng serve -o --ssl true --ssl-key F:\\proyectos\\geracion-de-certificados\\cert\\desarrollo.key --ssl-cert F:\\proyectos\\geracion-de-certificados\\cert\\desarrollo.crt --host 0.0.0.0",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -34,6 +34,7 @@
     "ng-chartist": "^1.1.1",
     "ng2-charts": "^2.3.2",
     "ngx-perfect-scrollbar": "^6.1.0",
+    "ngx-toastr": "^13.0.0",
     "node-sass": "^4.12.0",
     "popper.js": "^1.12.5",
     "rxjs": "^6.6.0",
