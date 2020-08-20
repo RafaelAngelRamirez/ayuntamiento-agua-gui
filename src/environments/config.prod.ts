@@ -1,1 +1,1 @@
-export const URL_BASE = (x: string) => `http://50.0.1.103:3000/${x}`;
+export const URL_BASE = (x: string) => `https://192.168.1.52:3000/${x}`;

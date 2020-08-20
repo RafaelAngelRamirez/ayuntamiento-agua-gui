@@ -13,8 +13,8 @@ export class TokenService {
   key = "token";
   constructor(private ls: LocalStorageService) {}
 
-  obtenerToken(): string | null {
-    return this.ls.leer(this.key);
+  obtenerToken(): string {
+    return this.ls.leer(this.key) || "";
   }
 
   guardarToken(token: string) {
@@ -35,6 +35,6 @@ export class TokenService {
 
     const decodedToken = helper.decodeToken(token);
     console.log(decodedToken);
-    return JSON.parse(JSON.stringify(decodedToken))
+    return JSON.parse(JSON.stringify(decodedToken)) as Usuario;
   }
 }
