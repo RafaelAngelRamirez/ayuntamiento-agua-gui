@@ -3,6 +3,7 @@ export class Usuario {
     public nombre: string,
     public usuario: string,
     public permissions: string[],
-    public dispositivo: string
+    public dispositivo: string,
+    public navegacionDefault: string = "tablero"
   ) {}
 }

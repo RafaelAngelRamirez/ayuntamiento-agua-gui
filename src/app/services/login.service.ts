@@ -6,12 +6,14 @@ import { HttpClient } from "@angular/common/http";
 import { map, catchError } from "rxjs/operators";
 import { throwError } from "rxjs";
 import { NotificacionesService } from "./notificaciones.service";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root",
 })
 export class LoginService {
   constructor(
+    private router: Router,
     public notiService: NotificacionesService,
     public http: HttpClient,
     public tkService: TokenService,
@@ -21,7 +23,8 @@ export class LoginService {
   base = URL_BASE("login");
 
   cerraSesion() {
-    this.ls.eliminarTodo(["usuario"]);
+    this.ls.eliminarTodo();
+    this.router.navigate(["/login"]);
   }
 
   login(usuario: string, password: string) {

@@ -58,7 +58,6 @@ export class ValidaLoginGuard implements CanActivate, CanLoad {
 
     //Tiene permiso de login
     let usuario = this.tkService.obtenerUsuario();
-    console.log("paso", usuario)
     let tienePermiso = usuario?.permissions.includes("login");
     if (!tienePermiso) {
       this.notiService.toast.info("Tu usuario esta desactivado.");
@@ -67,7 +66,7 @@ export class ValidaLoginGuard implements CanActivate, CanLoad {
 
     //Tiene el permiso para ver el contenido
     if (!usuario?.permissions.includes(permisoRequerido)) {
-    //   this.notiService.toast.info(
+      //   this.notiService.toast.info(
       this.notiService.toast.info(
         "No tienes permisos para acceder al contenido solicitado: " +
           permisoRequerido
@@ -93,6 +92,5 @@ export class ValidaLoginGuard implements CanActivate, CanLoad {
 
   irALogin() {
     this.loginService.cerraSesion();
-    this.router.navigate(["/login"]);
   }
 }

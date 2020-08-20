@@ -17,11 +17,10 @@ export class LocalStorageService {
   }
 
   eliminarTodo(exepciones: string[] = []) {
-    if (exepciones.length > 0) {
-      exepciones.forEach((x) => this.eliminar(x));
-      return;
-    }
-
+    // if (exepciones.length > 0) {
+    //   exepciones.forEach((x) => this.eliminar(x));
+    //   return;
+    // }
     localStorage.clear();
   }
 }

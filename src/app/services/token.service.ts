@@ -34,7 +34,6 @@ export class TokenService {
     if (!token) return null;
 
     const decodedToken = helper.decodeToken(token);
-    console.log(decodedToken);
     return JSON.parse(JSON.stringify(decodedToken)) as Usuario;
   }
 }
