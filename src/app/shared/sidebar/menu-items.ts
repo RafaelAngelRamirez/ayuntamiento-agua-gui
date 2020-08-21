@@ -32,6 +32,16 @@ export const ROUTES: RouteInfo[] = [
            submenu: [],
          },
          {
+           path: "/contrato",
+           title: "Contratos",
+           icon: "fas fa-document",
+           class: "",
+           label: "",
+           labelClass: "",
+           extralink: false,
+           submenu: [],
+         },
+         {
            path: "/lectura",
            title: "Lecturas",
            icon: "fas fa-file-invoice",
@@ -41,16 +51,6 @@ export const ROUTES: RouteInfo[] = [
            extralink: false,
            submenu: [],
          },
-         // {
-         //   path: "/contratos",
-         //   title: "Contratos",
-         //   icon: "fas fa-docs",
-         //   class: "",
-         //   label: "",
-         //   labelClass: "",
-         //   extralink: false,
-         //   submenu: [],
-         // },
          // {
          //   path: "",
          //   title: "UI Components",

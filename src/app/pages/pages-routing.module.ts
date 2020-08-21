@@ -3,7 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { FullComponent } from "../layouts/full/full.component";
 import { UsuarioComponent } from "./usuario/usuario.component";
-import { ContratosComponent } from './contratos/contratos.component'
+import { ContratosComponent } from "./contratos/contratos.component";
 
 export const Pagesroutes: Routes = [
   { path: "", redirectTo: "/tablero", pathMatch: "full" },
@@ -18,10 +18,15 @@ export const Pagesroutes: Routes = [
       import("./usuario/usuario.module").then((m) => m.UsuarioModule),
   },
   {
-    path: "contratos",
-    component: ContratosComponent,
+    path: "contrato",
+    loadChildren: () =>
+      import("./contratos/contrato.module").then((m) => m.ContratoModule),
   },
-
+  {
+    path: "lectura",
+    loadChildren: () =>
+      import("./lecturas/lecturas.module").then((m) => m.LecturasModule),
+  },
   {
     path: "component",
     loadChildren: () =>
