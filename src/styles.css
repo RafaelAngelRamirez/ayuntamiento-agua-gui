@@ -1,8 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '~perfect-scrollbar/css/perfect-scrollbar.css';
+@import "~perfect-scrollbar/css/perfect-scrollbar.css";
 
 .ps .ps__scrollbar-y-rail {
-    left: 3px;
-    right: auto;
+  left: 3px;
+  right: auto;
+}
+
+.fa-spin {
+  animation-duration: 0.5s !important;
 }
