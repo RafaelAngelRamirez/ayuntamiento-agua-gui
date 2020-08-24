@@ -1,1 +1,43 @@
-<p>lecturas works!</p>
+<div class="row m-0 p-0">
+  <div class="col-12">
+    <div
+      class="form-group d-flex justify-content-between align-items-center m-0 p-0"
+    >
+      <i
+        *ngIf="cargando"
+        class="iconos-buscador mr-3 fas fa-sync fa-spin font-20"
+      ></i>
+      <i
+        *ngIf="!cargando"
+        class="iconos-buscador mr-3 fas fa-search font-20"
+      ></i>
+
+      <input
+        id="buscador"
+        [formControl]="buscador"
+        type="number"
+        class="form-control shadow"
+      />
+    </div>
+  </div>
+</div>
+
+<div class="row m-0 p-0">
+  <div class="col-12">
+    <a
+      *ngFor="let contrato of contratos"
+      class="list-group-item list-group-item-action mt-2 shadow"
+      (click)="irA(contrato.Contrato)"
+    >
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{ contrato.Contrato }}</h5>
+        <small class="text-muted">{{ contrato.SerieMedidor }}</small>
+      </div>
+      <p class="mb-1">
+        {{ contrato.Calle }} #{{ contrato.Exterior }}, {{ contrato.Colonia }},
+        {{ contrato.Poblacion }}
+      </p>
+      <small class="text-muted">{{ contrato.Contribuyente }}</small>
+    </a>
+  </div>
+</div>
