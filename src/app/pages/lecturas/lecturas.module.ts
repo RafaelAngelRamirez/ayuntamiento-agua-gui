@@ -45,6 +45,6 @@ const routes: Routes = [
 })
 export class LecturasModule {
   constructor() {
-
+    console.log("si")
   }
 }

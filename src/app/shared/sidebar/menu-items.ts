@@ -34,7 +34,7 @@ export const ROUTES: RouteInfo[] = [
          {
            path: "/contrato",
            title: "Contratos",
-           icon: "fas fa-document",
+           icon: "fas fa-file-invoice",
            class: "",
            label: "",
            labelClass: "",
@@ -44,7 +44,17 @@ export const ROUTES: RouteInfo[] = [
          {
            path: "/lectura",
            title: "Lecturas",
-           icon: "fas fa-file-invoice",
+           icon: "fas fa-pen",
+           class: "",
+           label: "",
+           labelClass: "",
+           extralink: false,
+           submenu: [],
+         },
+         {
+           path: "/parametros",
+           title: "Parametros",
+           icon: "fas fa-cogs",
            class: "",
            label: "",
            labelClass: "",

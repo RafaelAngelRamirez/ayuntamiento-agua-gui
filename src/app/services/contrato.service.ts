@@ -17,28 +17,41 @@ export class ContratoService {
       .get<Contrato[]>(this.base.concat("/leer/todo"))
       .pipe(catchError((x) => throwError(x)));
   }
+
+  findByTerm(termino: string) {
+    let termi = encodeURI(termino);
+    return this.http
+      .get<Contrato[]>(this.base.concat("/leer/termino/").concat(termi))
+      .pipe(catchError((x) => throwError(x)));
+  }
+
+  findContrato(contrato: string) {
+    return this.http
+      .get<Contrato>(this.base.concat("/leer/contrato/").concat(contrato))
+      .pipe(catchError((x) => throwError(x)));
+  }
 }
 
 export interface Contrato {
-  contrato: string;
-  calle: string;
-  colonia: string;
-  poblacion: string;
-  exterior: string;
-  contribuyente: string;
-  vigenciaAnterior: number;
-  periodoAnterior: string;
-  lecturaAnterior: number;
-  promedio: number;
-  serieMedidor: string;
-  idTarifa: string;
-  idRuta: string;
-  saldo: number;
-  adeudo: number;
-  tipoPeriodo: string;
+  Contrato: string;
+  Calle: string;
+  Colonia: string;
+  Poblacion: string;
+  Exterior: string;
+  Contribuyente: string;
+  VigenciaAnterior: number;
+  PeriodoAnterior: string;
+  LecturaAnterior: number;
+  Promedio: number;
+  SerieMedidor: string;
+  IdTarifa: string;
+  IdRuta: string;
+  Saldo: number;
+  Adeudo: number;
+  TipoPeriodo: string;
   // No entiendo que hace consecutivoRuta ni para que es en auditoria
-  consecutivoRuta: number;
-  enAuditoria: Boolean;
+  ConsecutivoRuta: number;
+  EnAuditoria: Boolean;
 
   // Este cambia el schema
   // lecturas: [Lectura];

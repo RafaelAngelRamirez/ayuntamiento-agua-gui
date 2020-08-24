@@ -28,6 +28,11 @@ export const Pagesroutes: Routes = [
       import("./lecturas/lecturas.module").then((m) => m.LecturasModule),
   },
   {
+    path: "parametros",
+    loadChildren: () =>
+      import("./parametros/parametros.module").then((m) => m.ParametrosModule),
+  },
+  {
     path: "component",
     loadChildren: () =>
       import("../component/component.module").then((m) => m.ComponentsModule),

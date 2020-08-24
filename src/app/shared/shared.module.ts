@@ -39,16 +39,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LoginComponent,
     NoPageFoundComponent,
     RouterModule,
-    CommonModule,
   ],
 
-  imports: [
-    RouterModule,
-    CommonModule,
-    PerfectScrollbarModule,
-    ChartsModule,
-    NgbModule,
-  ],
+  imports: [RouterModule, PerfectScrollbarModule, ChartsModule, NgbModule],
 })
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {

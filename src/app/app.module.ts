@@ -14,12 +14,12 @@ import { ToastrModule } from "ngx-toastr";
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    RouterModule.forRoot(Approutes),
-    CommonModule,
     BrowserModule,
-    FormsModule,
-    HttpClientModule,
     BrowserAnimationsModule, // required animations module
+    HttpClientModule,
+
+    RouterModule.forRoot(Approutes),
+    FormsModule,
     ToastrModule.forRoot(), // ToastrModule added
     SharedModule.forRoot(),
   ],

@@ -70,7 +70,7 @@
     </form>
 
     <button
-      (click)="submit(formulario.value, formulario.invalid, $event)"
+      (click)="submit(formulario?.value, formulario?.invalid, $event)"
       class="btn btn-success"
       [disabled]="guardandoLectura"
       role="button"

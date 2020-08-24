@@ -1,1 +1,7 @@
 [1025/162430.594:ERROR:crash_report_database_win.cc(428)] unexpected header
+[0820/233146.420:ERROR:process_reader_win.cc(123)] NtOpenThread: {Acceso denegado} Un proceso ha solicitado acceso a un objeto, pero no se le han concedido esos derechos de acceso. (0xc0000022)
+[0820/233146.413:ERROR:process_reader_win.cc(123)] NtOpenThread: {Acceso denegado} Un proceso ha solicitado acceso a un objeto, pero no se le han concedido esos derechos de acceso. (0xc0000022)
+[0820/233146.424:ERROR:exception_snapshot_win.cc(98)] thread ID 21408 not found in process
+[0820/233146.424:ERROR:exception_snapshot_win.cc(98)] thread ID 1940 not found in process
+[0820/233146.454:ERROR:process_reader_win.cc(123)] NtOpenThread: {Acceso denegado} Un proceso ha solicitado acceso a un objeto, pero no se le han concedido esos derechos de acceso. (0xc0000022)
+[0820/233146.454:ERROR:exception_snapshot_win.cc(98)] thread ID 1664 not found in process
