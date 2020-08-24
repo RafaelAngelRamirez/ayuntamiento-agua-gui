@@ -52,6 +52,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/environments/config.ts",
+                  "with": "src/environments/config.prod.ts"
                 }
               ]
             }
