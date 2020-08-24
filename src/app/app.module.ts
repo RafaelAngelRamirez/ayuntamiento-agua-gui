@@ -10,6 +10,8 @@ import { SharedModule } from "./shared/shared.module";
 import { CommonModule } from "@angular/common";
 import { HttpConfigInterceptor } from "./interceptors/http-config.interceptor";
 import { ToastrModule } from "ngx-toastr";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +23,7 @@ import { ToastrModule } from "ngx-toastr";
     RouterModule.forRoot(Approutes),
     FormsModule,
     ToastrModule.forRoot(), // ToastrModule added
-    SharedModule.forRoot(),
+    SharedModule.forRoot(), ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     {

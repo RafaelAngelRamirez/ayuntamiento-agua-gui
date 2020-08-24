@@ -23,7 +23,7 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
-            "assets": ["src/assets", "src/favicon.ico"],
+            "assets": ["src/assets", "src/favicon.ico", "src/manifest.webmanifest"],
             "styles": [
               "src/styles.css",
               "src/assets/scss/style.scss",
@@ -57,7 +57,9 @@
                   "replace": "src/environments/config.ts",
                   "with": "src/environments/config.prod.ts"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             }
           }
         },
@@ -87,7 +89,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
             "styles": ["src/styles.css", "src/assets/scss/style.scss"],
-            "assets": ["src/assets", "src/favicon.ico"]
+            "assets": ["src/assets", "src/favicon.ico", "src/manifest.webmanifest"]
           }
         },
         "lint": {
