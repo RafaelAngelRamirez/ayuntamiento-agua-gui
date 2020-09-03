@@ -25,12 +25,9 @@ export class ContratosComponent implements OnInit {
   skip = this.limite;
   sincronizandoContratos = false;
 
-  
   leyendoContratosOffline = false;
 
-
   buscador = new FormControl();
-
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -39,7 +36,7 @@ export class ContratosComponent implements OnInit {
 
   registrarBuscador() {
     this.buscador.valueChanges.subscribe((value) => {
-      if ( !value ) return;
+      if (!value) return;
       this.contratosMostrar = this.contratos
         .map((x: Contrato) => {
           return {
@@ -54,14 +51,20 @@ export class ContratosComponent implements OnInit {
   }
 
   cargarDatos() {
+
+    
     this.leyendoContratosOffline = true;
     this.buscador.disable();
+
+    console.log("EStamos aqui")
     this.idbService.findAll().subscribe(
       (datos) => {
+        console.log(datos.length)
         if (datos.length === 0) {
           this.sincronizar();
         } else {
-          this.contratos = datos;
+
+          this.contratos = this.contratoService.contratos = datos;
           this.mostrarContratos();
 
           this.leyendoContratosOffline = false;
@@ -76,12 +79,32 @@ export class ContratosComponent implements OnInit {
   }
 
   sincronizar() {
+    if (!this.contratoService.estaOnline) {
+      this.notiService.toast.warning(
+        "No estas conectado. No se pueden sincronizar los contratos"
+      );
+
+      return;
+    }
+
     this.sincronizandoContratos = true;
 
+    //Comprobamos que no tengamos contratos sin sincronizar con la BD
+    let contratosPorSincronizar = this.contratoService.contratosPorSubir();
+    if (contratosPorSincronizar.length > 0) {
+      this.notiService.toast.warning(
+        `Hay ${contratosPorSincronizar} contratos pendientes por subir a la nube. Primero debes subirlos para no perder los datos.`
+      );
+
+      return;
+    }
+
+
+    console.log("Entro aqui")
     this.contratoService.findAll().subscribe(
       (contratos) => {
         this.contratos = contratos;
-
+        console.log(`Se encontraron contratos`,contratos.length)
         if (contratos.length === 0) {
           this.sincronizandoContratos = false;
           this.leyendoContratosOffline = false;
@@ -89,9 +112,10 @@ export class ContratosComponent implements OnInit {
           this.notiService.toast.warning("No hay contratos para sincronizar");
           return;
         }
-
-        forkJoin(contratos.map((c) => this.idbService.save(c))).subscribe(
+        console.log(`empieza el fork`)
+        forkJoin(contratos.map((c) => this.idbService.update(c))).subscribe(
           () => {
+            console.log("Termino fork")
             this.sincronizandoContratos = false;
             this.leyendoContratosOffline = false;
             this.buscador.enable();
@@ -102,10 +126,12 @@ export class ContratosComponent implements OnInit {
           },
 
           (_) => {
+            console.log("error", _)
             this.sincronizandoContratos = false;
             this.leyendoContratosOffline = false;
             this.buscador.enable();
-          }
+          },
+          ()=> console.log("completede forkJoin")
         );
       },
       (_) => {

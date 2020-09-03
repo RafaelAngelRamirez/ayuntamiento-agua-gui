@@ -10,13 +10,21 @@ import { NotificacionesService } from "./notificaciones.service";
   providedIn: "root",
 })
 export class ContratoService {
+  estaOnline = false;
   constructor(
     private notiService: NotificacionesService,
     private http: HttpClient,
     private estatus: EstatusConexionService
   ) {
     this.estatus.online.subscribe((estaOnline) => {
+      console.log("estaOnline", estaOnline)
       if (estaOnline) this.sincronizarContratosTomadosOffline();
+      this.estaOnline = estaOnline;
+
+
+      if( !estaOnline){
+        this.notiService.toast.warning("Sin conexion")
+      }
     });
   }
 
@@ -47,20 +55,27 @@ export class ContratoService {
   }
 
   sincronizarContratosTomadosOffline() {
-    let paraSincronizar = this.contratos.filter(
-      (x) => x.tomada && !x.sincronizada
-    );
+    let paraSincronizar = this.contratosPorSubir()
+
+
 
     if (paraSincronizar.length > 0) {
       this.notiService.toast.info(
-        `Hay ${paraSincronizar.length} contratos por sincronizar y la logica aun no esta terminada`
+        `[ En linea ]: Hay ${paraSincronizar.length} contratos por sincronizar y la logica aun no esta terminada`
       );
+    } else {
+
+      this.notiService.toast.info("[ En linea ]: No hay contratos para subir a la nube")
     }
   }
 
   construirBusqueda(contrato: Contrato): string {
     return `${contrato.Calle} ${contrato.Exterior} ${contrato.Colonia} ${contrato.Poblacion} ${contrato.Contribuyente} ${contrato.SerieMedidor} ${contrato.Contrato}
     `.toLowerCase();
+  }
+
+  contratosPorSubir(): Contrato[] {
+    return this.contratos.filter((x) => x.tomada && !x.sincronizada);
   }
 }
 
