@@ -4,13 +4,17 @@
       <div class="card-body">
         <h1>Contratos</h1>
 
-        <a class="btn btn-primary" href="javascript:void(0)" role="button">
+        <button 
+        class="btn btn-primary" 
+        role="button"
+        [disabled]="sincronizandoContratos"
+        >
           <i
             [ngClass]="{ 'fa-spin': sincronizandoContratos }"
             class="fas fa-sync"
           ></i>
 
-          Sincronizar</a
+          Sincronizar</button
         >
       </div>
     </div>

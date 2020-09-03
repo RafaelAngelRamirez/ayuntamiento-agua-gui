@@ -52,7 +52,7 @@ export class ContratosComponent implements OnInit {
           return;
         }
         
-        forkJoin([...contratos.map((c) => this.idbService.save(c))])
+        forkJoin(contratos.map((c) => this.idbService.save(c)))
         .subscribe(
           () => {
             this.sincronizandoContratos = false;
