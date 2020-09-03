@@ -3,6 +3,7 @@ import { ContratoService, Contrato } from "../../services/contrato.service";
 import { IndexedDBService } from "@codice-progressio/indexed-db";
 import { forkJoin } from "rxjs";
 import { NotificacionesService } from "../../services/notificaciones.service";
+import { FormControl } from "@angular/forms";
 
 @Component({
   selector: "app-contratos",
@@ -17,62 +18,108 @@ export class ContratosComponent implements OnInit {
   ) {}
 
   contratos: Contrato[] = [];
+  contratosMostrar: Contrato[] = [];
 
   desde = 0;
   limite = 30;
   skip = this.limite;
   sincronizandoContratos = false;
 
+  
+  leyendoContratosOffline = false;
+
+
+  buscador = new FormControl();
+
+
   ngOnInit(): void {
-    console.log("Entro");
-    this.idbService.findAll().subscribe((datos) => {
-      if (datos.length === 0) {
-        console.log("Aqui sigue");
-        this.sincronizar();
-      } else {
-        this.contratos = datos.slice(this.desde, this.skip);
-      }
+    this.cargarDatos();
+    this.registrarBuscador();
+  }
+
+  registrarBuscador() {
+    this.buscador.valueChanges.subscribe((value) => {
+      if ( !value ) return;
+      this.contratosMostrar = this.contratos
+        .map((x: Contrato) => {
+          return {
+            busqueda: this.contratoService.construirBusqueda(x),
+            contrato: x,
+          };
+        })
+        .filter((x) => x.busqueda.includes(value.toLowerCase()))
+        .slice(this.desde, this.desde + this.skip)
+        .map((x) => x.contrato as Contrato);
     });
   }
 
+  cargarDatos() {
+    this.leyendoContratosOffline = true;
+    this.buscador.disable();
+    this.idbService.findAll().subscribe(
+      (datos) => {
+        if (datos.length === 0) {
+          this.sincronizar();
+        } else {
+          this.contratos = datos;
+          this.mostrarContratos();
+
+          this.leyendoContratosOffline = false;
+          this.buscador.enable();
+        }
+      },
+      (_) => {
+        this.leyendoContratosOffline = false;
+        this.buscador.enable();
+      }
+    );
+  }
+
   sincronizar() {
-    console.log("sincronizando");
     this.sincronizandoContratos = true;
 
     this.contratoService.findAll().subscribe(
       (contratos) => {
         this.contratos = contratos;
 
-        console.log("Se obtuvieron los contratos", this.contratos.length);
-        console.log(this.idbService._opciones.objectStore);
-
         if (contratos.length === 0) {
           this.sincronizandoContratos = false;
+          this.leyendoContratosOffline = false;
+          this.buscador.enable();
           this.notiService.toast.warning("No hay contratos para sincronizar");
           return;
         }
-        
-        forkJoin(contratos.map((c) => this.idbService.save(c)))
-        .subscribe(
+
+        forkJoin(contratos.map((c) => this.idbService.save(c))).subscribe(
           () => {
             this.sincronizandoContratos = false;
+            this.leyendoContratosOffline = false;
+            this.buscador.enable();
             this.notiService.toast.correcto(
               `Se sincronizaron ${this.contratos.length} contratos`
             );
-
-            console.log("Estamos aqui")
+            this.mostrarContratos();
           },
 
-          (_) => console.log(_)
-          , ()=> console.log("Finally")
+          (_) => {
+            this.sincronizandoContratos = false;
+            this.leyendoContratosOffline = false;
+            this.buscador.enable();
+          }
         );
-
-
-
-
       },
-      (_) => (this.sincronizandoContratos = false)
+      (_) => {
+        this.sincronizandoContratos = false;
+        this.leyendoContratosOffline = false;
+      }
     );
     //Comprobamos que no haya contratos sin sincronizar.
+  }
+
+  mostrarContratos() {
+    this.contratosMostrar = this.contratos.slice(
+      this.desde,
+      this.desde + this.skip
+    );
   }
 }

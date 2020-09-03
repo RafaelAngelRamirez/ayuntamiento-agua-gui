@@ -3,19 +3,32 @@ import { URL_BASE } from "../../environments/config.prod";
 import { HttpClient } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
 import { throwError } from "rxjs";
+import { EstatusConexionService } from "@codice-progressio/estatus-conexion";
+import { NotificacionesService } from "./notificaciones.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class ContratoService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private notiService: NotificacionesService,
+    private http: HttpClient,
+    private estatus: EstatusConexionService
+  ) {
+    this.estatus.online.subscribe((estaOnline) => {
+      if (estaOnline) this.sincronizarContratosTomadosOffline();
+    });
+  }
 
   base = URL_BASE("contrato");
   contratos: Contrato[] = [];
 
   findAll() {
     return this.http.get<Contrato[]>(this.base.concat("/leer/todo")).pipe(
-      map(contratos => contratos),
+      map((contratos) => {
+        this.contratos = contratos;
+        return contratos;
+      }),
       catchError((x) => throwError(x))
     );
   }
@@ -31,6 +44,23 @@ export class ContratoService {
     return this.http
       .get<Contrato>(this.base.concat("/leer/contrato/").concat(contrato))
       .pipe(catchError((x) => throwError(x)));
+  }
+
+  sincronizarContratosTomadosOffline() {
+    let paraSincronizar = this.contratos.filter(
+      (x) => x.tomada && !x.sincronizada
+    );
+
+    if (paraSincronizar.length > 0) {
+      this.notiService.toast.info(
+        `Hay ${paraSincronizar.length} contratos por sincronizar y la logica aun no esta terminada`
+      );
+    }
+  }
+
+  construirBusqueda(contrato: Contrato): string {
+    return `${contrato.Calle} ${contrato.Exterior} ${contrato.Colonia} ${contrato.Poblacion} ${contrato.Contribuyente} ${contrato.SerieMedidor} ${contrato.Contrato}
+    `.toLowerCase();
   }
 }
 
@@ -59,7 +89,5 @@ export interface Contrato {
   // lecturas: [Lectura];
   tomada: boolean;
   sincronizada: boolean;
-  lectura:{}
+  lectura: {};
 }
-
-

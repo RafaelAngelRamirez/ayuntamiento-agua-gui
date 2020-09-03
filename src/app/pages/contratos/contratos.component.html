@@ -2,20 +2,38 @@
   <div class="col-12">
     <div class="card">
       <div class="card-body">
-        <h1>Contratos</h1>
+        <h1>
+          Contratos
+          <small
+            >Sincronizados :
 
-        <button 
-        class="btn btn-primary" 
-        role="button"
-        [disabled]="sincronizandoContratos"
+            <span *ngIf="!sincronizandoContratos">{{
+              contratos.length | number
+            }}</span>
+
+            <i *ngIf="sincronizandoContratos" class="fas fa-sync fa-spin"></i>
+          </small>
+        </h1>
+
+        <button
+          class="btn btn-primary"
+          role="button"
+          [disabled]="sincronizandoContratos"
         >
           <i
             [ngClass]="{ 'fa-spin': sincronizandoContratos }"
             class="fas fa-sync"
           ></i>
 
-          Sincronizar</button
-        >
+          Sincroniza
+        </button>
+
+        <div class="form-group">
+          <input type="text" class="form-control" [formControl]="buscador" />
+          <small id="helpId" class="form-text text-muted"
+            >Filtrar contratos</small
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -23,7 +41,7 @@
 
 <div class="col-12">
   <div class="card">
-    <div class="card-body">
+    <div class="card-body table-responsive">
       <table class="table">
         <thead>
           <tr>
@@ -33,7 +51,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let u of contratos">
+          <tr *ngFor="let u of contratosMostrar">
             <td>{{ u.Contrato }}</td>
             <td>{{ u.Contribuyente }}</td>
             <td>{{ u.Poblacion }}</td>
