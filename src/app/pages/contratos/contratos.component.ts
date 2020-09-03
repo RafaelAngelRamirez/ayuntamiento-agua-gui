@@ -104,7 +104,6 @@ export class ContratosComponent implements OnInit {
     this.contratoService.findAll().subscribe(
       (contratos) => {
         this.contratos = contratos;
-        console.log(`Se encontraron contratos`,contratos.length)
         if (contratos.length === 0) {
           this.sincronizandoContratos = false;
           this.leyendoContratosOffline = false;
@@ -112,10 +111,8 @@ export class ContratosComponent implements OnInit {
           this.notiService.toast.warning("No hay contratos para sincronizar");
           return;
         }
-        console.log(`empieza el fork`)
         forkJoin(contratos.map((c) => this.idbService.update(c))).subscribe(
           () => {
-            console.log("Termino fork")
             this.sincronizandoContratos = false;
             this.leyendoContratosOffline = false;
             this.buscador.enable();
