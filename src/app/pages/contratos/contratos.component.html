@@ -3,6 +3,15 @@
     <div class="card">
       <div class="card-body">
         <h1>Contratos</h1>
+
+        <a class="btn btn-primary" href="javascript:void(0)" role="button">
+          <i
+            [ngClass]="{ 'fa-spin': sincronizandoContratos }"
+            class="fas fa-sync"
+          ></i>
+
+          Sincronizar</a
+        >
       </div>
     </div>
   </div>
@@ -25,11 +34,7 @@
             <td>{{ u.Contribuyente }}</td>
             <td>{{ u.Poblacion }}</td>
             <td>
-              <a
-                (click)="alerta()"
-                class="btn btn-primary"
-                href="javascript:void(0)"
-                role="button"
+              <a class="btn btn-primary" href="javascript:void(0)" role="button"
                 ><i class="fas fa-edit"></i>
               </a>
             </td>

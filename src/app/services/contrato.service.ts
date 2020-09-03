@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { URL_BASE } from "../../environments/config.prod";
 import { HttpClient } from "@angular/common/http";
-import { catchError } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 import { throwError } from "rxjs";
 
 @Injectable({
@@ -11,11 +11,13 @@ export class ContratoService {
   constructor(private http: HttpClient) {}
 
   base = URL_BASE("contrato");
+  contratos: Contrato[] = [];
 
   findAll() {
-    return this.http
-      .get<Contrato[]>(this.base.concat("/leer/todo"))
-      .pipe(catchError((x) => throwError(x)));
+    return this.http.get<Contrato[]>(this.base.concat("/leer/todo")).pipe(
+      map(contratos => contratos),
+      catchError((x) => throwError(x))
+    );
   }
 
   findByTerm(termino: string) {
@@ -51,8 +53,13 @@ export interface Contrato {
   TipoPeriodo: string;
   // No entiendo que hace consecutivoRuta ni para que es en auditoria
   ConsecutivoRuta: number;
-  EnAuditoria: Boolean;
+  EnAuditoria: boolean;
 
   // Este cambia el schema
   // lecturas: [Lectura];
+  tomada: boolean;
+  sincronizada: boolean;
+  lectura:{}
 }
+
+

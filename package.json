@@ -25,6 +25,8 @@
     "@angular/router": "^10.0.11",
     "@angular/service-worker": "^10.0.11",
     "@auth0/angular-jwt": "^5.0.1",
+    "@codice-progressio/estatus-conexion": "0.0.2",
+    "@codice-progressio/indexed-db": "^0.0.4",
     "@codice-progressio/reactive-error-handler": "0.0.2",
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "bootstrap": "^4.1.1",
