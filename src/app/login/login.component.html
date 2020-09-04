@@ -1,0 +1,50 @@
+<!-- class="wrapper Down animated fadeIn infinite" -->
+<div class="wrapper">
+  <div id="formContent">
+    <!-- Tabs Titles -->
+
+    <!-- Icon -->
+    <div class="first mt-3">
+      <img src="assets/images/logo-icon.png" />
+      <br />
+      <br />
+      <img src="assets/images/logo-text.png" />
+    </div>
+    <hr />
+
+    <!-- Login Form -->
+    <form>
+      <input
+        #usuario
+        type="text"
+        id="login"
+        class="second"
+        name="login"
+        placeholder="usuario"
+      />
+      <input
+        #password
+        type="password"
+        id="password"
+        class="third"
+        name="login"
+        placeholder="contraseña"
+      />
+
+      <br />
+      <br />
+      <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+      <br />
+      <br />
+
+      <input
+        (click)="login(usuario.value, password.value, $event)"
+        type="submit"
+        class="fourth"
+        value="Iniciar sesión"
+        [disabled]="cargando"
+        [ngClass]="{ 'btn btn-ligth': cargando }"
+      />
+    </form>
+  </div>
+</div>
