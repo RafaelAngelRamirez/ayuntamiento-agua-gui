@@ -28,6 +28,10 @@ export class LecturasComponent implements OnInit {
 
   ngOnInit(): void {
     document.getElementById("buscador")?.focus();
+    this.registrarBuscador();
+  }
+
+  registrarBuscador() {
     this.buscador.valueChanges
       .pipe(
         tap((_) => (this.cargando = true)),
@@ -35,19 +39,17 @@ export class LecturasComponent implements OnInit {
       )
       .subscribe(
         (termino) => {
-          this.contratoService.findByTerm(termino).subscribe(
-            (contratos) => {
-              this.contratos = contratos;
-              this.cargando = false;
-            },
-            (_) => (this.cargando = false)
-          );
+          console.log(`termino`, termino);
+
+          this.contratos = this.contratoService.buscarPorTermino(termino);
+          this.cargando = false;
         },
         (_) => (this.cargando = false)
       );
   }
 
-  irA(contrato: string) {
-    this.router.navigate(["/lectura/captura", contrato]);
+  irA(contrato: Contrato) {
+    let ruta = contrato.tomada ? "imprime" : "captura";
+    this.router.navigate(["lectura", ruta, contrato.Contrato]);
   }
 }

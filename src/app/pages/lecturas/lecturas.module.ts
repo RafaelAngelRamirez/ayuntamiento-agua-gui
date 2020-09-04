@@ -5,7 +5,8 @@ import { LecturaCrearComponent } from "./lectura-crear/lectura-crear.component";
 import { ReactiveErrorHandlerModule } from "@codice-progressio/reactive-error-handler";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { BrowserModule } from '@angular/platform-browser'
+import { BrowserModule } from '@angular/platform-browser';
+import { TicketComponent } from './ticket/ticket.component'
 
 const routes: Routes = [
   {
@@ -18,14 +19,11 @@ const routes: Routes = [
   },
   {
     path: "captura/:contrato",
-    // data: {
-    //   title: "",
-    //   urls: [
-    //     { title: "Lectura", url: "/lectura/captura/:id" },
-    //     { title: "Lectura" },
-    //   ],
-    // },
     component: LecturaCrearComponent,
+  },
+  {
+    path: "imprime/:contrato",
+    component: TicketComponent,
   },
   {
     path: "**",
@@ -34,7 +32,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [LecturasComponent, LecturaCrearComponent],
+  declarations: [LecturasComponent, LecturaCrearComponent, TicketComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,

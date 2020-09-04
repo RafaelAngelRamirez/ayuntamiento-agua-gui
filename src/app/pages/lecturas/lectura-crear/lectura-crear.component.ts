@@ -1,10 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterModule, Router } from "@angular/router";
 import { ContratoService, Contrato } from "../../../services/contrato.service";
 import { Location } from "@angular/common";
 import { NotificacionesService } from "../../../services/notificaciones.service";
 import { SimapaService } from "../../../services/simapa.service";
+import { IndexedDBService } from "@codice-progressio/indexed-db";
 import {
   IncidenciaService,
   Incidencia,
@@ -21,26 +22,27 @@ import {
 })
 export class LecturaCrearComponent implements OnInit {
   cargandoContrato = false;
-  contrato: Contrato | undefined;
+  contrato!: Contrato;
   formulario: FormGroup | null = null;
 
   incidencias: Incidencia[] = [];
   impedimentos: Impedimento[] = [];
   constructor(
+    private idbService: IndexedDBService,
     private constratoService: ContratoService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private incidenciaService: IncidenciaService,
     private impedimentoService: ImpedimentoService,
     private notiService: NotificacionesService,
-    private simapaService: SimapaService
+    private router: Router
   ) {
-    this.detectarParametros();
+    this.cargaContrato();
     this.cargarIncidencias();
     this.cargarImpedimentos();
   }
 
-  detectarParametros() {
+  cargaContrato() {
     let error = (_: any) => {
       this.cargandoContrato = false;
       this.location.back();
@@ -48,16 +50,13 @@ export class LecturaCrearComponent implements OnInit {
 
     this.activatedRoute.paramMap.subscribe((dato) => {
       let conPara: string = dato.get("contrato") || "";
-      console.log(conPara);
       this.cargandoContrato = true;
 
-      this.constratoService
-        .findContrato(conPara)
-        .subscribe((contrato: Contrato) => {
-          this.contrato = contrato;
-          this.cargandoContrato = false;
-          this.crearFormulario(contrato);
-        }, error);
+      this.idbService.findById(conPara).subscribe((contrato) => {
+        this.contrato = contrato as Contrato;
+        this.cargandoContrato = false;
+        this.crearFormulario(this.contrato);
+      }, error);
     }, error);
   }
 
@@ -84,8 +83,8 @@ export class LecturaCrearComponent implements OnInit {
       FechaLectura: new FormControl(),
       HoraLectura: new FormControl(),
       LecturaActual: new FormControl("", [
-        Validators.required,
-        Validators.min(contrato.LecturaAnterior),
+        // Validators.required,
+        // Validators.min(contrato.LecturaAnterior),
       ]),
       IdImpedimento: new FormControl(),
       IdIncidencia: new FormControl(),
@@ -98,17 +97,71 @@ export class LecturaCrearComponent implements OnInit {
   }
 
   guardandoLectura = false;
-  submit(model: any, esInvalido: boolean, e: any) {
-    this.notiService.toast.correcto("Guardado")
-    // this.guardandoLectura = true;
-    // this.simapaService.subirLectura(model).subscribe(
-    //   (_) => {
-    //     this.notiService.toast.correcto("Se cargo la lectura correctamente");
-    //     this.location.back();
-    //   },
-    //   (_) => (this.guardandoLectura = false)
-    // );
+  submit(model: any, invalido: boolean, e: any) {
+    if (invalido) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.formulario?.markAsDirty();
 
-    this.location.back()
+      return;
+    }
+    //Esto es para idb, no para la api
+    this.contrato.tomada = true
+    this.contrato.lectura = model;
+
+    model.Contrato = this.contrato.Contrato;
+    model.Vigencia = 2020;
+    model.Periodo = "04";
+    model.IdLecturista = "01";
+    model.IdRuta = this.contrato.IdRuta;
+    model.IdTarifa = this.contrato.IdTarifa;
+    model.FechaLectura = new Date();
+    model.HoraLectura = new Date().getHours();
+    model.ConsumoMts3 = model.LecturaActual - this.contrato.LecturaAnterior;
+    model.Mts3Cobrados = model.LecturaActual - this.contrato.LecturaAnterior;
+    model.IdDispositivo = "01";
+
+    //Primero guardamos en local para que no haya problemas si nos falla
+    // la conexion
+
+    this.guardandoLectura = true;
+    this.idbService.update(this.contrato).subscribe(
+      () => {
+        //  Remplazamos los datos guardados en memoria.
+
+        let index = this.constratoService.contratos.findIndex(
+          (x) => x.Contrato === this.contrato.Contrato
+        );
+        this.constratoService.contratos[index] = this.contrato;
+
+        //Despues verificamos si hay conexion
+
+        if (this.constratoService.estaOnline) {
+          // Si hay conexion sincronizamos de una vez
+          this.constratoService.sincronizarContratosTomadosOffline().subscribe(
+            (cantidad) => {
+              this.notiService.toast.correcto(
+                `Se sincronizaron ${cantidad} ${
+                  cantidad > 1 ? "contratos" : "contrato"
+                }`
+              );
+
+              this.router.navigate([
+                "/lectura/imprime",
+                this.contrato.Contrato,
+              ]);
+            },
+            (_) => {
+              this.guardandoLectura = false;
+            }
+          );
+        } else {
+          // Si no hay conexion continuamos.
+          this.notiService.toast.info("Lectura en espera de conexion");
+          this.router.navigate(["/lectura/imprime", this.contrato.Contrato]);
+        }
+      },
+      () => (this.guardandoLectura = false)
+    );
   }
 }
