@@ -26,11 +26,16 @@
   <div class="col-12">
     <a
       *ngFor="let contrato of contratos"
-      class="list-group-item list-group-item-action mt-2 shadow"
+      class="list-group-item list-group-item-action mt-2 shadow list-group-item-secondary"
       (click)="irA(contrato.Contrato)"
     >
       <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">{{ contrato.Contrato }}</h5>
+        <h5 class="mb-1">
+          {{ contrato.Contrato }}
+
+          <i class="fas fa-cloud-upload-alt"></i>
+          <i class="fas fa-cloud text-success"></i>
+        </h5>
         <small class="text-muted">{{ contrato.SerieMedidor }}</small>
       </div>
       <p class="mb-1">

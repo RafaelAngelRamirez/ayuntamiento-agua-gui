@@ -37,33 +37,23 @@ export class ContratosComponent implements OnInit {
   registrarBuscador() {
     this.buscador.valueChanges.subscribe((value) => {
       if (!value) return;
-      this.contratosMostrar = this.contratos
-        .map((x: Contrato) => {
-          return {
-            busqueda: this.contratoService.construirBusqueda(x),
-            contrato: x,
-          };
-        })
-        .filter((x) => x.busqueda.includes(value.toLowerCase()))
-        .slice(this.desde, this.desde + this.skip)
-        .map((x) => x.contrato as Contrato);
+      this.contratosMostrar = this.contratoService.buscarPorTermino(
+        value,
+        this.desde,
+        this.skip
+      );
     });
   }
 
   cargarDatos() {
-
-    
     this.leyendoContratosOffline = true;
     this.buscador.disable();
 
-    console.log("EStamos aqui")
     this.idbService.findAll().subscribe(
       (datos) => {
-        console.log(datos.length)
         if (datos.length === 0) {
           this.sincronizar();
         } else {
-
           this.contratos = this.contratoService.contratos = datos;
           this.mostrarContratos();
 
@@ -99,8 +89,6 @@ export class ContratosComponent implements OnInit {
       return;
     }
 
-
-    console.log("Entro aqui")
     this.contratoService.findAll().subscribe(
       (contratos) => {
         this.contratos = contratos;
@@ -123,12 +111,12 @@ export class ContratosComponent implements OnInit {
           },
 
           (_) => {
-            console.log("error", _)
+            console.log("error", _);
             this.sincronizandoContratos = false;
             this.leyendoContratosOffline = false;
             this.buscador.enable();
           },
-          ()=> console.log("completede forkJoin")
+          () => console.log("completede forkJoin")
         );
       },
       (_) => {

@@ -17,13 +17,12 @@ export class ContratoService {
     private estatus: EstatusConexionService
   ) {
     this.estatus.online.subscribe((estaOnline) => {
-      console.log("estaOnline", estaOnline)
+      console.log("estaOnline", estaOnline);
       if (estaOnline) this.sincronizarContratosTomadosOffline();
       this.estaOnline = estaOnline;
 
-
-      if( !estaOnline){
-        this.notiService.toast.warning("Sin conexion")
+      if (!estaOnline) {
+        this.notiService.toast.warning("Sin conexion");
       }
     });
   }
@@ -55,17 +54,16 @@ export class ContratoService {
   }
 
   sincronizarContratosTomadosOffline() {
-    let paraSincronizar = this.contratosPorSubir()
-
-
+    let paraSincronizar = this.contratosPorSubir();
 
     if (paraSincronizar.length > 0) {
       this.notiService.toast.info(
         `[ En linea ]: Hay ${paraSincronizar.length} contratos por sincronizar y la logica aun no esta terminada`
       );
     } else {
-
-      this.notiService.toast.info("[ En linea ]: No hay contratos para subir a la nube")
+      this.notiService.toast.info(
+        "[ En linea ]: No hay contratos para subir a la nube"
+      );
     }
   }
 
@@ -76,6 +74,21 @@ export class ContratoService {
 
   contratosPorSubir(): Contrato[] {
     return this.contratos.filter((x) => x.tomada && !x.sincronizada);
+  }
+
+  buscarPorTermino(termino: string, desde = 0, skip = 30): Contrato[] {
+
+    console.log(`this.contratos.length`,this.contratos.length)
+    return this.contratos
+      .map((x: Contrato) => {
+        return {
+          busqueda: this.construirBusqueda(x),
+          contrato: x,
+        };
+      })
+      .filter((x) => x.busqueda.includes(termino.toLowerCase().trim()))
+      .slice(desde, desde + skip)
+      .map((x) => x.contrato as Contrato);
   }
 }
 
