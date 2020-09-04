@@ -26,15 +26,23 @@
   <div class="col-12">
     <a
       *ngFor="let contrato of contratos"
-      class="list-group-item list-group-item-action mt-2 shadow list-group-item-secondary"
+      class="list-group-item list-group-item-action mt-2 shadow"
+      [ngClass]="{ 'list-group-item-success': contrato.tomada }"
       (click)="irA(contrato.Contrato)"
     >
+      <pre>{{ contrato| json }}</pre>
       <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">
           {{ contrato.Contrato }}
 
-          <i class="fas fa-cloud-upload-alt"></i>
-          <i class="fas fa-cloud text-success"></i>
+          <i
+            *ngIf="contrato.tomada && !contrato.sincronizada"
+            class="fas fa-cloud-upload-alt"
+          ></i>
+          <i
+            *ngIf="contrato.sincronizada && contrato.tomada"
+            class="fas fa-cloud text-success"
+          ></i>
         </h5>
         <small class="text-muted">{{ contrato.SerieMedidor }}</small>
       </div>

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { URL_BASE } from "../../environments/config.prod";
 import { HttpClient } from "@angular/common/http";
 import { catchError, map } from "rxjs/operators";
-import { throwError } from "rxjs";
+import { throwError, Observable, forkJoin } from "rxjs";
 import { EstatusConexionService } from "@codice-progressio/estatus-conexion";
 import { NotificacionesService } from "./notificaciones.service";
 
@@ -53,18 +53,33 @@ export class ContratoService {
       .pipe(catchError((x) => throwError(x)));
   }
 
-  sincronizarContratosTomadosOffline() {
-    let paraSincronizar = this.contratosPorSubir();
+  update(contrato: Contrato) {
+    let url = this.base.concat("/agregar/lectura");
+    return this.http.put<null>(url, contrato);
+  }
 
-    if (paraSincronizar.length > 0) {
-      this.notiService.toast.info(
-        `[ En linea ]: Hay ${paraSincronizar.length} contratos por sincronizar y la logica aun no esta terminada`
-      );
-    } else {
-      this.notiService.toast.info(
-        "[ En linea ]: No hay contratos para subir a la nube"
-      );
-    }
+  sincronizarContratosTomadosOffline():Observable<number> {
+    return new Observable((subscriber) => {
+      let paraSincronizar = this.contratosPorSubir();
+
+      if (paraSincronizar.length > 0) {
+        let observables = paraSincronizar.map((c) => this.update(c));
+
+        forkJoin(observables).subscribe(
+          (Parametros) => {
+            subscriber.next(observables.length);
+            return subscriber.complete();
+          },
+          (_) => subscriber.error(_)
+        );
+      } else {
+        this.notiService.toast.info(
+          "[ En linea ]: No hay contratos para subir a la nube"
+        );
+        subscriber.next(0);
+        subscriber.complete();
+      }
+    });
   }
 
   construirBusqueda(contrato: Contrato): string {
@@ -77,8 +92,7 @@ export class ContratoService {
   }
 
   buscarPorTermino(termino: string, desde = 0, skip = 30): Contrato[] {
-
-    console.log(`this.contratos.length`,this.contratos.length)
+    console.log(`this.contratos.length`, this.contratos.length);
     return this.contratos
       .map((x: Contrato) => {
         return {

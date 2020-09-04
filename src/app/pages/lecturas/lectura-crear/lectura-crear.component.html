@@ -40,20 +40,24 @@
       </div>
       <div class="form-group">
         <select formControlName="IdImpedimento" class="form-control">
-          <option selected value="">Sin impedimento</option>
-          <option *ngFor="let impedimento of impedimentos">{{
-            impedimento.NombreImpedimento
-          }}</option>
+          <option
+            *ngFor="let impedimento of impedimentos"
+            [ngValue]="impedimento.IdImpedimento"
+          >
+            {{ impedimento.NombreImpedimento }}
+          </option>
         </select>
 
         <small id="helpId" class="form-text text-muted">Impedimento</small>
       </div>
       <div class="form-group">
         <select formControlName="IdIncidencia" class="form-control">
-          <option selected value="">Sin incidencia</option>
-          <option *ngFor="let incidencia of incidencias">{{
-            incidencia.NombreIncidencia
-          }}</option>
+          <option
+            *ngFor="let incidencia of incidencias"
+            [ngValue]="incidencia.IdIncidencia"
+          >
+            {{ incidencia.NombreIncidencia }}
+          </option>
         </select>
 
         <small id="helpId" class="form-text text-muted">Incidencias</small>
