@@ -5,6 +5,7 @@ import { catchError, map } from "rxjs/operators";
 import { throwError, Observable, forkJoin } from "rxjs";
 import { EstatusConexionService } from "@codice-progressio/estatus-conexion";
 import { NotificacionesService } from "./notificaciones.service";
+import { IndexedDBService } from "@codice-progressio/indexed-db";
 
 @Injectable({
   providedIn: "root",
@@ -14,7 +15,8 @@ export class ContratoService {
   constructor(
     private notiService: NotificacionesService,
     private http: HttpClient,
-    private estatus: EstatusConexionService
+    private estatus: EstatusConexionService,
+    private idbService: IndexedDBService
   ) {
     this.estatus.online.subscribe((estaOnline) => {
       console.log("estaOnline", estaOnline);
@@ -58,16 +60,24 @@ export class ContratoService {
     return this.http.put<null>(url, contrato);
   }
 
-  sincronizarContratosTomadosOffline():Observable<number> {
+  sincronizarContratosTomadosOffline(): Observable<number> {
     return new Observable((subscriber) => {
       let paraSincronizar = this.contratosPorSubir();
 
       if (paraSincronizar.length > 0) {
-        let observables = paraSincronizar.map((c) => this.update(c));
+        let observables: Observable<any>[] = [];
 
+        paraSincronizar.forEach((c) => {
+          c.sincronizada = true;
+          observables.push(this.update(c));
+          //Actualizamos el contrato en indexed-db
+          observables.push(this.idbService.update(c));
+        });
+
+        console.log(`paraSincronizar.length`, paraSincronizar.length);
         forkJoin(observables).subscribe(
           (Parametros) => {
-            subscriber.next(observables.length);
+            subscriber.next(paraSincronizar.length);
             return subscriber.complete();
           },
           (_) => subscriber.error(_)

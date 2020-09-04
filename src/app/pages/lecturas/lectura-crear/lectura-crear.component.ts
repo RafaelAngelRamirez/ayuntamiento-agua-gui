@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterModule, Router } from "@angular/router";
 import { ContratoService, Contrato } from "../../../services/contrato.service";
 import { Location } from "@angular/common";
 import { NotificacionesService } from "../../../services/notificaciones.service";
@@ -34,7 +34,8 @@ export class LecturaCrearComponent implements OnInit {
     private location: Location,
     private incidenciaService: IncidenciaService,
     private impedimentoService: ImpedimentoService,
-    private notiService: NotificacionesService
+    private notiService: NotificacionesService,
+    private router: Router
   ) {
     this.cargaContrato();
     this.cargarIncidencias();
@@ -104,6 +105,8 @@ export class LecturaCrearComponent implements OnInit {
 
       return;
     }
+    //Esto es para idb, no para la api
+    this.contrato.tomada = true
     this.contrato.lectura = model;
 
     model.Contrato = this.contrato.Contrato;
@@ -142,7 +145,11 @@ export class LecturaCrearComponent implements OnInit {
                   cantidad > 1 ? "contratos" : "contrato"
                 }`
               );
-              this.location.back();
+
+              this.router.navigate([
+                "/lectura/imprime",
+                this.contrato.Contrato,
+              ]);
             },
             (_) => {
               this.guardandoLectura = false;
@@ -151,7 +158,7 @@ export class LecturaCrearComponent implements OnInit {
         } else {
           // Si no hay conexion continuamos.
           this.notiService.toast.info("Lectura en espera de conexion");
-          this.location.back();
+          this.router.navigate(["/lectura/imprime", this.contrato.Contrato]);
         }
       },
       () => (this.guardandoLectura = false)

@@ -12,6 +12,8 @@ import { HttpConfigInterceptor } from "./interceptors/http-config.interceptor";
 import { ToastrModule } from "ngx-toastr";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "../environments/environment";
+import {NgxPrintModule} from 'ngx-print';
+
 
 import { IndexedDBModule } from "@codice-progressio/indexed-db";
 import { EstatusConexionModule } from "@codice-progressio/estatus-conexion";
@@ -28,6 +30,7 @@ import { EstatusConexionModule } from "@codice-progressio/estatus-conexion";
     SharedModule.forRoot(),
     IndexedDBModule,
     EstatusConexionModule,
+    NgxPrintModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
       enabled: environment.production,
     }),

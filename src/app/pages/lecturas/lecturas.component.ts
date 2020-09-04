@@ -39,17 +39,17 @@ export class LecturasComponent implements OnInit {
       )
       .subscribe(
         (termino) => {
-
-          console.log(`termino`,termino)
+          console.log(`termino`, termino);
 
           this.contratos = this.contratoService.buscarPorTermino(termino);
-          this.cargando = false
+          this.cargando = false;
         },
         (_) => (this.cargando = false)
       );
   }
 
-  irA(contrato: string) {
-    this.router.navigate(["/lectura/captura", contrato]);
+  irA(contrato: Contrato) {
+    let ruta = contrato.tomada ? "imprime" : "captura";
+    this.router.navigate(["lectura", ruta, contrato.Contrato]);
   }
 }
