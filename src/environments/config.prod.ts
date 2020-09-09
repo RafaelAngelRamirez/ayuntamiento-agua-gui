@@ -1,1 +1,2 @@
-export const URL_BASE = (x: string) => `https://127.0.0.1:3000/${x}`;
+export const URL_BASE = (x: string) =>
+  `https://young-gorge-50005.herokuapp.com/${x}`;
