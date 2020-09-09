@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve -o --ssl true --ssl-key F:\\proyectos\\geracion-de-certificados\\cert\\desarrollo.key --ssl-cert F:\\proyectos\\geracion-de-certificados\\cert\\desarrollo.crt --host 0.0.0.0",
+    "start": "node server.js",
+    "start-local": "ng serve -o --ssl true --ssl-key F:\\proyectos\\geracion-de-certificados\\cert\\desarrollo.key --ssl-cert F:\\proyectos\\geracion-de-certificados\\cert\\desarrollo.crt --host 0.0.0.0",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
