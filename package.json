@@ -9,14 +9,17 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "postinstall": "ngcc && ng build --prod --output-path dist"
+    "postinstall": "ngcc",
+    "heroku-postbuild": "ng build --prod"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "^10.1.0",
     "@angular/cdk": "^10.2.0",
+    "@angular/cli": "^10.1.0",
     "@angular/common": "^10.1.0",
     "@angular/compiler": "^10.1.0",
+    "@angular/compiler-cli": "^10.1.0",
     "@angular/core": "^10.1.0",
     "@angular/forms": "^10.1.0",
     "@angular/localize": "^10.1.0",
@@ -33,6 +36,7 @@
     "chart.js": "^2.8.0",
     "chartist": "^0.11.0",
     "core-js": "^2.6.9",
+    "express": "^4.17.1",
     "http-server": "^0.12.3",
     "jasmine": "^3.1.0",
     "jquery-slimscroll": "^1.3.8",
@@ -42,16 +46,16 @@
     "ngx-print": "^1.2.0-beta.5",
     "ngx-toastr": "^13.0.0",
     "node-sass": "^4.12.0",
+    "path": "^0.12.7",
     "popper.js": "^1.12.5",
     "rxjs": "^6.6.0",
     "rxjs-compat": "^6.6.0",
     "tslib": "^2.0.0",
+    "typescript": "3.9.6",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.1000.8",
-    "@angular/cli": "^10.1.0",
-    "@angular/compiler-cli": "^10.1.0",
     "@angular/language-service": "^10.1.0",
     "@types/chartist": "^0.9.46",
     "@types/jasmine": "~3.3.8",
@@ -59,6 +63,7 @@
     "@types/jquery": "^3.3.30",
     "@types/node": "^12.12.55",
     "codelyzer": "^5.1.2",
+    "enhanced-resolve": "^4.3.0",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.0.0",
@@ -69,10 +74,8 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "protractor": "~7.0.0",
     "ts-node": "~3.2.0",
-    "tslint": "~6.1.0",
-    "typescript": "3.9.6"
+    "tslint": "~6.1.0"
   },
-
   "engines": {
     "node": "14.x",
     "npm": "6.x"
