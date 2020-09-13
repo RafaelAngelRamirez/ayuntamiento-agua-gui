@@ -4,6 +4,7 @@ import { Location } from "@angular/common";
 import { IndexedDBService } from "@codice-progressio/indexed-db";
 import { Contrato } from "../../../services/contrato.service";
 import { NotificacionesService } from "../../../services/notificaciones.service";
+import { ImprimirService } from "../../../services/imprimir.service";
 
 @Component({
   selector: "app-ticket",
@@ -13,6 +14,7 @@ import { NotificacionesService } from "../../../services/notificaciones.service"
 export class TicketComponent implements OnInit {
   contrato!: Contrato;
   constructor(
+    private imprimirService: ImprimirService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private idbService: IndexedDBService,
@@ -20,7 +22,7 @@ export class TicketComponent implements OnInit {
   ) {}
 
   cargandoContrato = false;
-
+  datos: any = {};
   ngOnInit(): void {
     this.cargaContrato();
   }
@@ -38,9 +40,11 @@ export class TicketComponent implements OnInit {
       this.idbService.findById(conPara).subscribe((contrato) => {
         this.contrato = contrato as Contrato;
         this.cargandoContrato = false;
-
-        this.notiService.toast.warning("Este demo no permite la impresion");
       }, error);
     }, error);
+  }
+
+  imprimir() {
+    this.imprimirService.ticket(this.contrato);
   }
 }

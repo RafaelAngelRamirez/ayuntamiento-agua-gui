@@ -13,7 +13,6 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { LoginComponent } from "../login/login.component";
 import { NoPageFoundComponent } from "../no-page-found/no-page-found.component";
 import { RouterModule } from "@angular/router";
-import { Approutes } from "app/app-routing.module";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,

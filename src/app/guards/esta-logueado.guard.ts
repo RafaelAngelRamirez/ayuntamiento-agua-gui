@@ -34,7 +34,7 @@ export class EstaLogueadoGuard implements CanActivate {
 
     if (helper.isTokenExpired(token)) return true;
 
-    this.router.navigate(["/" + usuario.navegacionDefault]);
+    this.router.navigate(["/app" + usuario.navegacionDefault]);
 
     return false;
   }

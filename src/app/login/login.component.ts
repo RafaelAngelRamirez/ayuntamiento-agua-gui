@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
       (correcto) => {
         this.cargando = false;
         if (correcto) {
-          this.router.navigate(["/tablero"]);
+          this.router.navigate(["/app/tablero"]);
           return;
         }
       },

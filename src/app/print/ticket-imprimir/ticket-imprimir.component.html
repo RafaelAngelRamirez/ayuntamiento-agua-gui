@@ -1,0 +1,57 @@
+<div class="card-body text-center">
+    <img src="assets/images/zapotlanejo-logo.png" />
+    <br />
+    <span>H. AYUNTAMIENTO DE ZAPOTLANEJO</span> <br />
+    <span>DIRECCION DE AGUA POTABLE Y ALCANTARILLADO</span> <br />
+    <hr />
+
+    <span><b>DATOS GENERALES</b></span>
+    <hr />
+    <table class="table no-border">
+      <tbody>
+        <tr *ngFor="let kv of this.datos.generales | keyvalue">
+          <td>{{ kv.key }}:</td>
+          <td>{{ kv.value }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <span><b>DATOS DE LA LECTURA</b></span>
+    <hr />
+    <table class="table no-border">
+      <tbody>
+        <tr *ngFor="let kv of this.datos.lectura | keyvalue">
+          <td>{{ kv.key }}:</td>
+          <td>{{ kv.value }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <span><b>ESTADO DE CUENTA</b></span>
+    <hr />
+    <table class="table no-border">
+      <tbody>
+        <tr *ngFor="let kv of this.datos.cuenta | keyvalue">
+          <td>{{ kv.key }}:</td>
+          <td>{{ kv.value }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr />
+    <qrcode
+      [qrdata]="'Your data string'"
+      [width]="256"
+      [errorCorrectionLevel]="'M'"
+    ></qrcode>
+
+    <hr />
+
+    <span><b>CUIDAR EL AGUA ES MISION DE TODOS</b></span
+    ><br />
+    <p class="leyenda">
+      Sirva de realizar el pago de este comprobante a partir del siguiente
+      dia habil de la fecha que señala este recibo. Despues de 4 meses de
+      adeudo se aplicara sanción de acuerdo con el Art. 72, Fracc. IV, Inc.
+      F de la ley de ingresos municipale.s
+    </p>
+  </div>

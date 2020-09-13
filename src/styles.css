@@ -10,3 +10,13 @@
 .fa-spin {
   animation-duration: 0.5s !important;
 }
+
+@media print {
+  app-full-component > * {
+    display: none !important;
+  }
+
+  app-print-layout {
+    display: block;
+  }
+}

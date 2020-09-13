@@ -50,6 +50,6 @@ export class LecturasComponent implements OnInit {
 
   irA(contrato: Contrato) {
     let ruta = contrato.tomada ? "imprime" : "captura";
-    this.router.navigate(["lectura", ruta, contrato.Contrato]);
+    this.router.navigate(["app","lectura", ruta, contrato.Contrato]);
   }
 }

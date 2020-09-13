@@ -1,34 +1,35 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, HostListener } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
+import { ImprimirService } from "../../services/imprimir.service";
 
 @Component({
-  selector: 'app-full-layout',
-  templateUrl: './full.component.html',
-  styleUrls: ['./full.component.scss']
+  selector: "app-full-layout",
+  templateUrl: "./full.component.html",
+  styleUrls: ["./full.component.scss"],
 })
 export class FullComponent implements OnInit {
-  color = 'defaultdark';
+  color = "defaultdark";
   showSettings = false;
   showMinisidebar = false;
   showDarktheme = false;
 
-  public innerWidth: number=-1;
+  public innerWidth: number = -1;
 
   public config: PerfectScrollbarConfigInterface = {};
 
-  constructor(public router: Router) {}
+  constructor(public imprimirService: ImprimirService, public router: Router) {}
 
   ngOnInit() {
-    if (this.router.url === '/') {
-      this.router.navigate(['/dashboard/dashboard1']);
+    if (this.router.url === "/") {
+      this.router.navigate(["/dashboard/dashboard1"]);
     }
     this.handleLayout();
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event:string) {
+  @HostListener("window:resize", ["$event"])
+  onResize(event: string) {
     this.handleLayout();
   }
 
@@ -44,4 +45,5 @@ export class FullComponent implements OnInit {
       this.showMinisidebar = false;
     }
   }
+
 }

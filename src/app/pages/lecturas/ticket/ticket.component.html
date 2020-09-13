@@ -1,10 +1,32 @@
-<pre>{{ contrato | json }}</pre>
+<div class="row">
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body text-right">
+        <a
+          routerLink="/app/lectura"
+          class="btn btn-warning mr-5"
+          href="javascript:void(0)"
+          role="button"
+        >
+          <i class="fas fa-edit"></i> Tomar lectura</a
+        >
+        <a
+          class="btn btn-primary"
+          href="javascript:void(0)"
+          role="button"
+          (click)="imprimir()"
+        >
+          <i class="fas fa-print"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
 
-<a
-  routerLink="/lectura"
-  class="btn btn-primary"
-  href="javascript:void(0)"
-  role="button"
->
-  <i class="fas fa-edit"></i> Tomar lectura</a
->
+<div id="print-section" class="row ticket">
+  <div class="col-12">
+    <div class="card shadow">
+      <app-ticket-imprimir [contrato]="contrato"></app-ticket-imprimir>
+    </div>
+  </div>
+</div>

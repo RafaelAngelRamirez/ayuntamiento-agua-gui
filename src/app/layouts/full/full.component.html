@@ -5,7 +5,8 @@
   id="main-wrapper"
   [ngClass]="{
     defaultdark: color == 'defaultdark',
-    'mini-sidebar': showMinisidebar
+    'mini-sidebar': showMinisidebar,
+    'no-print': imprimirService.imprimiendo
   }"
 >
   <!-- ============================================================== -->
@@ -99,10 +100,12 @@
   <!-- ============================================================== -->
   <!-- footer -->
   <!-- ============================================================== -->
-  <footer class="footer">
-    © 2020 R-AP
-  </footer>
+  <footer class="footer">© 2020 R-AP</footer>
   <!-- ============================================================== -->
   <!-- End footer -->
   <!-- ============================================================== -->
+</div>
+
+<div class="no-print">
+  <h1>Debe mostrarse</h1>
 </div>

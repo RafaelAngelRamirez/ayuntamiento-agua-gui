@@ -1,7 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { IndexedDBService, IDBOpciones } from "@codice-progressio/indexed-db";
 import { NotificacionesService } from "./services/notificaciones.service";
 import { ContratoService } from "./services/contrato.service";
+import { ImprimirService } from "./services/imprimir.service";
+import { ActivationStart, Router, RouterOutlet } from "@angular/router";
 
 @Component({
   selector: "app-root",
@@ -9,11 +11,15 @@ import { ContratoService } from "./services/contrato.service";
   styleUrls: ["./app.component.css"],
 })
 export class AppComponent {
+  @ViewChild(RouterOutlet) outlet!: RouterOutlet;
+
   constructor(
     private dbService: IndexedDBService,
     private notiService: NotificacionesService,
     private contratoService: ContratoService,
-    private idbService: IndexedDBService
+    private idbService: IndexedDBService,
+    public imprimirService: ImprimirService,
+    private router: Router
   ) {
     let opciones = new IDBOpciones();
     opciones.nombreBD = "simapa";
@@ -21,6 +27,16 @@ export class AppComponent {
     opciones.objectStore = "contratos";
     this.dbService.inicializar(opciones).subscribe(() => {
       this.cargarContratosEnMemoria();
+    });
+
+    //Desactivamos el outlet para que no nos de error de
+    // que ya esta
+    this.router.events.subscribe((e) => {
+      console.log("hay un evento");
+      if (e instanceof ActivationStart && e.snapshot.outlet === "print") {
+        console.log("desactivando");
+        this.outlet.deactivate();
+      }
     });
   }
   cargarContratosEnMemoria() {

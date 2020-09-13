@@ -8,6 +8,8 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from '@angular/platform-browser';
 import { TicketComponent } from './ticket/ticket.component'
 
+
+
 const routes: Routes = [
   {
     path: "",
@@ -32,17 +34,21 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [LecturasComponent, LecturaCrearComponent, TicketComponent],
+  declarations: [LecturasComponent, LecturaCrearComponent],
   imports: [
     RouterModule.forChild(routes),
     FormsModule,
     // ReactiveFormsModule,
     CommonModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
+    
   ],
 })
+
+
 export class LecturasModule {
   constructor() {
     console.log("si")
   }
 }
+
