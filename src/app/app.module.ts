@@ -16,7 +16,6 @@ import { IndexedDBModule } from "@codice-progressio/indexed-db";
 import { EstatusConexionModule } from "@codice-progressio/estatus-conexion";
 import { TicketComponent } from "./pages/lecturas/ticket/ticket.component";
 import { PrintLayoutComponent } from "./print/print-layout/print-layout.component";
-import { InvoiceComponent } from "./print/invoice/invoice.component";
 import { QRCodeModule } from "angularx-qrcode";
 import { EstaLogueadoGuard } from "./guards/esta-logueado.guard";
 import { ValidaLoginGuard } from "./guards/valida-login.guard";
@@ -31,10 +30,7 @@ export const Approutes: Routes = [
     path: "print",
     outlet: "print",
     component: PrintLayoutComponent,
-    children: [
-      { path: "invoice", component: InvoiceComponent },
-      { path: "ticket", component: TicketImprimirComponent },
-    ],
+    children: [{ path: "ticket", component: TicketImprimirComponent }],
   },
   {
     path: "login",
@@ -62,7 +58,6 @@ export const Approutes: Routes = [
     AppComponent,
     TicketComponent,
     PrintLayoutComponent,
-    InvoiceComponent,
     TicketImprimirComponent,
   ],
   imports: [
