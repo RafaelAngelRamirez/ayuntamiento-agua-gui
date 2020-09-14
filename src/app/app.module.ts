@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "./app.component";
-import { SharedModule } from "./shared/shared.module";
+import { SharedModule } from './shared/shared.module'
 import { CommonModule } from "@angular/common";
 import { HttpConfigInterceptor } from "./interceptors/http-config.interceptor";
 import { ToastrModule } from "ngx-toastr";
@@ -71,6 +71,7 @@ export const Approutes: Routes = [
     IndexedDBModule,
     EstatusConexionModule,
     QRCodeModule,
+    SharedModule,
     ServiceWorkerModule.register("ngsw-worker.js", {
       enabled: environment.production,
     }),
