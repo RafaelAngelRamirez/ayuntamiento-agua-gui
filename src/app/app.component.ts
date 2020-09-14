@@ -32,9 +32,7 @@ export class AppComponent {
     //Desactivamos el outlet para que no nos de error de
     // que ya esta
     this.router.events.subscribe((e) => {
-      console.log("hay un evento");
       if (e instanceof ActivationStart && e.snapshot.outlet === "print") {
-        console.log("desactivando");
         this.outlet.deactivate();
       }
     });

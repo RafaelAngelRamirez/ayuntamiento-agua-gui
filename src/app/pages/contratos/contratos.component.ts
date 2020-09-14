@@ -111,12 +111,10 @@ export class ContratosComponent implements OnInit {
           },
 
           (_) => {
-            console.log("error", _);
             this.sincronizandoContratos = false;
             this.leyendoContratosOffline = false;
             this.buscador.enable();
-          },
-          () => console.log("completede forkJoin")
+          }
         );
       },
       (_) => {

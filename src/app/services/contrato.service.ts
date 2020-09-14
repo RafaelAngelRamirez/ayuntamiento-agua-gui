@@ -19,7 +19,6 @@ export class ContratoService {
     private idbService: IndexedDBService
   ) {
     this.estatus.online.subscribe((estaOnline) => {
-      console.log("estaOnline", estaOnline);
       if (estaOnline) this.sincronizarContratosTomadosOffline();
       this.estaOnline = estaOnline;
 
@@ -74,7 +73,6 @@ export class ContratoService {
           observables.push(this.idbService.update(c));
         });
 
-        console.log(`paraSincronizar.length`, paraSincronizar.length);
         forkJoin(observables).subscribe(
           (Parametros) => {
             subscriber.next(paraSincronizar.length);
@@ -102,7 +100,6 @@ export class ContratoService {
   }
 
   buscarPorTermino(termino: string, desde = 0, skip = 30): Contrato[] {
-    console.log(`this.contratos.length`, this.contratos.length);
     return this.contratos
       .map((x: Contrato) => {
         return {

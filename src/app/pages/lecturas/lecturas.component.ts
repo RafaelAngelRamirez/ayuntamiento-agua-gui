@@ -39,8 +39,6 @@ export class LecturasComponent implements OnInit {
       )
       .subscribe(
         (termino) => {
-          console.log(`termino`, termino);
-
           this.contratos = this.contratoService.buscarPorTermino(termino);
           this.cargando = false;
         },

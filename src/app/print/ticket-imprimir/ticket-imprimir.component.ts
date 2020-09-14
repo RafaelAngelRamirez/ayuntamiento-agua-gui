@@ -35,7 +35,6 @@ export class TicketImprimirComponent implements OnInit {
   }
 
   definirContrato(contrato = this.contrato) {
-    console.log("entro aqui");
 
     this.datos["generales"] = {
       Contrato: contrato.Contrato,

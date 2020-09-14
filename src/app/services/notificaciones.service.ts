@@ -10,7 +10,6 @@ export class NotificacionesService {
   constructor(private t: ToastrService) {}
 
   error(estatus: string, razon: string, err: any) {
-    console.log("estatus", estatus, "razon", razon);
     this.toast.error(`${estatus}: ${razon} => ${err}`);
   }
 }
