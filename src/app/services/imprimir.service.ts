@@ -10,7 +10,7 @@ export class ImprimirService {
   contrato!: Contrato;
   private _imprimiendo = false;
 
-  actualizar = new BehaviorSubject<boolean>(false);
+  actualizar = new BehaviorSubject<Contrato | undefined >(undefined);
 
   get imprimiendo() {
     return this._imprimiendo;
@@ -32,7 +32,7 @@ export class ImprimirService {
         },
       ])
       .then((algo) => {
-        this.actualizar.next(true);
+        this.actualizar.next(contrato);
         setTimeout(() => {
           window.print();
         }, 100);

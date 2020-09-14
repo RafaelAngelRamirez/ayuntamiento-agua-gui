@@ -141,5 +141,5 @@ export interface Contrato {
   // lecturas: [Lectura];
   tomada: boolean;
   sincronizada: boolean;
-  lectura: {};
+  lectura: any;
 }

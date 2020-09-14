@@ -27,7 +27,7 @@ export class UsuarioService {
   obtenerUsuario(): Usuario {
     let usuario = this.tkService.obtenerUsuario();
 
-    throw usuario;
+    return  usuario as Usuario
   }
 
   base = URL_BASE("usuario");

@@ -41,14 +41,13 @@
           ></i>
           <i
             *ngIf="contrato.sincronizada && contrato.tomada"
-            class="fas fa-cloud text-success "
+            class="fas fa-cloud text-success"
           ></i>
         </h5>
         <small class="text-muted">{{ contrato.SerieMedidor }}</small>
       </div>
       <p class="mb-1">
-        {{ contrato.Calle }} #{{ contrato.Exterior }}, {{ contrato.Colonia }},
-        {{ contrato.Poblacion }}
+        {{ contrato | domicilio }}
       </p>
       <small class="text-muted">{{ contrato.Contribuyente }}</small>
     </a>

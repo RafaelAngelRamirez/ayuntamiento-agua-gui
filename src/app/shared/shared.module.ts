@@ -55,7 +55,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FormsModule,
   ],
 })
-
 export class SharedModule {
   static forRoot(): ModuleWithProviders<SharedModule> {
     return {
@@ -65,7 +64,7 @@ export class SharedModule {
           provide: PERFECT_SCROLLBAR_CONFIG,
           useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
         },
-        DomicilioPipe
+        DomicilioPipe,
       ],
     };
   }

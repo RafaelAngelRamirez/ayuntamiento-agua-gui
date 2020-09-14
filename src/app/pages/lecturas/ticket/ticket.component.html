@@ -23,10 +23,22 @@
   </div>
 </div>
 
-<div id="print-section" class="row ticket">
+<div *ngIf="contrato; else cargando" id="print-section" class="row ticket">
   <div class="col-12">
     <div class="card shadow">
       <app-ticket-imprimir [contrato]="contrato"></app-ticket-imprimir>
     </div>
   </div>
 </div>
+
+<ng-template #cargando>
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-body text-center">
+          <h1 class="display-1"><i class="fas fa-sync fa-spin"></i></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
