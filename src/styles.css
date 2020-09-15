@@ -12,11 +12,29 @@
 }
 
 @media print {
+  @page {
+    width: 80mm;
+    height: 400mm;
+  }
+  html,
+  body {
+    width: 80mm;
+    height: 100%;
+    padding: none;
+    margin: none;
+  }
+
   app-full-component > * {
     display: none !important;
+    padding: none;
+    margin: none;
   }
 
   app-print-layout {
     display: block;
+    padding: none;
+    margin: none;
   }
+
+  /* ... the rest of the rules ... */
 }
