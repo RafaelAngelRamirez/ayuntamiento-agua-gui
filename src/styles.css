@@ -14,7 +14,7 @@
 @media print {
   @page {
     width: 80mm;
-    height: 400mm;
+    height: 600mm;
   }
   html,
   body {
@@ -23,18 +23,5 @@
     padding: none;
     margin: none;
   }
-
-  app-full-component > * {
-    display: none !important;
-    padding: none;
-    margin: none;
-  }
-
-  app-ticket-imprimir {
-    display: block;
-    padding: none;
-    margin: none;
-  }
-
   /* ... the rest of the rules ... */
 }

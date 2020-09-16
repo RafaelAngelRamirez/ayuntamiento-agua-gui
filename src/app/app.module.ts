@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { RouterModule, Routes } from "@angular/router";
 import { AppComponent } from "./app.component";
-import { SharedModule } from './shared/shared.module'
+import { SharedModule } from "./shared/shared.module";
 import { CommonModule } from "@angular/common";
 import { HttpConfigInterceptor } from "./interceptors/http-config.interceptor";
 import { ToastrModule } from "ngx-toastr";
@@ -26,12 +26,7 @@ import { TicketImprimirComponent } from "./print/ticket-imprimir/ticket-imprimir
 
 export const Approutes: Routes = [
   //Imprecion
-  {
-    path: "print",
-    outlet: "print",
-    component: PrintLayoutComponent,
-    children: [{ path: "ticket", component: TicketImprimirComponent }],
-  },
+  { path: "ticket", component: TicketImprimirComponent },
   {
     path: "login",
     component: LoginComponent,

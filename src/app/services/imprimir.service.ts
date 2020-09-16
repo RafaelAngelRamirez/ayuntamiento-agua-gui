@@ -10,7 +10,7 @@ export class ImprimirService {
   contrato!: Contrato;
   private _imprimiendo = false;
 
-  actualizar = new BehaviorSubject<Contrato | undefined >(undefined);
+  actualizar = new BehaviorSubject<Contrato | undefined>(undefined);
 
   get imprimiendo() {
     return this._imprimiendo;
@@ -22,32 +22,16 @@ export class ImprimirService {
     this._imprimiendo = true;
     this.contrato = contrato;
 
-    this.router
-      .navigate([
-        "/",
-        {
-          outlets: {
-            print: ["print", "ticket"],
-          },
-        },
-      ])
-      .then((algo) => {
-        this.actualizar.next(contrato);
-        setTimeout(() => {
-          window.print();
-        }, 100);
-      });
+    this.router.navigate(["/ticket"]).then((algo) => {
+      this.actualizar.next(contrato);
+      setTimeout(() => {
+        window.print();
+      }, 100);
+    });
 
     window.addEventListener("afterprint", () => {
       this._imprimiendo = false;
-      this.router.navigate([
-        "/",
-        {
-          outlets: {
-            print: ["print"],
-          },
-        },
-      ]);
+      this.router.navigate(["/app/lectura"]);
     });
   }
 }
