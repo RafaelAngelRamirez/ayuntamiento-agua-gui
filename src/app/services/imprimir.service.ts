@@ -24,14 +24,6 @@ export class ImprimirService {
 
     this.router.navigate(["/ticket"]).then((algo) => {
       this.actualizar.next(contrato);
-      setTimeout(() => {
-        window.print();
-      }, 100);
-    });
-
-    window.addEventListener("afterprint", () => {
-      this._imprimiendo = false;
-      this.router.navigate(["/app/lectura"]);
     });
   }
 }

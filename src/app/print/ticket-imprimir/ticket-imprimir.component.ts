@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
+import { Router } from "@angular/router"
 import { Contrato } from "app/services/contrato.service";
 import { ImprimirService } from "app/services/imprimir.service";
 import { DomicilioPipe } from "../../pipes/domicilio.pipe";
@@ -25,7 +26,8 @@ export class TicketImprimirComponent implements OnInit {
   constructor(
     private usuarioService: UsuarioService,
     private domicilioPipe: DomicilioPipe,
-    private imprimirService: ImprimirService
+    private imprimirService: ImprimirService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +37,6 @@ export class TicketImprimirComponent implements OnInit {
   }
 
   definirContrato(contrato = this.contrato) {
-
     this.datos["generales"] = {
       Contrato: contrato.Contrato,
       Contribuyente: contrato.Contribuyente,
@@ -47,7 +48,6 @@ export class TicketImprimirComponent implements OnInit {
       ConsumoPromedio: contrato.Promedio,
       Lecturista: this.usuarioService.obtenerUsuario().nombre,
     };
-
 
     this.datos["lectura"] = {
       "Periodo anterior": contrato.PeriodoAnterior,
@@ -66,6 +66,9 @@ export class TicketImprimirComponent implements OnInit {
       Importe: "SIN DEFINIR Importe ",
       "Saldo a favor": "SIN DEFINIR Saldo a favor ",
     };
+  }
 
+  retornar() {
+    this.router.navigate(["/app/lectura"]);
   }
 }
