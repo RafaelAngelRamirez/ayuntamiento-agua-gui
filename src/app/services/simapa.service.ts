@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { URL_BASE } from "../../environments/config.prod";
+import { URL_BASE } from "../../environments/config";
 import { catchError, map } from "rxjs/operators";
 import { throwError, forkJoin } from "rxjs";
 import { Contrato, ContratoService } from "./contrato.service";

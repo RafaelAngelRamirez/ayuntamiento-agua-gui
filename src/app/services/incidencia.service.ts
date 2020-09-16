@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { URL_BASE } from "../../environments/config.prod";
+import { URL_BASE } from "../../environments/config";
 import { HttpClient } from "@angular/common/http";
 import { catchError } from "rxjs/operators";
 import { throwError } from "rxjs";
