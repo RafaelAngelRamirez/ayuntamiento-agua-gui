@@ -23,10 +23,21 @@ import { FullComponent } from "./layouts/full/full.component";
 import { LoginComponent } from "./login/login.component";
 import { TicketImprimirComponent } from "./print/ticket-imprimir/ticket-imprimir.component";
 // import { Approutes } from "./app-routing.module"
+import { PublicComponent } from "./public/public.component";
 
 export const Approutes: Routes = [
+  {
+    path: "public",
+    component: PublicComponent,
+    loadChildren: () =>
+      import("./public/public.module").then((m) => m.PublicModule),
+  },
   //Imprecion
-  { path: "ticket", component: TicketImprimirComponent },
+  {
+    path: "ticket",
+    canActivate: [ValidaLoginGuard],
+    component: TicketImprimirComponent,
+  },
   {
     path: "login",
     component: LoginComponent,
@@ -71,6 +82,7 @@ export const Approutes: Routes = [
       enabled: environment.production,
     }),
   ],
+  exports: [RouterModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

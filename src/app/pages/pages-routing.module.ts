@@ -1,9 +1,4 @@
-import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { FullComponent } from "../layouts/full/full.component";
-import { UsuarioComponent } from "./usuario/usuario.component";
-import { ContratosComponent } from "./contratos/contratos.component";
+import { Routes } from "@angular/router";
 
 export const Pagesroutes: Routes = [
   { path: "", redirectTo: "/tablero", pathMatch: "full" },
