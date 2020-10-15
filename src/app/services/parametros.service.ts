@@ -13,4 +13,10 @@ export class ParametrosService {
   actualizarPermisosSuperUsuario() {
     return this.http.put(this.base.concat("/actualizar-permisos"), null);
   }
+
+  obtenerUsuariosSimapa() {
+    return this.http.get<any[]>(this.base.concat("/lecturistas"));
+  }
+
+  
 }
