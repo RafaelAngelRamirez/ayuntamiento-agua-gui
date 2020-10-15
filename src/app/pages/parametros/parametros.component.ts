@@ -65,10 +65,12 @@ export class ParametrosComponent implements OnInit {
     );
   }
 
-  detectarHeroku() {
-    this.parametrosService.detectarHeroku().subscribe((_) => {
-      this.notiService.toast.correcto("Heroku enviado");
 
+  resultadoHeroku = ""
+  detectarHeroku(url:string) {
+    this.parametrosService.detectarHeroku(url).subscribe((_) => {
+      this.notiService.toast.correcto("Heroku enviado");
+      this.resultadoHeroku = _
       console.log(_);
     });
   }

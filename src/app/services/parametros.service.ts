@@ -19,8 +19,8 @@ export class ParametrosService {
   }
 
   
-  detectarHeroku(){
-    return this.http.get(this.base.concat("/detectarHeroku"))
+  detectarHeroku(url:string){
+    return this.http.post<any>(this.base.concat("/detectarHeroku"), {url:url})
   }
 
 

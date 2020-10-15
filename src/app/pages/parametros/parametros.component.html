@@ -15,16 +15,28 @@
         </button>
  
         <a
-          (click)="detectarHeroku()"
+          (click)="detectarHeroku(heroku.value)"
           class="btn btn-primary"
           href="javascript:void(0)"
           role="button"
           >Detectar heroku</a
         >
+
+        <div class="form-group">
+          <input 
+          #heroku
+          type="text"
+            class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
+          <small id="helpId" class="form-text text-muted">Url para pedir</small>
+        </div>
+
       </div>
     </div>
   </div>
 </div>
+
+
+<pre>{{resultadoHeroku | json }}</pre>
 
 <div class="row">
   <div class="col-6">
