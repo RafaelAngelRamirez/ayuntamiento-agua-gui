@@ -1,15 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ImprimirService } from './imprimir.service';
+import { ZebraService } from './zebra.service';
 
-
-
-describe('ImprimirService', () => {
-  let service: ImprimirService;
+describe('ZebraService', () => {
+  let service: ZebraService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ImprimirService);
+    service = TestBed.inject(ZebraService);
   });
 
   it('should be created', () => {

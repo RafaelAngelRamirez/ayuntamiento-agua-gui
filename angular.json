@@ -29,7 +29,9 @@
               "src/assets/scss/style.scss",
               "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/zebra.js"
+            ]
           },
           "configurations": {
             "production": {

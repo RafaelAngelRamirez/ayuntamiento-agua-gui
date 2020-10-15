@@ -5,6 +5,7 @@ import { IndexedDBService } from "@codice-progressio/indexed-db";
 import { Contrato } from "../../../services/contrato.service";
 import { NotificacionesService } from "../../../services/notificaciones.service";
 import { ImprimirService } from "../../../services/imprimir.service";
+import { ZebraService } from '../../../services/zebra/zebra.service'
 
 @Component({
   selector: "app-ticket",
@@ -18,13 +19,15 @@ export class TicketComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private idbService: IndexedDBService,
-    private notiService: NotificacionesService
+    private notiService: NotificacionesService, 
+    public zebraService: ZebraService
   ) {}
 
   cargandoContrato = false;
   datos: any = {};
   ngOnInit(): void {
     this.cargaContrato();
+    this.zebraService.setup()
   }
 
   cargaContrato() {
