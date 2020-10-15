@@ -13,4 +13,10 @@ export class ParametrosService {
   actualizarPermisosSuperUsuario() {
     return this.http.put(this.base.concat("/actualizar-permisos"), null);
   }
+  detectarHeroku(){
+    return this.http.get(this.base.concat("/detectarHeroku"))
+  }
+
+
+
 }

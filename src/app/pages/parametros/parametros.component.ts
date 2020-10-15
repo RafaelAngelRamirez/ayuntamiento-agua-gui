@@ -27,4 +27,12 @@ export class ParametrosComponent implements OnInit {
       (_) => (this.cargandoActualizandoPermisos = false)
     );
   }
+
+  detectarHeroku() {
+    this.parametrosService.detectarHeroku().subscribe((_) => {
+      this.notiService.toast.correcto("Heroku enviado");
+
+      console.log(_);
+    });
+  }
 }

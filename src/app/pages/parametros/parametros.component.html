@@ -9,10 +9,18 @@
         >
           <i
             *ngIf="cargandoActualizandoPermisos"
-            class="fas fa-sync fa-spin"
+            class="fas fa-sync fa-spin mr-3"
           ></i>
           Actualizar permisos Super admin
         </button>
+ 
+        <a
+          (click)="detectarHeroku()"
+          class="btn btn-primary"
+          href="javascript:void(0)"
+          role="button"
+          >Detectar heroku</a
+        >
       </div>
     </div>
   </div>
