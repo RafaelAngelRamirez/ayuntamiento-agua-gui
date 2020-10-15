@@ -22,16 +22,9 @@ import { ValidaLoginGuard } from "./guards/valida-login.guard";
 import { FullComponent } from "./layouts/full/full.component";
 import { LoginComponent } from "./login/login.component";
 import { TicketImprimirComponent } from "./print/ticket-imprimir/ticket-imprimir.component";
-// import { Approutes } from "./app-routing.module"
-import { PublicComponent } from "./public/public.component";
+import { CiudadanosComponent } from "./ciudadanos/ciudadanos.component";
 
 export const Approutes: Routes = [
-  {
-    path: "public",
-    component: PublicComponent,
-    loadChildren: () =>
-      import("./public/public.module").then((m) => m.PublicModule),
-  },
   //Imprecion
   {
     path: "ticket",
@@ -57,6 +50,12 @@ export const Approutes: Routes = [
     path: "",
     redirectTo: "/app/tablero",
     pathMatch: "full",
+  },
+  {
+    path: "ciudadanos",
+    component: CiudadanosComponent,
+    loadChildren: () =>
+      import("./ciudadanos/ciudadanos.module").then((m) => m.CiudadanosModule),
   },
 ];
 @NgModule({

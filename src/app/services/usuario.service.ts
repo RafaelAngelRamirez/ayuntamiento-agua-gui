@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { LocalStorageService } from "./local-storage.service";
-import { Usuario } from "../models/usuario.model";
+import { Usuario, Lecturista } from "../models/usuario.model";
 import { TokenService } from "./token.service";
 import { LoginService } from "./login.service";
 import { HttpClient } from "@angular/common/http";
 import { URL_BASE } from "../../environments/config";
-import { catchError } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 import { throwError } from "rxjs";
 
 @Injectable({
@@ -27,7 +27,7 @@ export class UsuarioService {
   obtenerUsuario(): Usuario {
     let usuario = this.tkService.obtenerUsuario();
 
-    return  usuario as Usuario
+    return usuario as Usuario;
   }
 
   base = URL_BASE("usuario");
@@ -38,5 +38,22 @@ export class UsuarioService {
         return throwError(x);
       })
     );
+  }
+
+  guardarLecturistaEnUsuario(idUsuario: string, idLecturista: string) {
+    return this.http
+      .put<Usuario>(this.base.concat("/agregarLecturista"), {
+        idUsuario,
+        idLecturista,
+      })
+      .pipe(
+        map((x) => {
+          x.lecturista = x.lecturista as Lecturista;
+          return x;
+        }),
+        catchError((x) => {
+          return throwError(x);
+        })
+      );
   }
 }
