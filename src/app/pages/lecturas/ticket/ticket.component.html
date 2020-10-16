@@ -1,17 +1,24 @@
 <div class="row">
   <div class="col-12">
     <div class="card shadow">
-      <div class="card-body text-right">
-        Impresora activa: {{ this.zebraService.selected_device?.name }}
-
+      <div
+        class="card-body d-md-flex justify-content-md-between align-items-md-center"
+      >
         <a
           routerLink="/app/lectura"
           class="btn btn-warning mr-5"
           href="javascript:void(0)"
           role="button"
         >
-          <i class="fas fa-edit"></i> Tomar lectura</a
+          <i class="fas fa-arrow-circle-left"></i> Regresar a lecturas</a
         >
+        Impresora activa:
+        {{
+          this.zebraService.selected_device?.name
+            ? this.zebraService.selected_device?.name
+            : "NO DISPONIBLE"
+        }}
+
         <a
           class="btn btn-primary"
           href="javascript:void(0)"
