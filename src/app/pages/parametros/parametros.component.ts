@@ -4,6 +4,7 @@ import { NotificacionesService } from "../../services/notificaciones.service";
 import { Usuario, Lecturista } from "../../models/usuario.model";
 import { UsuarioService } from "../../services/usuario.service";
 import { FormControl } from "@angular/forms";
+import { SimapaService } from "../../services/simapa.service";
 
 @Component({
   selector: "app-parametros",
@@ -12,6 +13,7 @@ import { FormControl } from "@angular/forms";
 })
 export class ParametrosComponent implements OnInit {
   constructor(
+    private simapaService: SimapaService,
     private notiService: NotificacionesService,
     private parametrosService: ParametrosService,
     private usuarioService: UsuarioService
@@ -65,13 +67,33 @@ export class ParametrosComponent implements OnInit {
     );
   }
 
+  sincronizandoParametros = false;
 
-  resultadoHeroku = ""
-  detectarHeroku(url:string) {
-    this.parametrosService.detectarHeroku(url).subscribe((_) => {
-      this.notiService.toast.correcto("Heroku enviado");
-      this.resultadoHeroku = _
-      console.log(_);
-    });
+  sincronizarParametros() {
+    this.sincronizandoParametros = true;
+
+    this.simapaService.sincronizarParametros().subscribe(
+      (resultado) => {
+        this.cargarUsuariosSimapa();
+        this.sincronizandoParametros = false;
+        this.notiService.toast.correcto(
+          "Se sincronizaron los datos correctamente"
+        );
+      },
+      () => {
+        this.sincronizandoParametros = false;
+      }
+    );
+  }
+
+  sincronizandoContratos = false;
+  sincronizarContratos() {
+    this.sincronizandoContratos = true
+    this.simapaService.sincronizarContratos().subscribe((resultado:any) => {
+      this.sincronizandoContratos = false;
+      this.notiService.toast.correcto(
+        "Contatos sincronizados: " + resultado.total
+      );
+    }, ()=>this.sincronizandoContratos = false );
   }
 }

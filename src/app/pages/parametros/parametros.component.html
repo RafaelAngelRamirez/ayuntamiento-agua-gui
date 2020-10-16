@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-6">
+  <div class="col-auto">
     <div class="card shadow">
       <div class="card-body">
         <button
@@ -13,33 +13,48 @@
           ></i>
           Actualizar permisos Super admin
         </button>
- 
-        <a
-          (click)="detectarHeroku(heroku.value)"
-          class="btn btn-primary"
-          href="javascript:void(0)"
-          role="button"
-          >Detectar heroku</a
-        >
-
-        <div class="form-group">
-          <input 
-          #heroku
-          type="text"
-            class="form-control" name="" id="" aria-describedby="helpId" placeholder="">
-          <small id="helpId" class="form-text text-muted">Url para pedir</small>
-        </div>
-
       </div>
     </div>
   </div>
-</div>
+
+  <div class="col-auto">
+    <div class="card shadow">
+      <div class="card-body">
+        <button
+          (click)="sincronizarParametros()"
+          class="btn btn-primary"
+          [disabled]="sincronizandoParametros"
+        >
+          <i
+            *ngIf="sincronizandoParametros"
+            class="fas fa-sync fa-spin mr-3"
+          ></i>
+          Sincronizar parametros
+        </button>
+      </div>
+    </div>
+  </div>
 
 
-<pre>{{resultadoHeroku | json }}</pre>
+  <div class="col-auto">
+    <div class="card shadow">
+      <div class="card-body">
+        <button
+          (click)="sincronizarContratos()"
+          class="btn btn-primary"
+          [disabled]="sincronizandoContratos"
+        >
+          <i
+            *ngIf="sincronizandoContratos"
+            class="fas fa-sync fa-spin mr-3"
+          ></i>
+          Sincronizar contratos
+        </button>
+      </div>
+    </div>
+  </div>
 
-<div class="row">
-  <div class="col-6">
+  <div class="col-auto">
     <div class="card shadow">
       <div class="card-body">
         <h1>Lecturistas SIMAPA</h1>

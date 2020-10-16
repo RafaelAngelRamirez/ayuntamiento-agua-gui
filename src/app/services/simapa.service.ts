@@ -5,6 +5,7 @@ import { catchError, map } from "rxjs/operators";
 import { throwError, forkJoin } from "rxjs";
 import { Contrato, ContratoService } from "./contrato.service";
 import { IndexedDBService } from "@codice-progressio/indexed-db";
+import { NotificacionesService } from "./notificaciones.service";
 
 @Injectable({
   providedIn: "root",
@@ -13,6 +14,7 @@ export class SimapaService {
   base = URL_BASE("simapa");
 
   constructor(
+    private notiService: NotificacionesService,
     private http: HttpClient,
     private contratoService: ContratoService,
     private idbService: IndexedDBService
@@ -24,15 +26,39 @@ export class SimapaService {
       .pipe(catchError((_) => throwError(_)));
   }
 
-  sincronizar() {
-    return this.http.get<Contrato[]>(this.base.concat("/sincronizar/contratos")).pipe(
-      map((x) => {
-        this.contratoService.contratos = x;
-        return forkJoin(x.map((contrato) => this.idbService.save(contrato)));
-      }),
+  /**
+   *Sincroniza los datos desde simapa sql server. Es necesario primero
+   * sinronizar los parametros para obtener los lecturistas.
+   *
+   * @returns
+   * @memberof SimapaService
+   */
+  sincronizarContratos() {
+    return this.http
+      .put<Contrato[]>(this.base.concat("/sincronizar/contratos"), null)
+      .pipe(catchError((x) => throwError(x)));
+  }
 
-      map((r) => this.contratoService.contratos),
-      catchError((x) => throwError(x))
-    );
+  /**
+   *Sincroniza todos los parametros desde simapa sql server.
+   * Incidencias
+   * lecturistas
+   * Tarifas
+   * Vigencias
+   * Periodos
+   *
+   *
+   * @returns
+   * @memberof SimapaService
+   */
+  sincronizarParametros() {
+    return this.http
+      .put<any>(this.base.concat("/sincronizar/parametros"), null)
+      .pipe(
+        catchError((x) => {
+          this.notiService.error("500", "Algo malo paso", x);
+          return throwError(x);
+        })
+      );
   }
 }

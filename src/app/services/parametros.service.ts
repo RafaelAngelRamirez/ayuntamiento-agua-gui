@@ -17,12 +17,4 @@ export class ParametrosService {
   obtenerUsuariosSimapa() {
     return this.http.get<any[]>(this.base.concat("/lecturistas"));
   }
-
-  
-  detectarHeroku(url:string){
-    return this.http.post<any>(this.base.concat("/detectarHeroku"), {url:url})
-  }
-
-
-
 }
