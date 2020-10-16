@@ -147,7 +147,7 @@ export class LecturaCrearComponent implements OnInit {
               );
 
               this.router.navigate([
-                "/lectura/imprime",
+                "/app/lectura/imprime",
                 this.contrato.Contrato,
               ]);
             },
@@ -158,7 +158,7 @@ export class LecturaCrearComponent implements OnInit {
         } else {
           // Si no hay conexion continuamos.
           this.notiService.toast.info("Lectura en espera de conexion");
-          this.router.navigate(["/lectura/imprime", this.contrato.Contrato]);
+          this.router.navigate(["/app/lectura/imprime", this.contrato.Contrato]);
         }
       },
       () => (this.guardandoLectura = false)

@@ -26,10 +26,12 @@
   </div>
 </div>
 
+<pre>{{contrato | json }}</pre>
+
 <div class="row m-0 p-0">
   <div class="col-12">
     <form *ngIf="formulario" [formGroup]="formulario">
-      <div class="form-group">
+      <div class="form-group mt-5">
         <input
           formControlName="LecturaActual"
           type="number"
