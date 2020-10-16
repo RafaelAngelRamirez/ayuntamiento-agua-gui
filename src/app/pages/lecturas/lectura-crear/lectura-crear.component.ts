@@ -56,6 +56,11 @@ export class LecturaCrearComponent implements OnInit {
         this.contrato = contrato as Contrato;
         this.cargandoContrato = false;
         this.crearFormulario(this.contrato);
+
+        setTimeout(() => {
+          console.log("entro");
+          document.getElementById("lecturaActual")?.focus();
+        }, 100);
       }, error);
     }, error);
   }
@@ -72,6 +77,7 @@ export class LecturaCrearComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
   crearFormulario(contrato: Contrato) {
     this.formulario = new FormGroup({
       Contrato: new FormControl(),
@@ -106,7 +112,7 @@ export class LecturaCrearComponent implements OnInit {
       return;
     }
     //Esto es para idb, no para la api
-    this.contrato.tomada = true
+    this.contrato.tomada = true;
     this.contrato.lectura = model;
 
     model.Contrato = this.contrato.Contrato;
@@ -158,7 +164,10 @@ export class LecturaCrearComponent implements OnInit {
         } else {
           // Si no hay conexion continuamos.
           this.notiService.toast.info("Lectura en espera de conexion");
-          this.router.navigate(["/app/lectura/imprime", this.contrato.Contrato]);
+          this.router.navigate([
+            "/app/lectura/imprime",
+            this.contrato.Contrato,
+          ]);
         }
       },
       () => (this.guardandoLectura = false)
