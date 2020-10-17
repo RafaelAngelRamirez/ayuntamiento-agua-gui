@@ -28,6 +28,11 @@ export const Pagesroutes: Routes = [
       import("./parametros/parametros.module").then((m) => m.ParametrosModule),
   },
   {
+    path: "reportes",
+    loadChildren: () =>
+      import("./reportes/reportes.module").then((m) => m.ReportesModule),
+  },
+  {
     path: "component",
     loadChildren: () =>
       import("../component/component.module").then((m) => m.ComponentsModule),

@@ -61,6 +61,16 @@ export const ROUTES: RouteInfo[] = [
     extralink: false,
     submenu: [],
   },
+  {
+    path: "/reportes",
+    title: "Reportes",
+    icon: "fas fa-chart-line",
+    class: "",
+    label: "",
+    labelClass: "",
+    extralink: false,
+    submenu: [],
+  },
   // {
   //   path: "",
   //   title: "UI Components",
