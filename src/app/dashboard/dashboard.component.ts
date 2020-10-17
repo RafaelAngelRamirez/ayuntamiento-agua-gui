@@ -1,10 +1,12 @@
+
 import { Component, AfterViewInit } from "@angular/core";
+import { GpsService } from "../services/gps.service";
 @Component({
   templateUrl: "./dashboard.component.html",
 })
 export class DashboardComponent implements AfterViewInit {
   subtitle: string;
-  constructor() {
+  constructor(public gpsService: GpsService) {
     this.subtitle = "This is some text within a card block.";
   }
 
