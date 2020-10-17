@@ -5,8 +5,28 @@ import { NotificacionesService } from "./notificaciones.service";
   providedIn: "root",
 })
 export class GpsService {
+  /**
+   *Callback que genera una url compatible con google maps para abrir
+   la ubicacion que se le pase como parametro
+   *
+   * @memberof GpsService
+   */
   maps = (latitude: number, longitude: number) => {
     return `https://www.google.com.mx/maps/dir//${latitude},${longitude}/@${latitude},${longitude},18z`;
+  };
+
+  /**
+   *Estructura para usar en caso de que se haya desactivado el gps
+   Usar siempre que se obtenga la ubicacion. 
+   *
+   * @memberof GpsService
+   */
+  errorFATAL = (err: errorFATAL) => {
+    let error = err.err as PositionError;
+    if (error.PERMISSION_DENIED)
+      this.notiService.toast.error(
+        "Es necesario que des permisos de ubicacion para que la aplicacion funcione correctamente. "
+      );
   };
 
   constructor(private notiService: NotificacionesService) {
@@ -15,13 +35,7 @@ export class GpsService {
         .then(() => {
           this.notiService.toast.correcto("GPS habilitado");
         })
-        .catch((err) => {
-          let error = err.err as PositionError;
-          if (error.PERMISSION_DENIED)
-            this.notiService.toast.error(
-              "Es necesario que des permisos de ubicacion para que la aplicacion funcione correctamente. "
-            );
-        });
+        .catch(this.errorFATAL);
     } else {
       this.notiService.toast.error(
         "La funcionalidad de la aplicación estará limitada mientras no se habilite el GPS"
@@ -29,8 +43,12 @@ export class GpsService {
     }
   }
 
-  thisGPSOn() {}
-
+  /**
+   *Retorna la posicion actual sin hacer ningunga combprobacion sobre el estado del gps. Usuar el catch de esta promesa con `this.errorFATALgps`
+   *
+   * @returns {Promise<Position>}
+   * @memberof GpsService
+   */
   findMe(): Promise<Position> {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
@@ -45,6 +63,14 @@ export class GpsService {
     });
   }
 
+  /**
+   *Retorna una url valida
+   *
+   * @param {number} latitude
+   * @param {number} longitud
+   * @returns
+   * @memberof GpsService
+   */
   openGoogleMaps(latitude: number, longitud: number) {
     return this.maps(latitude, longitud);
   }
@@ -52,4 +78,9 @@ export class GpsService {
   private geolocationExist(): boolean {
     return !!navigator.geolocation;
   }
+}
+
+export interface errorFATAL {
+  msj: string;
+  err: PositionError;
 }

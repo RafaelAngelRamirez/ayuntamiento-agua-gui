@@ -139,4 +139,7 @@ export interface Contrato {
   tomada: boolean;
   sincronizada: boolean;
   lectura: any;
+
+  latitud: number;
+  longitud: number;
 }
