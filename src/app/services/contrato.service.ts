@@ -138,8 +138,29 @@ export interface Contrato {
   // lecturas: [Lectura];
   tomada: boolean;
   sincronizada: boolean;
-  lectura: any;
+  lectura: Lectura;
 
+  latitud: number;
+  longitud: number;
+}
+
+export interface Lectura {
+  Contrato: string;
+  Vigencia: string;
+  Periodo: string;
+  IdLecturista: string;
+  IdRuta: string;
+  FechaLectura: Date; // 2015-09-07T00:00:00-05:00
+  HoraLectura: Date; // 11:32:51
+  LecturaActual: number;
+  IdTarifa: string;
+  IdImpedimento: string;
+  IdIncidencia: string;
+  ConsumoMts3: number;
+  Mts3Cobrados: number;
+  Observaciones: string;
+  IdDispositivo: string;
+  Estado: string;
   latitud: number;
   longitud: number;
 }
