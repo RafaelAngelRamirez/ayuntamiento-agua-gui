@@ -30,7 +30,7 @@
     "@angular/service-worker": "^10.1.0",
     "@auth0/angular-jwt": "^5.0.1",
     "@codice-progressio/estatus-conexion": "0.0.2",
-    "@codice-progressio/indexed-db": "0.0.7",
+    "@codice-progressio/indexed-db": "^0.1.1",
     "@codice-progressio/reactive-error-handler": "0.0.2",
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "angularx-qrcode": "^10.0.10",
