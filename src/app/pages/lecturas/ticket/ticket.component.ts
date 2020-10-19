@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
-import { IndexedDBService } from "@codice-progressio/indexed-db";
-import { Contrato } from "../../../services/contrato.service";
+import { Contrato, ContratoService } from "../../../services/contrato.service";
 import { NotificacionesService } from "../../../services/notificaciones.service";
 import { ImprimirService } from "../../../services/imprimir.service";
-import { ZebraService } from '../../../services/zebra/zebra.service'
+import { ZebraService } from "../../../services/zebra/zebra.service";
+import { IndexedDbService } from "../../../services/offline/indexed-db.service";
 
 @Component({
   selector: "app-ticket",
@@ -15,11 +15,10 @@ import { ZebraService } from '../../../services/zebra/zebra.service'
 export class TicketComponent implements OnInit {
   contrato!: Contrato;
   constructor(
+    private contratoService: ContratoService,
     private imprimirService: ImprimirService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
-    private idbService: IndexedDBService,
-    private notiService: NotificacionesService, 
     public zebraService: ZebraService
   ) {}
 
@@ -27,7 +26,7 @@ export class TicketComponent implements OnInit {
   datos: any = {};
   ngOnInit(): void {
     this.cargaContrato();
-    this.zebraService.setup()
+    this.zebraService.setup();
   }
 
   cargaContrato() {
@@ -40,7 +39,7 @@ export class TicketComponent implements OnInit {
       let conPara: string = dato.get("contrato") || "";
       this.cargandoContrato = true;
 
-      this.idbService.findById(conPara).subscribe((contrato) => {
+      this.contratoService.offline.findById(conPara).subscribe((contrato) => {
         this.contrato = contrato as Contrato;
         this.cargandoContrato = false;
       }, error);

@@ -13,8 +13,7 @@ import { FormControl } from "@angular/forms";
 export class ContratosComponent implements OnInit {
   constructor(
     private notiService: NotificacionesService,
-    private contratoService: ContratoService,
-    private idbService: IndexedDBService
+    private contratoService: ContratoService
   ) {}
 
   contratos: Contrato[] = [];
@@ -49,7 +48,7 @@ export class ContratosComponent implements OnInit {
     this.leyendoContratosOffline = true;
     this.buscador.disable();
 
-    this.idbService.findAll().subscribe(
+    this.contratoService.offline.findAll().subscribe(
       (datos) => {
         if (datos.length === 0) {
           this.sincronizar();
@@ -99,7 +98,9 @@ export class ContratosComponent implements OnInit {
           this.notiService.toast.warning("No hay contratos para sincronizar");
           return;
         }
-        forkJoin(contratos.map((c) => this.idbService.update(c))).subscribe(
+        forkJoin(
+          contratos.map((c) => this.contratoService.offline.update(c))
+        ).subscribe(
           () => {
             this.sincronizandoContratos = false;
             this.leyendoContratosOffline = false;

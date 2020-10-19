@@ -22,11 +22,13 @@ export class GpsService {
    * @memberof GpsService
    */
   errorFATAL = (err: errorFATAL) => {
+    console.log("el error", err)
     let error = err.err as PositionError;
-    if (error.PERMISSION_DENIED)
+    if (error?.PERMISSION_DENIED === 1)
       this.notiService.toast.error(
         "Es necesario que des permisos de ubicacion para que la aplicacion funcione correctamente. "
       );
+
   };
 
   constructor(private notiService: NotificacionesService) {

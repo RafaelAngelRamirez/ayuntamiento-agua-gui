@@ -1,9 +1,9 @@
 import { Component, ViewChild } from "@angular/core";
-import { IndexedDBService, IDBOpciones } from "@codice-progressio/indexed-db";
 import { NotificacionesService } from "./services/notificaciones.service";
 import { ContratoService } from "./services/contrato.service";
 import { ImprimirService } from "./services/imprimir.service";
 import { ActivationStart, Router, RouterOutlet } from "@angular/router";
+import { IndexedDbService } from "./services/offline/indexed-db.service";
 
 @Component({
   selector: "app-root",
@@ -14,21 +14,12 @@ export class AppComponent {
   @ViewChild(RouterOutlet) outlet!: RouterOutlet;
 
   constructor(
-    private dbService: IndexedDBService,
     private notiService: NotificacionesService,
     private contratoService: ContratoService,
-    private idbService: IndexedDBService,
     public imprimirService: ImprimirService,
-    private router: Router
+    private router: Router,
+    private idbService: IndexedDbService
   ) {
-    let opciones = new IDBOpciones();
-    opciones.nombreBD = "simapa";
-    opciones.keyPath = "Contrato";
-    opciones.objectStore = "contratos";
-    this.dbService.inicializar(opciones).subscribe(() => {
-      this.cargarContratosEnMemoria();
-    });
-
     //Desactivamos el outlet para que no nos de error de
     // que ya esta
     this.router.events.subscribe((e) => {
@@ -36,9 +27,13 @@ export class AppComponent {
         this.outlet.deactivate();
       }
     });
+
+    this.idbService.inicializar().subscribe(() => {
+      this.cargarContratosEnMemoria();
+    });
   }
   cargarContratosEnMemoria() {
-    this.idbService.findAll().subscribe(
+    this.contratoService.offline.findAll().subscribe(
       (datos) => (this.contratoService.contratos = datos),
       (_) =>
         this.notiService.toast.error(

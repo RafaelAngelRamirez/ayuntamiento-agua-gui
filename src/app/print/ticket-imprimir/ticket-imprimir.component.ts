@@ -4,6 +4,7 @@ import { Contrato } from "app/services/contrato.service";
 import { ImprimirService } from "app/services/imprimir.service";
 import { DomicilioPipe } from "../../pipes/domicilio.pipe";
 import { UsuarioService } from "../../services/usuario.service";
+import { ParametrosService } from '../../services/parametros.service'
 
 @Component({
   selector: "app-ticket-imprimir",
@@ -24,6 +25,7 @@ export class TicketImprimirComponent implements OnInit {
   datos: any = {};
 
   constructor(
+    private parametrosSerivce:ParametrosService,
     private usuarioService: UsuarioService,
     private domicilioPipe: DomicilioPipe,
     private imprimirService: ImprimirService,
@@ -52,8 +54,8 @@ export class TicketImprimirComponent implements OnInit {
     this.datos["lectura"] = {
       "Periodo anterior": contrato.PeriodoAnterior,
       "Lectura anterior": contrato.LecturaAnterior,
-      "Periodo actual": "SIN DEFINIR PERIODO ACTUAL",
-      "Lectura actual": contrato.lectura?.lectura,
+      "Periodo actual": this.parametrosSerivce.obtenerPeriodoActual(),
+      "Lectura actual": contrato.lectura.LecturaActual,
       "Periodos generados": "SIND DEFINIR PERIODOS GENERADOS",
       "Consumo por periodo": "SIN DEFINIR CONSUMO POR PERIODO",
       "Consumo total": "SIN DEFINR CONSUMO TOTAL",

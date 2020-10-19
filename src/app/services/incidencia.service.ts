@@ -2,13 +2,19 @@ import { Injectable } from "@angular/core";
 import { URL_BASE } from "../../environments/config";
 import { HttpClient } from "@angular/common/http";
 import { catchError } from "rxjs/operators";
-import { throwError } from "rxjs";
+import { throwError, forkJoin } from "rxjs";
+import { Offline, IndexedDbService } from "./offline/indexed-db.service";
+import { IndexedDBService } from "@codice-progressio/indexed-db";
 
 @Injectable({
   providedIn: "root",
 })
 export class IncidenciaService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private codiceIdbService: IndexedDBService,
+    private idbService: IndexedDbService
+  ) {}
 
   base = URL_BASE("incidencia");
 
@@ -17,6 +23,11 @@ export class IncidenciaService {
       .get<Incidencia[]>(this.base)
       .pipe(catchError((_) => throwError(_)));
   }
+
+  offline = new Offline(
+    this.idbService.storeObjects.CONTRATOS,
+    this.codiceIdbService
+  );
 }
 
 export interface Incidencia {

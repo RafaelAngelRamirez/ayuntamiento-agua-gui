@@ -1,12 +1,18 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, RouterModule, Router } from "@angular/router";
-import { ContratoService, Contrato } from "../../../services/contrato.service";
+import {
+  ContratoService,
+  Contrato,
+  Lectura,
+} from "../../../services/contrato.service";
 import { Location } from "@angular/common";
 import { NotificacionesService } from "../../../services/notificaciones.service";
 import { SimapaService } from "../../../services/simapa.service";
 import { IndexedDBService } from "@codice-progressio/indexed-db";
 import { GpsService } from "../../../services/gps.service";
+import { UsuarioService } from "../../../services/usuario.service";
+import { ParametrosService } from "../../../services/parametros.service";
 import {
   IncidenciaService,
   Incidencia,
@@ -31,6 +37,8 @@ export class LecturaCrearComponent implements OnInit {
   constructor(
     private idbService: IndexedDBService,
     private constratoService: ContratoService,
+    private parametrosService: ParametrosService,
+    private usuarioService: UsuarioService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
     private incidenciaService: IncidenciaService,
@@ -53,8 +61,8 @@ export class LecturaCrearComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe((dato) => {
       let conPara: string = dato.get("contrato") || "";
       this.cargandoContrato = true;
-
-      this.idbService.findById(conPara).subscribe((contrato) => {
+      console.log(conPara)
+      this.constratoService.offline.findById(conPara).subscribe((contrato) => {
         this.contrato = contrato as Contrato;
         this.cargandoContrato = false;
         this.crearFormulario(this.contrato);
@@ -105,7 +113,7 @@ export class LecturaCrearComponent implements OnInit {
   }
 
   guardandoLectura = false;
-  submit(model: any, invalido: boolean, e: any) {
+  submit(model: Lectura, invalido: boolean, e: any) {
     this.gpsService
       .findMe()
       .then((position) => {
@@ -120,18 +128,26 @@ export class LecturaCrearComponent implements OnInit {
         this.contrato.tomada = true;
         this.contrato.lectura = model;
 
+        //Diez dias
+
         model.Contrato = this.contrato.Contrato;
-        model.Vigencia = 2020;
-        model.Periodo = "04";
-        model.IdLecturista = "01";
+
+        model.Vigencia = this.parametrosService.obtenerVigenciaActual();
+        model.Periodo = this.parametrosService.obtenerPeriodoActual();
+
+        //Traer desde el usuario
+        model.IdLecturista = this.usuarioService.obtenerUsuario().lecturista.IdLecturista;
         model.IdRuta = this.contrato.IdRuta;
         model.IdTarifa = this.contrato.IdTarifa;
+
         model.FechaLectura = new Date();
-        model.HoraLectura = new Date().getHours();
+        model.HoraLectura = new Date();
         model.ConsumoMts3 = model.LecturaActual - this.contrato.LecturaAnterior;
+
         model.Mts3Cobrados =
           model.LecturaActual - this.contrato.LecturaAnterior;
-        model.IdDispositivo = "01";
+
+        model.IdDispositivo = this.usuarioService.obtenerUsuario().dispositivo;
         // GPS
         model.longitud = position.coords.longitude;
         model.latitud = position.coords.latitude;
@@ -140,7 +156,7 @@ export class LecturaCrearComponent implements OnInit {
         // la conexion
 
         this.guardandoLectura = true;
-        this.idbService.update(this.contrato).subscribe(
+        this.constratoService.offline.update(this.contrato).subscribe(
           () => {
             //  Remplazamos los datos guardados en memoria.
 

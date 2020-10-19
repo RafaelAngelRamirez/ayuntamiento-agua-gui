@@ -5,7 +5,11 @@ import { catchError, map } from "rxjs/operators";
 import { throwError, Observable, forkJoin } from "rxjs";
 import { EstatusConexionService } from "@codice-progressio/estatus-conexion";
 import { NotificacionesService } from "./notificaciones.service";
-import { IndexedDBService } from "@codice-progressio/indexed-db";
+import { IndexedDbService, Offline } from './offline/indexed-db.service'
+import {
+  IDBOpcionesObjectStore,
+  IndexedDBService as CodiIDBService,
+} from "@codice-progressio/indexed-db";
 
 @Injectable({
   providedIn: "root",
@@ -16,7 +20,8 @@ export class ContratoService {
     private notiService: NotificacionesService,
     private http: HttpClient,
     private estatus: EstatusConexionService,
-    private idbService: IndexedDBService
+    private idbService: IndexedDbService,
+    private codiceIdbService: CodiIDBService
   ) {
     this.estatus.online.subscribe((estaOnline) => {
       if (estaOnline) this.sincronizarContratosTomadosOffline();
@@ -70,7 +75,7 @@ export class ContratoService {
           c.sincronizada = true;
           observables.push(this.update(c));
           //Actualizamos el contrato en indexed-db
-          observables.push(this.idbService.update(c));
+          observables.push(this.offline.update(c));
         });
 
         forkJoin(observables).subscribe(
@@ -111,7 +116,14 @@ export class ContratoService {
       .slice(desde, desde + skip)
       .map((x) => x.contrato as Contrato);
   }
+
+  offline = new Offline(
+    this.idbService.storeObjects.CONTRATOS,
+    this.codiceIdbService
+  );
 }
+
+
 
 export interface Contrato {
   Contrato: string;

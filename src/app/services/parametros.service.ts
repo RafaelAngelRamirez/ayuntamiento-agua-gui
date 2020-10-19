@@ -17,4 +17,16 @@ export class ParametrosService {
   obtenerUsuariosSimapa() {
     return this.http.get<any[]>(this.base.concat("/lecturistas"));
   }
+
+  obtenerVigenciaActual(): string {
+    // TODO: Crear tabla en indexdb para manejar estos
+    // datos y que se sincronizen offline.
+    throw "No definido.";
+  }
+
+  obtenerPeriodoActual(): string {
+    // TODO: Crear parametro en indexdb para manejar este dato.
+    // Mismo trabajo que obtenerVigenciaActual
+    throw "No definido";
+  }
 }
