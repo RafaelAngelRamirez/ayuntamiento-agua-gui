@@ -32,6 +32,19 @@ export class ParametrosComponent implements OnInit {
   ngOnInit(): void {
     this.cargarUsuariosSimapa();
     this.cargarUsuarios();
+    this.cargarVigenciaActual();
+    this.cargarPeriodoActual();
+  }
+
+  cargarVigenciaActual() {
+    this.parametrosService.obtenerVigenciaActual().subscribe((p) => {
+      this.vigenciaActual = p;
+    });
+  }
+  cargarPeriodoActual() {
+    this.parametrosService.obtenerPeriodoActual().subscribe((p) => {
+      this.periodoActual = p;
+    });
   }
 
   cargarUsuarios() {
@@ -88,12 +101,52 @@ export class ParametrosComponent implements OnInit {
 
   sincronizandoContratos = false;
   sincronizarContratos() {
-    this.sincronizandoContratos = true
-    this.simapaService.sincronizarContratos().subscribe((resultado:any) => {
-      this.sincronizandoContratos = false;
-      this.notiService.toast.correcto(
-        "Contatos sincronizados: " + resultado.total
-      );
-    }, ()=>this.sincronizandoContratos = false );
+    this.sincronizandoContratos = true;
+    this.simapaService.sincronizarContratos().subscribe(
+      (resultado: any) => {
+        this.sincronizandoContratos = false;
+        this.notiService.toast.correcto(
+          "Contatos sincronizados: " + resultado.total
+        );
+      },
+      () => (this.sincronizandoContratos = false)
+    );
+  }
+
+  vigenciaActual: number | undefined = undefined;
+  guardandoVigenciaActual = false;
+  periodoActual: number | undefined = undefined;
+  guardandoPeridoActual = false;
+
+  almacenarVigencia() {
+    this.guardandoVigenciaActual = true;
+    if (!this.vigenciaActual) {
+      this.notiService.toast.error("No definiste vigencia actual");
+      this.guardandoVigenciaActual = false;
+      return;
+    }
+    this.parametrosService.guardarVigenciaActual(this.vigenciaActual).subscribe(
+      () => {
+        this.guardandoVigenciaActual = false;
+        this.notiService.toast.correcto(" Se modifico la vigencia actual");
+      },
+      () => (this.guardandoVigenciaActual = false)
+    );
+  }
+
+  almacenarPeriodoActual() {
+    this.guardandoPeridoActual = true;
+    if (!this.periodoActual) {
+      this.notiService.toast.error("No definiste periodo actual");
+      this.guardandoPeridoActual = false;
+      return;
+    }
+    this.parametrosService.guardarPeriodoActual(this.periodoActual).subscribe(
+      () => {
+        this.guardandoPeridoActual = false;
+        this.notiService.toast.correcto(" Se modifico el perido actual");
+      },
+      () => (this.guardandoPeridoActual = false)
+    );
   }
 }

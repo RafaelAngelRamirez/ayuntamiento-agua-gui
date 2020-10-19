@@ -5,11 +5,8 @@ import { catchError, map } from "rxjs/operators";
 import { throwError, Observable, forkJoin } from "rxjs";
 import { EstatusConexionService } from "@codice-progressio/estatus-conexion";
 import { NotificacionesService } from "./notificaciones.service";
-import { IndexedDbService, Offline } from './offline/indexed-db.service'
-import {
-  IDBOpcionesObjectStore,
-  IndexedDBService as CodiIDBService,
-} from "@codice-progressio/indexed-db";
+import { IndexedDbService, Offline } from "./offline/indexed-db.service";
+import { IndexedDBService as CodiIDBService } from "@codice-progressio/indexed-db";
 
 @Injectable({
   providedIn: "root",
@@ -122,8 +119,6 @@ export class ContratoService {
     this.codiceIdbService
   );
 }
-
-
 
 export interface Contrato {
   Contrato: string;

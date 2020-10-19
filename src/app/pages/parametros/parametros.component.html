@@ -35,7 +35,6 @@
     </div>
   </div>
 
-
   <div class="col-auto">
     <div class="card shadow">
       <div class="card-body">
@@ -77,6 +76,58 @@
             </ng-container>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-auto">
+    <div class="card shadow">
+      <div class="card-body">
+        <h1>Vigencia y Periodo actuales</h1>
+
+        <div class="form-group">
+          <input
+            [(ngModel)]="vigenciaActual"
+            type="text"
+            class="form-control"
+            [disabled]="guardandoVigenciaActual"
+          />
+          <small id="helpId" class="form-text text-muted"
+            >Vigencia actual</small
+          >
+        </div>
+
+        <button
+          (click)="almacenarVigencia()"
+          type="button"
+          class="btn btn-primary btn-sm"
+          [disabled]="guardandoVigenciaActual"
+        >
+          <i *ngIf="guardandoVigenciaActual" class="fas fa-sync fa-spin"></i>
+          <i *ngIf="!guardandoVigenciaActual" class="fas fa-save"></i>
+          Guardar vigencia
+        </button>
+
+        <div class="form-group">
+          <input
+            [(ngModel)]="periodoActual"
+            type="text"
+            class="form-control"
+            [disabled]="guardandoPeridoActual"
+          />
+          <small id="helpId" class="form-text text-muted">Perido actual</small>
+        </div>
+
+        <button
+          (click)="almacenarPeriodoActual()"
+          type="button"
+          class="btn btn-primary btn-sm"
+          [disabled]="guardandoPeridoActual"
+        >
+          <i *ngIf="!guardandoPeridoActual" class="fas fa-save"></i>
+          <i *ngIf="guardandoPeridoActual" class="fas fa-sync fa-spin"></i>
+          Guardar periodo
+        </button>
       </div>
     </div>
   </div>
