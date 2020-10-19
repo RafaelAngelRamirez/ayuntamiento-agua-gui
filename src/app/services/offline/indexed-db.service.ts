@@ -30,8 +30,8 @@ export class IndexedDbService {
 
 export class Offline {
   constructor(
-    private storeObject: IDBOpcionesObjectStore,
-    private codiIDBService: IndexedDBService
+    public storeObject: IDBOpcionesObjectStore,
+    public codiIDBService: IndexedDBService
   ) {}
 
   findAll() {
@@ -44,5 +44,13 @@ export class Offline {
 
   findById(id: string) {
     return this.codiIDBService.findById(id, this.storeObject);
+  }
+
+  save(data: any) {
+    return this.codiIDBService.save(data, this.storeObject);
+  }
+
+  deleteAll() {
+    return this.codiIDBService.deleteAll(this.storeObject);
   }
 }

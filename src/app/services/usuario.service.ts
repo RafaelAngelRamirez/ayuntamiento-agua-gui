@@ -7,12 +7,14 @@ import { HttpClient } from "@angular/common/http";
 import { URL_BASE } from "../../environments/config";
 import { catchError, map } from "rxjs/operators";
 import { throwError } from "rxjs";
+import { NotificacionesService } from "./notificaciones.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class UsuarioService {
   constructor(
+    private notiService: NotificacionesService,
     private loginService: LoginService,
     private tkService: TokenService,
     private http: HttpClient
@@ -55,5 +57,15 @@ export class UsuarioService {
           return throwError(x);
         })
       );
+  }
+
+  findById(id: string) {
+    return this.http.get<Usuario>(this.base.concat(`/leer/${id}`)).pipe(
+      catchError((x: any) => {
+        this.notiService.toast.error(x.mensaje, x.nombre);
+
+        return throwError(x);
+      })
+    );
   }
 }

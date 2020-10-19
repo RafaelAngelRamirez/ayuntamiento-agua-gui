@@ -1,53 +1,74 @@
 <div class="row">
-  <div class="col-auto">
+  <div class="col-12 col-md-3">
     <div class="card shadow">
       <div class="card-body">
+        <h3>Actualizar permisos super admin</h3>
+        <small class="text-muted"
+          >Actualiza los permisos del susper usuarios cuando estos se han
+          actualizado en la API.</small
+        >
+
+        <hr />
         <button
           (click)="actualizarPermisos()"
-          class="btn btn-primary"
+          class="btn btn-primary btn-sm"
           [disabled]="cargandoActualizandoPermisos"
         >
           <i
             *ngIf="cargandoActualizandoPermisos"
-            class="fas fa-sync fa-spin mr-3"
+            class="fas fa-sync fa-spin"
           ></i>
-          Actualizar permisos Super admin
+          <i
+            *ngIf="!cargandoActualizandoPermisos"
+            class="fas fa-user-secret"
+          ></i>
+          Actualizar
         </button>
       </div>
     </div>
   </div>
 
-  <div class="col-auto">
+  <div class="col-12 col-md-3">
     <div class="card shadow">
       <div class="card-body">
+        <h3>[ SIMAPA ] Parametros</h3>
+        <small class="text-muted"
+          >Sincroniza los parametros del SIMAPA con el servidor. No confundir
+          con sincronizacion offline.
+        </small>
+        <hr />
         <button
           (click)="sincronizarParametros()"
-          class="btn btn-primary"
+          class="btn btn-primary btn-sm"
           [disabled]="sincronizandoParametros"
         >
-          <i
-            *ngIf="sincronizandoParametros"
-            class="fas fa-sync fa-spin mr-3"
-          ></i>
-          Sincronizar parametros
+          <i *ngIf="sincronizandoParametros" class="fas fa-sync fa-spin"></i>
+          <i *ngIf="!sincronizandoParametros" class="fas fa-server"></i>
+
+          Sincronizar
         </button>
       </div>
     </div>
   </div>
 
-  <div class="col-auto">
+  <div class="col-12 col-md-3">
     <div class="card shadow">
       <div class="card-body">
+        <h3>[ SIMAPA ] Contratos</h3>
+        <small class="text-muted"
+          >Sincroniza los contratos asignados a lecturistas desde el SIMAPA. Si
+          no se asignan lecturas a los usuarios en el sistama NEXT no será
+          posible sincronizarlos a este servidor.
+        </small>
+        <hr />
         <button
           (click)="sincronizarContratos()"
-          class="btn btn-primary"
+          class="btn btn-primary btn-sm"
           [disabled]="sincronizandoContratos"
         >
-          <i
-            *ngIf="sincronizandoContratos"
-            class="fas fa-sync fa-spin mr-3"
-          ></i>
-          Sincronizar contratos
+          <i *ngIf="!sincronizandoContratos" class="fas fa-server"></i>
+          <i *ngIf="sincronizandoContratos" class="fas fa-sync fa-spin"></i>
+          Sincronizar
         </button>
       </div>
     </div>
@@ -56,8 +77,10 @@
   <div class="col-auto">
     <div class="card shadow">
       <div class="card-body">
-        <h1>Lecturistas SIMAPA</h1>
-
+        <h3>[ SIMAPA ] Lecturistas</h3>
+        <small *ngIf="lecturistas.length > 0" class="text-muted"
+          >Sincronizado desde parametros.</small
+        >
         <table class="table">
           <thead>
             <tr>
@@ -83,51 +106,98 @@
   <div class="col-auto">
     <div class="card shadow">
       <div class="card-body">
-        <h1>Vigencia y Periodo actuales</h1>
+        <h3>[ LECTURISTA ] Sincronizar parametros offline</h3>
+        <small class="text-muted">
+          Sincroniza los parametros para que el lecturista pueda trabajar de
+          manera offline
+        </small>
 
-        <div class="form-group">
-          <input
-            [(ngModel)]="vigenciaActual"
-            type="text"
-            class="form-control"
-            [disabled]="guardandoVigenciaActual"
-          />
-          <small id="helpId" class="form-text text-muted"
-            >Vigencia actual</small
-          >
-        </div>
+        <hr />
 
-        <button
-          (click)="almacenarVigencia()"
-          type="button"
-          class="btn btn-primary btn-sm"
-          [disabled]="guardandoVigenciaActual"
-        >
-          <i *ngIf="guardandoVigenciaActual" class="fas fa-sync fa-spin"></i>
-          <i *ngIf="!guardandoVigenciaActual" class="fas fa-save"></i>
-          Guardar vigencia
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Parametro</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let kv of listaParametros | keyvalue">
+              <td scope="row">{{ kv.value.nombre }}</td>
+              <td>
+                <button
+                  (click)="kv.value.sincronizar()"
+                  type="button"
+                  class="btn btn-primary btn-xs"
+                >
+                  <i
+                    [ngClass]="{ 'fa-spin': kv.value.cargando }"
+                    class="fas fa-sync"
+                  ></i>
+                </button>
+              </td>
+              <td>
+                <button
+                  (click)="kv.value.eliminar()"
+                  type="button"
+                  class="btn btn-primary btn-xs"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn btn-primary btn-sm">
+          <i class="fas fa-cloud-download-alt"></i>
+          <i class="fas fa-sync fa-spin"></i>
+
+          Sincronizar
         </button>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <div class="form-group">
-          <input
-            [(ngModel)]="periodoActual"
-            type="text"
-            class="form-control"
-            [disabled]="guardandoPeridoActual"
-          />
-          <small id="helpId" class="form-text text-muted">Perido actual</small>
-        </div>
+<!-- Button trigger modal -->
+<button
+  type="button"
+  class="btn btn-primary btn-lg"
+  data-toggle="modal"
+  data-target="#modelId"
+>
+  Launch
+</button>
 
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="modelId"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modelTitleId"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
         <button
-          (click)="almacenarPeriodoActual()"
           type="button"
-          class="btn btn-primary btn-sm"
-          [disabled]="guardandoPeridoActual"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
         >
-          <i *ngIf="!guardandoPeridoActual" class="fas fa-save"></i>
-          <i *ngIf="guardandoPeridoActual" class="fas fa-sync fa-spin"></i>
-          Guardar periodo
+          <span aria-hidden="true">&times;</span>
         </button>
+      </div>
+      <div class="modal-body">Body</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="btn btn-primary">Save</button>
       </div>
     </div>
   </div>

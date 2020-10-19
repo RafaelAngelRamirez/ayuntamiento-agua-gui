@@ -5,7 +5,11 @@ import { IndexedDbService, Offline } from "./offline/indexed-db.service";
 import { IndexedDBService as CodiIDBService } from "@codice-progressio/indexed-db";
 import { catchError, map } from "rxjs/operators";
 import { throwError } from "rxjs";
-
+import {
+  IndexedDBService,
+  IDBOpcionesObjectStore,
+  IDBOpciones,
+} from "@codice-progressio/indexed-db";
 @Injectable({
   providedIn: "root",
 })
@@ -26,61 +30,6 @@ export class ParametrosService {
     return this.http.get<any[]>(this.base.concat("/lecturistas"));
   }
 
-  obtenerVigenciaActual() {
-    return this.http
-      .get<number>(this.base.concat("/vigenciaActual"))
-
-      .pipe(
-        map((datos: any) => {
-          return datos.vigenciaActual as number;
-        }),
-        catchError((err) => {
-          return throwError(err);
-        })
-      );
-  }
-
-  guardarVigenciaActual(vigenciaActual: number | undefined) {
-    return this.http
-      .put<number>(this.base.concat("/vigenciaActual"), {
-        vigenciaActual,
-      })
-      .pipe(
-        map((datos: any) => {
-          return datos.vigenciaActual as number;
-        }),
-        catchError((err) => {
-          return throwError(err);
-        })
-      );
-  }
-
-  obtenerPeriodoActual() {
-    return this.http.get<number>(this.base.concat("/periodoActual")).pipe(
-      map((datos: any) => {
-        return datos.periodoActual as number;
-      }),
-      catchError((err) => {
-        return throwError(err);
-      })
-    );
-  }
-
-  guardarPeriodoActual(periodoActual: number) {
-    return this.http
-      .put<number>(this.base.concat("/periodoActual"), {
-        periodoActual,
-      })
-      .pipe(
-        map((datos: any) => {
-          return datos.periodoActual as number;
-        }),
-        catchError((err) => {
-          return throwError(err);
-        })
-      );
-  }
-
   offline = new OfflineParametros(
     this.idbService.storeObjects.PARAMETROS,
     this.codiceIdbService
@@ -88,8 +37,22 @@ export class ParametrosService {
 }
 
 class OfflineParametros extends Offline {
+  key = "nombreParametro";
+
+  constructor(
+    public storeObject: IDBOpcionesObjectStore,
+    public codiIDBService: IndexedDBService
+  ) {
+    super(storeObject, codiIDBService);
+  }
   obtenerVigenciaActual() {
-    throw "No definido";
+    return this.codiIDBService.findAll(this.storeObject);
+  }
+  guardarVigenciaActual(vigencia: number) {
+    return this.codiIDBService.save(
+      { [this.key]: "vigencia", vigencia },
+      this.storeObject
+    );
   }
   obtenerPeridoActual() {
     throw "No definido";
