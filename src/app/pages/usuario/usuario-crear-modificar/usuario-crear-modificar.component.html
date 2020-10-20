@@ -1,0 +1,163 @@
+<div *ngIf="usuario" class="row">
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <h2>Modificar datos de usuario</h2>
+        <div *ngIf="usuario" class="row">
+          <div class="col-12 col-6">
+            <div class="form-group">
+              <input
+                [disabled]="cargando"
+                [(ngModel)]="usuario.nombre"
+                type="text"
+                class="form-control"
+              />
+              <small class="form-text text-muted">Nombre</small>
+            </div>
+          </div>
+          <div class="col-12 col-6">
+            <div class="form-group">
+              <input
+                [disabled]="cargando"
+                [(ngModel)]="usuario.usuario"
+                type="text"
+                class="form-control"
+              />
+              <small class="form-text text-muted">Usuario</small>
+            </div>
+          </div>
+
+          <div *ngIf="!usuario._id" class="col-12 col-6">
+            <div class="form-group">
+              <input
+                [disabled]="cargando"
+                [(ngModel)]="usuario.password"
+                type="text"
+                class="form-control"
+              />
+              <small class="form-text text-muted">Password</small>
+            </div>
+          </div>
+        </div>
+
+        <button
+          *ngIf="usuario._id"
+          (click)="modificar()"
+          class="btn btn-primary"
+          role="button"
+          [disabled]="cargando"
+        >
+          <i *ngIf="!cargando" class="fas fa-save"></i>
+          <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+
+          Modificar
+        </button>
+        <button
+          *ngIf="!usuario._id"
+          (click)="guardar()"
+          class="btn btn-primary"
+          role="button"
+          [disabled]="cargando"
+        >
+          <i *ngIf="!cargando" class="fas fa-save"></i>
+          <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="usuario?._id" class="row">
+  <div class="col-auto">
+    <div class="card shadow">
+      <div class="card-body">
+        <h3>Password</h3>
+
+        <div class="form-group">
+          <input
+            [disabled]="cargando"
+            type="text"
+            class="form-control"
+            [(ngModel)]="usuario.password"
+          />
+          <small class="form-text text-muted">Ingresa nuevo password</small>
+        </div>
+
+        <button
+          (click)="modificarPassword()"
+          [disabled]="cargando"
+          type="button"
+          class="btn btn-primary"
+        >
+          <i *ngIf="!cargando" class="fas fa-save"></i>
+
+          <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="usuario?._id" class="col-auto">
+    <div class="card shadow">
+      <div class="card-body">
+        <h3>Dispositivo</h3>
+
+        <div class="form-group">
+          <input 
+          [(ngModel)]="usuario.dispositivo"
+          [disabled]="cargando" type="text" class="form-control" />
+          <small class="form-text text-muted">Asginar UID dispositivo</small>
+        </div>
+
+        <button
+          (click)="modificarDispositivo()"
+          [disabled]="cargando"
+          type="button"
+          class="btn btn-primary"
+        >
+          <i *ngIf="!cargando" class="fas fa-save"></i>
+
+          <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="usuario?._id" class="row">
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <h1>Permisos</h1>
+
+        <div class="row">
+          <div *ngFor="let kv of permisos | keyvalue" class="col-12">
+            <h4>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input
+                    *ngIf="!modificandoPermisos"
+                    (change)="agregarOQuitarPermiso(kv.key, $event)"
+                    type="checkbox"
+                    class="form-check-input"
+                    value="checkedValue"
+                    [checked]="comprobarPermisos(kv.key)"
+                  />
+                  <i
+                    *ngIf="modificandoPermisos"
+                    class="fas fa-sync fa-spin"
+                  ></i>
+                  {{ kv.key }}
+                </label>
+              </div>
+              <small class="text-muted">{{ kv.value }}</small>
+              <br />
+            </h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

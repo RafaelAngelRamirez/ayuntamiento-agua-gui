@@ -18,13 +18,10 @@ export class UsuarioComponent implements OnInit {
     this.usuarioSerivice.findAll().subscribe(
       (u) => {
         this.usuarios = u;
-        
+
         delete this.cargando["usuarios"];
       },
       (_) => delete this.cargando["usuarios"]
     );
-  }
-  alerta() {
-    alert("No permitido en este demo");
   }
 }

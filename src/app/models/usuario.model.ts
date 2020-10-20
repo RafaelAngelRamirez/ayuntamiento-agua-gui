@@ -1,12 +1,12 @@
 export class Usuario {
   constructor(
-    public _id: string,
-    public nombre: string,
-    public usuario: string,
-    public permissions: string[],
-    public dispositivo: string,
-    public navegacionDefault: string = "tablero",
-    public lecturista: Lecturista
+    public _id?: string,
+    public nombre?: string,
+    public usuario?: string,
+    public password?: string,
+    public permissions: string[] = [],
+    public dispositivo?: string,
+    public lecturista?: Lecturista
   ) {}
 }
 

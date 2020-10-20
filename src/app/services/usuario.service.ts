@@ -63,9 +63,70 @@ export class UsuarioService {
     return this.http.get<Usuario>(this.base.concat(`/leer/${id}`)).pipe(
       catchError((x: any) => {
         this.notiService.toast.error(x.mensaje, x.nombre);
-
+        console.log(x);
         return throwError(x);
       })
     );
+  }
+
+  update(usuario: Usuario) {
+    return this.http
+      .put<Usuario>(this.base.concat("/modificar/id/" + usuario._id), usuario)
+      .pipe(
+        catchError((x: any) => {
+          this.notiService.toast.error(x.mensaje, x.nombre);
+          return throwError(x);
+        })
+      );
+  }
+
+  save(usuario: Usuario) {
+    console.log(usuario);
+    return this.http.post<Usuario>(this.base, usuario).pipe(
+      catchError((x) => {
+        console.log(x);
+        this.notiService.toast.error(x.err);
+        return throwError(x);
+      })
+    );
+  }
+
+  updatePermisos(usuario: Usuario) {
+    return this.http
+      .put<Usuario>(
+        this.base.concat("/modificar/permisos/" + usuario._id),
+        usuario.permissions
+      )
+      .pipe(
+        catchError((x: any) => {
+          this.notiService.toast.error(x.mensaje, x.nombre);
+          return throwError(x);
+        })
+      );
+  }
+
+  updatePassword(id: string, password: string) {
+    return this.http
+      .put<Usuario>(this.base.concat("/modificar/password/" + id), { password })
+      .pipe(
+        catchError((x: any) => {
+
+          this.notiService.toast.error(x.error.err);
+          return throwError(x);
+        })
+      );
+  }
+
+  updateImpresora(id: string, dispositivo: string) {
+    return this.http
+      .put<Usuario>(this.base.concat("/modificar/equipos/" + id), {
+        dispositivo,
+      })
+      .pipe(
+        catchError((x: any) => {
+          this.notiService.toast.error(x.err);
+          return throwError(x);
+        })
+      );
   }
 }

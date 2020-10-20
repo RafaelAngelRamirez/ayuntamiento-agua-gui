@@ -30,6 +30,10 @@ export class ParametrosService {
     return this.http.get<any[]>(this.base.concat("/lecturistas"));
   }
 
+  obtenerPermisos() {
+    return this.http.get<any>(this.base.concat("/permisos"));
+  }
+
   offline = new OfflineParametros(
     this.idbService.storeObjects.PARAMETROS,
     this.codiceIdbService
