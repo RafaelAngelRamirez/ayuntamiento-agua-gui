@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Usuario } from "../../../models/usuario.model";
+import { Usuario, Lecturista } from "../../../models/usuario.model";
 import { UsuarioService } from "../../../services/usuario.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Location } from "@angular/common";
@@ -24,9 +24,18 @@ export class UsuarioCrearModificarComponent implements OnInit {
   cargando = false;
   permisos: any;
   cargandoPermisos = false;
+  usuariosSimapa: Lecturista[] = [];
+
   ngOnInit(): void {
     this.obtenerUsuario();
     this.obtenerPermisos();
+    this.obtenerUsuariosSimapa();
+  }
+
+  obtenerUsuariosSimapa() {
+    this.parametrosService.obtenerUsuariosSimapa().subscribe((lecturistas) => {
+      this.usuariosSimapa = lecturistas;
+    });
   }
 
   obtenerPermisos() {
@@ -34,6 +43,7 @@ export class UsuarioCrearModificarComponent implements OnInit {
     this.parametrosService.obtenerPermisos().subscribe(
       (permisos) => {
         this.permisos = permisos;
+        delete this.permisos.super_admin;
         this.cargandoPermisos = false;
       },
       (_) => (this.cargandoPermisos = false)
@@ -165,6 +175,27 @@ export class UsuarioCrearModificarComponent implements OnInit {
 
           this.cargando = false;
         },
+        (_) => (this.cargando = false)
+      );
+  }
+
+  guardarLecturista() {
+    if (!this.usuario._id) return;
+    if (!this.usuario.lecturista) return;
+
+    this.cargando = true;
+    this.usuarioSerivce
+      .guardarLecturistaEnUsuario(
+        this.usuario._id,
+        this.usuario.lecturista.IdLecturista
+      )
+      .subscribe(
+        (usuario) => {
+          this.obtenerUsuario();
+          this.notiService.toast.correcto("Se asigno el lecturista");
+          this.cargando = false;
+        },
+
         (_) => (this.cargando = false)
       );
   }

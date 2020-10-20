@@ -54,6 +54,7 @@ export class UsuarioService {
           return x;
         }),
         catchError((x) => {
+          this.notiService.toast.error(x.err)
           return throwError(x);
         })
       );

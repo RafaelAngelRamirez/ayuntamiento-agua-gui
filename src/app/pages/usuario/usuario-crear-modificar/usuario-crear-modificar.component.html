@@ -105,9 +105,12 @@
         <h3>Dispositivo</h3>
 
         <div class="form-group">
-          <input 
-          [(ngModel)]="usuario.dispositivo"
-          [disabled]="cargando" type="text" class="form-control" />
+          <input
+            [(ngModel)]="usuario.dispositivo"
+            [disabled]="cargando"
+            type="text"
+            class="form-control"
+          />
           <small class="form-text text-muted">Asginar UID dispositivo</small>
         </div>
 
@@ -124,37 +127,63 @@
       </div>
     </div>
   </div>
-</div>
-
-<div *ngIf="usuario?._id" class="row">
-  <div class="col-12">
+  <div *ngIf="usuario?._id" class="col-auto">
     <div class="card shadow">
       <div class="card-body">
-        <h1>Permisos</h1>
+        <h3>Lecturista
 
-        <div class="row">
-          <div *ngFor="let kv of permisos | keyvalue" class="col-12">
-            <h4>
-              <div class="form-check">
-                <label class="form-check-label">
-                  <input
-                    *ngIf="!modificandoPermisos"
-                    (change)="agregarOQuitarPermiso(kv.key, $event)"
-                    type="checkbox"
-                    class="form-check-input"
-                    value="checkedValue"
-                    [checked]="comprobarPermisos(kv.key)"
-                  />
-                  <i
-                    *ngIf="modificandoPermisos"
-                    class="fas fa-sync fa-spin"
-                  ></i>
-                  {{ kv.key }}
-                </label>
-              </div>
-              <small class="text-muted">{{ kv.value }}</small>
-              <br />
-            </h4>
+          <br>
+          <small>{{usuario?.lecturista?.NombreLecturista}}</small>
+        </h3>
+
+        <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+
+        <div class="form-group">
+          <label for="">Selecciona lecturista</label>
+          <select
+          (change)="guardarLecturista()"
+          [(ngModel)]="usuario.lecturista" class="form-control">
+            <option 
+            [ngValue]="item"
+            *ngFor="let item of usuariosSimapa">
+              {{ item.NombreLecturista }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="usuario?._id" class="row">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-body">
+          <h1>Permisos</h1>
+
+          <div class="row">
+            <div *ngFor="let kv of permisos | keyvalue" class="col-12">
+              <h4>
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input
+                      *ngIf="!modificandoPermisos"
+                      (change)="agregarOQuitarPermiso(kv.key, $event)"
+                      type="checkbox"
+                      class="form-check-input"
+                      value="checkedValue"
+                      [checked]="comprobarPermisos(kv.key)"
+                    />
+                    <i
+                      *ngIf="modificandoPermisos"
+                      class="fas fa-sync fa-spin"
+                    ></i>
+                    {{ kv.key }}
+                  </label>
+                </div>
+                <small class="text-muted">{{ kv.value }}</small>
+                <br />
+              </h4>
+            </div>
           </div>
         </div>
       </div>
