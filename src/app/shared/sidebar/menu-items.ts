@@ -10,6 +10,7 @@ export const ROUTES: RouteInfo[] = [
     labelClass: "",
     extralink: true,
     submenu: [],
+    permission:"super_admin"
   },
   {
     path: "/tablero",
@@ -20,6 +21,7 @@ export const ROUTES: RouteInfo[] = [
     labelClass: "",
     extralink: false,
     submenu: [],
+    permission:""
   },
   {
     path: "/usuario",
@@ -30,6 +32,7 @@ export const ROUTES: RouteInfo[] = [
     labelClass: "",
     extralink: false,
     submenu: [],
+    permission:"super_admin"
   },
   {
     path: "/contrato",
@@ -40,6 +43,7 @@ export const ROUTES: RouteInfo[] = [
     labelClass: "",
     extralink: false,
     submenu: [],
+    permission:""
   },
   {
     path: "/lectura",
@@ -50,6 +54,7 @@ export const ROUTES: RouteInfo[] = [
     labelClass: "",
     extralink: false,
     submenu: [],
+    permission:""
   },
   {
     path: "/parametros",
@@ -60,6 +65,7 @@ export const ROUTES: RouteInfo[] = [
     labelClass: "",
     extralink: false,
     submenu: [],
+    permission:""
   },
   {
     path: "/reportes",
@@ -70,6 +76,7 @@ export const ROUTES: RouteInfo[] = [
     labelClass: "",
     extralink: false,
     submenu: [],
+    permission:"super_admin"
   },
   // {
   //   path: "",

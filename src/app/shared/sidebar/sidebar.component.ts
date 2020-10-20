@@ -3,6 +3,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ROUTES } from "./menu-items";
 import { RouteInfo } from "./sidebar.metadata";
 import { Router, ActivatedRoute } from "@angular/router";
+import { UsuarioService } from "../../services/usuario.service";
 //declare var $: any;
 @Component({
   selector: "app-sidebar",
@@ -25,10 +26,19 @@ export class SidebarComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private usuarioSerivce: UsuarioService
   ) {}
   // End open close
   ngOnInit() {
-    this.sidebarnavItems = ROUTES.filter((sidebarnavItem) => sidebarnavItem);
+    let permisos = this.usuarioSerivce.obtenerUsuario().permissions;
+
+    this.sidebarnavItems = ROUTES.filter(
+      (sidebarnavItem) => sidebarnavItem
+    ).filter((x) => {
+
+      let p = x.permission
+      if( p=== '' ) return true
+      return permisos.includes(x.permission)});
   }
 }
