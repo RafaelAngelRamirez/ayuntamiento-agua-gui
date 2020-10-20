@@ -6,7 +6,8 @@ export class Usuario {
     public password?: string,
     public permissions: string[] = [],
     public dispositivo?: string,
-    public lecturista?: Lecturista
+    public lecturista?: Lecturista,
+    public navegacionDefault: string = "tablero",
   ) {}
 }
 

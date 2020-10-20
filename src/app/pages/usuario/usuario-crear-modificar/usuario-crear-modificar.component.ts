@@ -199,4 +199,14 @@ export class UsuarioCrearModificarComponent implements OnInit {
         (_) => (this.cargando = false)
       );
   }
+
+
+  rutaLecturista = "/app/lectura"
+  rutaTablero = "/app/tablero"
+
+
+
+
+
+
 }
