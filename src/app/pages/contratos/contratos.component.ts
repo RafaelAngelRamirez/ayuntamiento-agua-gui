@@ -79,51 +79,51 @@ export class ContratosComponent implements OnInit {
     this.sincronizandoContratos = true;
 
     //Comprobamos que no tengamos contratos sin sincronizar con la BD
-    let contratosPorSincronizar = this.contratoService.contratosPorSubir();
-    if (contratosPorSincronizar.length > 0) {
-      this.notiService.toast.warning(
-        `Hay ${contratosPorSincronizar} contratos pendientes por subir a la nube. Primero debes subirlos para no perder los datos.`
-      );
 
-      return;
-    }
+    this.contratoService
+      .sincronizarContratosTomadosOffline()
+      .subscribe((cantidad) => {
+        this.notiService.toast.correcto(`Se subieron ${cantidad} contratos`);
 
-    this.contratoService.findAll().subscribe(
-      (contratos) => {
-        this.contratos = contratos;
-        if (contratos.length === 0) {
-          this.sincronizandoContratos = false;
-          this.leyendoContratosOffline = false;
-          this.buscador.enable();
-          this.notiService.toast.warning("No hay contratos para sincronizar");
-          return;
-        }
-        forkJoin(
-          contratos.map((c) => this.contratoService.offline.update(c))
-        ).subscribe(
-          () => {
-            this.sincronizandoContratos = false;
-            this.leyendoContratosOffline = false;
-            this.buscador.enable();
-            this.notiService.toast.correcto(
-              `Se sincronizaron ${this.contratos.length} contratos`
+        this.contratoService.findAll().subscribe(
+          (contratos) => {
+            this.contratos = contratos;
+            if (contratos.length === 0) {
+              this.sincronizandoContratos = false;
+              this.leyendoContratosOffline = false;
+              this.buscador.enable();
+              this.notiService.toast.warning(
+                "No hay contratos para sincronizar"
+              );
+              return;
+            }
+            forkJoin(
+              contratos.map((c) => this.contratoService.offline.update(c))
+            ).subscribe(
+              () => {
+                this.sincronizandoContratos = false;
+                this.leyendoContratosOffline = false;
+                this.buscador.enable();
+                this.notiService.toast.correcto(
+                  `Se sincronizaron ${this.contratos.length} contratos`
+                );
+                this.mostrarContratos();
+              },
+
+              (_) => {
+                this.sincronizandoContratos = false;
+                this.leyendoContratosOffline = false;
+                this.buscador.enable();
+              }
             );
-            this.mostrarContratos();
           },
-
           (_) => {
             this.sincronizandoContratos = false;
             this.leyendoContratosOffline = false;
-            this.buscador.enable();
           }
         );
-      },
-      (_) => {
-        this.sincronizandoContratos = false;
-        this.leyendoContratosOffline = false;
-      }
-    );
-    //Comprobamos que no haya contratos sin sincronizar.
+        //Comprobamos que no haya contratos sin sincronizar.
+      });
   }
 
   mostrarContratos() {
