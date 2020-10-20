@@ -39,6 +39,6 @@ export const Pagesroutes: Routes = [
   },
   {
     path: "**",
-    redirectTo: "/tablero",
+    redirectTo: "/app/tablero",
   },
 ];
