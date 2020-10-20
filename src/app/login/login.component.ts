@@ -58,7 +58,11 @@ export class LoginComponent implements OnInit {
         this.cargando = false;
         if (correcto) {
           let usuario = this.usuarioService.obtenerUsuario();
-          this.router.navigate([usuario.navegacionDefault]);
+          let ruta = usuario.navegacionDefault
+          ? usuario.navegacionDefault
+          : "/app/tablero";
+         
+          this.router.navigate([ruta]);
           return;
         }
       },
