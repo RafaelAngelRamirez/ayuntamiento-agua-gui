@@ -132,66 +132,50 @@ export class ParametrosComponent implements OnInit {
       this.incidenciasSincronizar.bind(this),
       this.incidenciasEliminar.bind(this)
     ),
+
     impedimentos: new SincronizacionLecturista<Impedimento[]>(
       "Impedimentos",
       this.impedimentosSincronizar.bind(this),
       this.impedimentosEliminar.bind(this)
     ),
-    vigencia: new SincronizacionLecturista<number>(
-      "Vigencia",
-      this.vigenciaSincronizar.bind(this),
-      this.vigenciaEliminar.bind(this)
-    ),
-    periodo: new SincronizacionLecturista<number>(
-      "Periodo",
-      this.periodoSincronizar.bind(this),
-      this.periodoEliminar.bind(this)
-    ),
-    drenaje: new SincronizacionLecturista<Drenaje>(
-      "Drenaje",
-      this.drenajeSincronizar.bind(this),
-      this.drenajeEliminar.bind(this)
-    ),
-    infrastructura: new SincronizacionLecturista<Infrastructura>(
-      "Infrastructura",
-      this.infrastructuraSincronizar.bind(this),
-      this.infrastructuraEliminar.bind(this)
-    ),
-    aguasResiduales: new SincronizacionLecturista<AguasResiduales>(
-      "Aguas residuales",
-      this.aguasResidualesSincronizar.bind(this),
-      this.aguasResidualesEliminar.bind(this)
-    ),
-    tarifas: new SincronizacionLecturista<Tarifas>(
-      "Tarifas",
-      this.tarifasSincronizar.bind(this),
-      this.tarifasEliminar.bind(this)
-    ),
-    rutas: new SincronizacionLecturista<Rutas>(
-      "Rutas",
-      this.rutasSincronizar.bind(this),
-      this.rutasEliminar.bind(this)
+
+    ticket: new SincronizacionLecturista<Lecturista>(
+      "Parametros ticket",
+      this.parametrosTicketSincronizar.bind(this),
+      this.parametrosTicketEliminar.bind(this)
     ),
   };
 
   private obtenerLecturista(): Promise<Lecturista> {
-    return new Promise((resolve, reject) => {
-      this.usuarioService
-        .findById(this.usuarioService.obtenerUsuario()._id)
-        .subscribe(
-          (usuario: Usuario) => {
-            if (!usuario.lecturista) {
-              this.notiService.toast.error(
-                "Debes comunicarte con el administrador para asiganar un lecturista a este usuario",
-                "USUARIO SIN LECTURISTA"
-              );
-              return reject();
-            }
-
-            return resolve(usuario.lecturista);
-          },
-          (err: any) => reject(err)
+    return new Promise(async (resolve, reject) => {
+      let usuarioLocal = this.usuarioService.obtenerUsuario();
+      let usuario = await this.usuarioService
+        .findById(usuarioLocal._id)
+        .toPromise();
+      if (!usuario) {
+        this.notiService.toast.error(
+          "No de pudo cargar el usuario. Vuelve a iniciar sesión. "
         );
+
+        return reject("No se encontro el usuario");
+      }
+
+      if (!usuario._id) return reject("No se puede buscar el usuario");
+      this.usuarioService.findById(usuario._id).subscribe(
+        (usuario: Usuario) => {
+          console.log(usuario);
+          if (!usuario.lecturista) {
+            this.notiService.toast.error(
+              "Debes comunicarte con el administrador para asiganar un lecturista a este usuario",
+              "USUARIO SIN LECTURISTA"
+            );
+            return reject();
+          }
+
+          return resolve(usuario.lecturista);
+        },
+        (err: any) => reject(err)
+      );
     });
   }
 
@@ -248,6 +232,7 @@ export class ParametrosComponent implements OnInit {
         let promesas = impedimentos.map((x) =>
           this.impedimentosService.offline.save(x).toPromise()
         );
+
         this.listaParametros.impedimentos.datos = impedimentos;
 
         return Promise.all(promesas);
@@ -263,75 +248,49 @@ export class ParametrosComponent implements OnInit {
         this.listaParametros.impedimentos.cargando = false;
       });
   }
+
   private impedimentosEliminar() {
-    this.listaParametros.impedimentos.cargando = true;
+    this.listaParametros.incidencias.cargando = true;
 
     this.impedimentosService.offline.deleteAll().subscribe(() => {
       this.listaParametros.impedimentos.cargando = false;
 
       this.notiService.toast.correcto(
-        "Se eliminaron las impedimentos sincronizadas. Deberas descargarlas de nuevo"
+        "Se eliminaron los impedimentos sincronizados. Deberas descargarlos de nuevo"
       );
     });
   }
-
-  private vigenciaSincronizar() {
-    this.listaParametros.vigencia.cargando = true;
+  private parametrosTicketSincronizar() {
     this.obtenerLecturista()
       .then((lecturista) => {
-        let vigencia = lecturista.parametros.rutas[0].VigenciaRuta;
+        this.listaParametros.ticket.datos = lecturista;
 
-        if (!vigencia) throw "No se pudo cargar la vigencia.";
+        return this.parametrosService.offline
+          .guardarLecturista(lecturista)
+          .toPromise();
+      })
+      .then((re) => {
+        this.notiService.toast.correcto(
+          `Se sincronizaron los parametros para el ticket`
+        );
+        this.listaParametros.ticket.cargando = false;
       })
       .catch((err) => {
-        this.notiService.toast.error(err);
-        this.listaParametros.vigencia.cargando = false;
+        this.notiService.toast.error("Error en ticket", err);
+        this.listaParametros.ticket.cargando = false;
       });
   }
-  private vigenciaEliminar() {
-    throw "No definido";
-  }
-  private periodoSincronizar() {
-    throw "No definido";
-  }
-  private periodoEliminar() {
-    throw "No definido";
-  }
-  private drenajeSincronizar() {
-    throw "No definido";
-  }
-  private drenajeEliminar() {
-    throw "No definido";
-  }
-  private infrastructuraSincronizar() {
-    throw "No definido";
-  }
-  private infrastructuraEliminar() {
-    throw "No definido";
-  }
-  private aguasResidualesSincronizar() {
-    throw "No definido";
-  }
-  private aguasResidualesEliminar() {
-    throw "No definido";
-  }
-  private tarifasSincronizar() {
-    throw "No definido";
-  }
-  private tarifasEliminar() {
-    throw "No definido";
-  }
-  private rutasSincronizar() {
-    throw "No definido";
-  }
-  private rutasEliminar() {
-    throw "No definido";
-  }
-  private periodosSincronizar() {
-    throw "No definido";
-  }
-  private periodosEliminar() {
-    throw "No definido";
+
+  private parametrosTicketEliminar() {
+    this.listaParametros.ticket.cargando = true;
+
+    this.parametrosService.offline.eliminarParametrosTicket().subscribe(() => {
+      this.listaParametros.impedimentos.cargando = false;
+
+      this.notiService.toast.correcto(
+        "Se eliminaron los parametros del ticket sincronizados. Deberas descargarlos de nuevo"
+      );
+    });
   }
 }
 

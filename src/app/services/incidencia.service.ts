@@ -25,12 +25,13 @@ export class IncidenciaService {
   }
 
   offline = new Offline(
-    this.idbService.storeObjects.CONTRATOS,
+    this.idbService.storeObjects.INCIDENCIAS,
     this.codiceIdbService
   );
 }
 
 export interface Incidencia {
-  IdIncidencia: String;
-  NombreIncidencia: String;
+  _id: string;
+  IdIncidencia: string;
+  NombreIncidencia: string;
 }

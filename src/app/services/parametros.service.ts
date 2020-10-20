@@ -5,6 +5,7 @@ import { IndexedDbService, Offline } from "./offline/indexed-db.service";
 import { IndexedDBService as CodiIDBService } from "@codice-progressio/indexed-db";
 import { catchError, map } from "rxjs/operators";
 import { throwError } from "rxjs";
+import { Lecturista } from "../models/usuario.model";
 import {
   IndexedDBService,
   IDBOpcionesObjectStore,
@@ -49,16 +50,21 @@ class OfflineParametros extends Offline {
   ) {
     super(storeObject, codiIDBService);
   }
-  obtenerVigenciaActual() {
-    return this.codiIDBService.findAll(this.storeObject);
-  }
-  guardarVigenciaActual(vigencia: number) {
+
+
+  guardarLecturista(lecturista: Lecturista) {
     return this.codiIDBService.save(
-      { [this.key]: "vigencia", vigencia },
+      { [this.key]: "lecturista", lecturista },
       this.storeObject
     );
   }
-  obtenerPeridoActual() {
-    throw "No definido";
+
+  obtenerVigenciaActual() {
+    return this.codiIDBService.findById("lecturista", this.storeObject);
+  }
+
+
+  eliminarParametrosTicket(){
+    return this.codiIDBService.delete("lecturista", this.storeObject)
   }
 }
