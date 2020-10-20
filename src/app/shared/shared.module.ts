@@ -15,6 +15,7 @@ import { NoPageFoundComponent } from "../no-page-found/no-page-found.component";
 import { RouterModule } from "@angular/router";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { DomicilioPipe } from "../pipes/domicilio.pipe";
+import { TienePermisoPipe } from "../pipes/tiene-permiso.pipe";
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
   wheelSpeed: 2,
@@ -31,6 +32,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LoginComponent,
     NoPageFoundComponent,
     DomicilioPipe,
+    TienePermisoPipe,
   ],
   exports: [
     FullComponent,
@@ -44,6 +46,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ReactiveFormsModule,
     FormsModule,
     DomicilioPipe,
+    TienePermisoPipe,
   ],
 
   imports: [
@@ -65,6 +68,7 @@ export class SharedModule {
           useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
         },
         DomicilioPipe,
+        TienePermisoPipe,
       ],
     };
   }
