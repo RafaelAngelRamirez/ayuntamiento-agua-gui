@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { LoginService } from "../services/login.service";
 import { NotificacionesService } from "../services/notificaciones.service";
 import { IndexedDBService } from "@codice-progressio/indexed-db";
+import { UsuarioService } from "../services/usuario.service";
 
 @Component({
   selector: "app-login",
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private loginService: LoginService,
     private notiService: NotificacionesService,
-    private dbService: IndexedDBService
+    private dbService: IndexedDBService,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit() {
@@ -55,7 +57,8 @@ export class LoginComponent implements OnInit {
       (correcto) => {
         this.cargando = false;
         if (correcto) {
-          this.router.navigate(["/app/tablero"]);
+          let usuario = this.usuarioService.obtenerUsuario();
+          this.router.navigate([usuario.navegacionDefault]);
           return;
         }
       },
