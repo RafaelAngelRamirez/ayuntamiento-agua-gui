@@ -76,12 +76,12 @@ export class LecturaCrearComponent implements OnInit {
   }
 
   cargarIncidencias() {
-    this.incidenciaService.findAll().subscribe((incidencias) => {
+    this.incidenciaService.offline.findAll().subscribe((incidencias) => {
       this.incidencias = incidencias;
     });
   }
   cargarImpedimentos() {
-    this.impedimentoService.findAll().subscribe((impedimentos) => {
+    this.impedimentoService.offline.findAll().subscribe((impedimentos) => {
       this.impedimentos = impedimentos;
     });
   }
@@ -99,8 +99,8 @@ export class LecturaCrearComponent implements OnInit {
       FechaLectura: new FormControl(),
       HoraLectura: new FormControl(),
       LecturaActual: new FormControl("", [
-        // Validators.required,
-        // Validators.min(contrato.LecturaAnterior),
+        Validators.required,
+        Validators.min(0),
       ]),
       IdImpedimento: new FormControl(),
       IdIncidencia: new FormControl(),
