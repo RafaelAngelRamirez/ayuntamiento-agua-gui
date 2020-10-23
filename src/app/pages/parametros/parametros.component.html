@@ -1,7 +1,5 @@
 <div class="row">
-  <div 
-  *ngIf="'super_admin' | tienePermiso"
-  class="col-12 col-md-3">
+  <div *ngIf="'super_admin' | tienePermiso" class="col-12 col-md-3">
     <div class="card shadow">
       <div class="card-body">
         <h3>Actualizar permisos super admin</h3>
@@ -71,6 +69,53 @@
           <i *ngIf="!sincronizandoContratos" class="fas fa-server"></i>
           <i *ngIf="sincronizandoContratos" class="fas fa-sync fa-spin"></i>
           Sincronizar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="'super_admin' | tienePermiso" class="col-12 col-md-3">
+    <div class="card shadow">
+      <div class="card-body">
+        <h3>
+          [ SIMAPA ] Sincronizacion
+          <i *ngIf="cargandoEstadisticas" class="fas fa-sync fa-spin"></i>
+        </h3>
+        <small class="text-muted"
+          >Estado actual de sincronizacion de lecturas con SIMAPA. Se
+          contabiliza una lectura por contrato en el perido dada la vigencia
+          actual.
+        </small>
+        <hr />
+        <h1>
+          <small class="text-muted">Total de contratos</small
+          >{{ totalDeContratos }}
+        </h1>
+        <hr />
+        <h3>
+          <small class="text-muted">En espera</small
+          >{{ contratosPendientesDeSincronizar }}
+        </h3>
+        <small class="text-muted"
+          >Contratos en espera de ser sincronizados.
+        </small>
+        <h3>
+          <small class="text-muted">Contratos sincronizados</small
+          >{{ contratosSincronizados }}
+        </h3>
+
+        <small class="text-muted"
+          >Contratos que ya han sido subidos a SIMAPA</small
+        >
+        <hr />
+        <button
+          (click)="subirLecturasASimapa()"
+          class="btn btn-danger btn-sm"
+          [disabled]="subiendoLecturasASimapa"
+        >
+          <i *ngIf="!subiendoLecturasASimapa" class="fas fa-server"></i>
+          <i *ngIf="subiendoLecturasASimapa" class="fas fa-sync fa-spin"></i>
+          SUBIR LECTURAS SIMAPA
         </button>
       </div>
     </div>
@@ -154,4 +199,3 @@
     </div>
   </div>
 </div>
-

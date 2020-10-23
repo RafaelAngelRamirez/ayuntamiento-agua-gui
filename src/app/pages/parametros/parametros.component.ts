@@ -38,6 +38,10 @@ export class ParametrosComponent implements OnInit {
     private impedimentosService: ImpedimentoService
   ) {}
 
+  totalDeContratos = 0;
+  contratosPendientesDeSincronizar = 0;
+  contratosSincronizados = 0;
+
   cargandoActualizandoPermisos = false;
 
   lecturistas: Lecturista[] = [];
@@ -51,6 +55,22 @@ export class ParametrosComponent implements OnInit {
   ngOnInit(): void {
     this.cargarUsuariosSimapa();
     this.cargarUsuarios();
+    this.cargarEstadisticas();
+  }
+
+  cargandoEstadisticas = false;
+  cargarEstadisticas() {
+    this.cargandoEstadisticas = true;
+    this.parametrosService.obtenerEstadisticasSincronizacion().subscribe(
+      (resultado: any) => {
+        this.cargandoEstadisticas = false;
+        this.totalDeContratos = resultado.totalDeContratos;
+        this.contratosPendientesDeSincronizar =
+          resultado.contratosPendientesDeSincronizar;
+        this.contratosSincronizados = resultado.contratosSincronizados;
+      },
+      (_) => (this.cargandoEstadisticas = false)
+    );
   }
 
   cargarUsuarios() {
@@ -291,6 +311,28 @@ export class ParametrosComponent implements OnInit {
         "Se eliminaron los parametros del ticket sincronizados. Deberas descargarlos de nuevo"
       );
     });
+  }
+
+  archivarContratos() {
+    // this.parametrosService.archivarContratos().subscribe()
+    this.notiService.toast.warning("No disponible en este momento");
+  }
+
+  subiendoLecturasASimapa = false;
+  subirLecturasASimapa() {
+    {
+      this.subiendoLecturasASimapa = true;
+      this.simapaService.subirLecturasASimapa().subscribe(
+        (r) => {
+          this.subiendoLecturasASimapa = false;
+          this.notiService.toast.correcto(
+            "Se subieron losc contratos correctamente"
+          );
+          this.cargarEstadisticas();
+        },
+        (_) => (this.subiendoLecturasASimapa = false)
+      );
+    }
   }
 }
 

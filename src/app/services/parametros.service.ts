@@ -35,6 +35,13 @@ export class ParametrosService {
     return this.http.get<any>(this.base.concat("/permisos"));
   }
 
+  obtenerEstadisticasSincronizacion() {
+    return this.http.get(this.base.concat("/estado-de-sincronizacion-simapa"));
+  }
+  archivarContratos() {
+    return this.http.put(this.base.concat("/archivar-contratos"), null);
+  }
+
   offline = new OfflineParametros(
     this.idbService.storeObjects.PARAMETROS,
     this.codiceIdbService
@@ -51,7 +58,6 @@ class OfflineParametros extends Offline {
     super(storeObject, codiIDBService);
   }
 
-
   guardarLecturista(lecturista: Lecturista) {
     return this.codiIDBService.save(
       { [this.key]: "lecturista", lecturista },
@@ -63,15 +69,7 @@ class OfflineParametros extends Offline {
     return this.codiIDBService.findById("lecturista", this.storeObject);
   }
 
-
-  eliminarParametrosTicket(){
-    return this.codiIDBService.delete("lecturista", this.storeObject)
+  eliminarParametrosTicket() {
+    return this.codiIDBService.delete("lecturista", this.storeObject);
   }
-
-
-  
-
-
-
-
 }

@@ -61,4 +61,15 @@ export class SimapaService {
         })
       );
   }
+
+  subirLecturasASimapa() {
+    return this.http
+      .put(this.base.concat("/guardar/lecturas/listas"), null)
+      .pipe(
+        catchError((x) => {
+          this.notiService.error("500", "Algo malo paso", x);
+          return throwError(x);
+        })
+      );
+  }
 }
