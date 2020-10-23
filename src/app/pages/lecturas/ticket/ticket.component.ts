@@ -22,6 +22,8 @@ export class TicketComponent implements OnInit {
     public zebraService: ZebraService
   ) {}
 
+  datosAImprimir: any = {}
+
   cargandoContrato = false;
   datos: any = {};
   ngOnInit(): void {
@@ -47,6 +49,18 @@ export class TicketComponent implements OnInit {
   }
 
   imprimir() {
-    this.imprimirService.ticket(this.contrato);
+    let zpl = this.imprimirService.ticket1
+    let p = "@$@"
+    console.log(`this.datosAImprimir`,this.datosAImprimir)
+    Object.keys(this.datosAImprimir).forEach(key=>{
+      console.log(`${p}${key}${p}`)
+      zpl = zpl.replace(`${p}${key}${p}`, this.datosAImprimir[key])
+
+
+    })
+
+    console.log(zpl)
+
+    this.imprimirService.ticket(zpl);
   }
 }

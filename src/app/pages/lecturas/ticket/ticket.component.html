@@ -35,7 +35,10 @@
 <div *ngIf="contrato; else cargando" id="print-section" class="row ticket">
   <div class="col-12">
     <div class="card shadow">
-      <app-ticket-imprimir [contrato]="contrato"></app-ticket-imprimir>
+      <app-ticket-imprimir
+        [contrato]="contrato"
+        (paraTicket)="datosAImprimir = $event"
+      ></app-ticket-imprimir>
     </div>
   </div>
 </div>

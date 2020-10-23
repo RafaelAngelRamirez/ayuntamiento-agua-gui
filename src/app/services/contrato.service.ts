@@ -7,6 +7,7 @@ import { EstatusConexionService } from "@codice-progressio/estatus-conexion";
 import { NotificacionesService } from "./notificaciones.service";
 import { IndexedDbService, Offline } from "./offline/indexed-db.service";
 import { IndexedDBService as CodiIDBService } from "@codice-progressio/indexed-db";
+import { Tarifas } from "../models/usuario.model";
 
 @Injectable({
   providedIn: "root",
@@ -114,6 +115,19 @@ export class ContratoService {
       .map((x) => x.contrato as Contrato);
   }
 
+  sincronizarContratosTomadosPorOtroLecturista() {
+    return this.http.get<Contrato[]>(
+      this.base.concat("/leer/contratos/sincronizarTomadasPorOtrosLecturistas")
+    );
+  }
+
+  confirmarNotificacion(contratosIds: string[]) {
+    return this.http.put(
+      this.base.concat("/confirmarNotificacion"),
+      contratosIds
+    );
+  }
+
   offline = new Offline(
     this.idbService.storeObjects.CONTRATOS,
     this.codiceIdbService
@@ -121,6 +135,7 @@ export class ContratoService {
 }
 
 export interface Contrato {
+  _id: string;
   Contrato: string;
   Calle: string;
   Colonia: string;
@@ -170,4 +185,13 @@ export interface Lectura {
   Estado: string;
   latitud: number;
   longitud: number;
+  importe: number;
+  desgloses: {
+    tarifa: Tarifas;
+    min: number;
+    max: number;
+    mt3: number;
+    costo: number;
+    cuotaMinima: number;
+  }[];
 }

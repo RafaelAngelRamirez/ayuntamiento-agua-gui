@@ -59,7 +59,7 @@ class OfflineParametros extends Offline {
     );
   }
 
-  obtenerVigenciaActual() {
+  obtenerParametrosGenerales() {
     return this.codiIDBService.findById("lecturista", this.storeObject);
   }
 
@@ -67,4 +67,11 @@ class OfflineParametros extends Offline {
   eliminarParametrosTicket(){
     return this.codiIDBService.delete("lecturista", this.storeObject)
   }
+
+
+  
+
+
+
+
 }

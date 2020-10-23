@@ -20,7 +20,7 @@ export interface Lecturista {
 
 export interface ParametrosSIMAPA {
   drenaje: Drenaje[];
-  parametrosLecturistaSimapa: ParametrosLecturistaSimapa[];
+  parametros: ParametrosLecturistaSimapa[];
   infrastructura: Infrastructura[];
   aguasResiduales: AguasResiduales[];
   tarifas: Tarifas[];
@@ -59,6 +59,6 @@ export interface Tarifas {
 export interface Rutas {
   IdRuta: string;
   NombreRuta: string;
-  VigenciaRuta: number;
+  VigenciaRuta: string;
   PeriodoRuta: string;
 }
