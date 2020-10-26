@@ -25,14 +25,15 @@
       data-toggle="dropdown"
       aria-haspopup="true"
       aria-expanded="false"
-      ><img src="assets/images/users/1.jpg" alt="user" class="profile-pic"
-    /></a>
+    >
+      <!-- <img src="assets/images/users/1.jpg" alt="user" class="profile-pic"
+    /> -->
+      <i class="fas fa-plus"></i>
+    </a>
     <div class="dropdown-menu" ngbDropdownMenu>
       <ul class="dropdown-user">
         <li>
-          <a
-            (click)="lgS.cerraSesion()"
-            href="javascript:void(0)"
+          <a (click)="lgS.cerraSesion()" href="javascript:void(0)"
             ><i class="fa fa-power-off"></i> Cerrar sesión</a
           >
         </li>
