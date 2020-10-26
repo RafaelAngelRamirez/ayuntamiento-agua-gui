@@ -21,6 +21,7 @@ export class FullComponent implements OnInit {
 
   constructor(public imprimirService: ImprimirService, public router: Router) {}
 
+
   ngOnInit() {
     if (this.router.url === "/") {
       this.router.navigate(["/dashboard/dashboard1"]);
@@ -30,6 +31,7 @@ export class FullComponent implements OnInit {
 
   @HostListener("window:resize", ["$event"])
   onResize(event: string) {
+    
     this.handleLayout();
   }
 
