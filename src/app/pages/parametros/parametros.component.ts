@@ -18,6 +18,7 @@ import {
   IncidenciaService,
 } from "../../services/incidencia.service";
 import { catchError } from "rxjs/operators";
+import { TienePermisoPipe } from "../../pipes/tiene-permiso.pipe";
 import {
   Impedimento,
   ImpedimentoService,
@@ -35,7 +36,8 @@ export class ParametrosComponent implements OnInit {
     private parametrosService: ParametrosService,
     private usuarioService: UsuarioService,
     private incidenciasSerivice: IncidenciaService,
-    private impedimentosService: ImpedimentoService
+    private impedimentosService: ImpedimentoService,
+    private tienePermisoPipe: TienePermisoPipe
   ) {}
 
   totalDeContratos = 0;
@@ -53,9 +55,15 @@ export class ParametrosComponent implements OnInit {
   selectUsuario = new FormControl();
 
   ngOnInit(): void {
-    this.cargarUsuariosSimapa();
-    this.cargarUsuarios();
-    this.cargarEstadisticas();
+    let esAdministrador = this.usuarioService
+      .obtenerUsuario()
+      .permissions.includes("administrador");
+
+    if (esAdministrador) {
+      this.cargarUsuariosSimapa();
+      this.cargarEstadisticas();
+      this.cargarUsuarios();
+    }
   }
 
   cargandoEstadisticas = false;
