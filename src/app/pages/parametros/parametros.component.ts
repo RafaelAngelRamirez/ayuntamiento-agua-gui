@@ -76,7 +76,7 @@ export class ParametrosComponent implements OnInit {
         this.contratosPendientesDeSincronizar =
           resultado.contratosPendientesDeSincronizar;
         this.contratosSincronizados = resultado.contratosSincronizados;
-        this.notiService.toast.correcto("Estadisticas sincronizadas")
+        this.notiService.toast.correcto("Estadisticas sincronizadas");
       },
       (_) => (this.cargandoEstadisticas = false)
     );
@@ -239,13 +239,16 @@ export class ParametrosComponent implements OnInit {
   private incidenciasEliminar() {
     this.listaParametros.incidencias.cargando = true;
 
-    this.incidenciasSerivice.offline.deleteAll().subscribe(() => {
-      this.listaParametros.incidencias.cargando = false;
+    this.incidenciasSerivice.offline.deleteAll().subscribe(
+      () => {
+        this.listaParametros.incidencias.cargando = false;
 
-      this.notiService.toast.correcto(
-        "Se eliminaron las incidencias sincronizadas. Deberas descargarlas de nuevo"
-      );
-    });
+        this.notiService.toast.correcto(
+          "Se eliminaron las incidencias sincronizadas. Deberas descargarlas de de nuevo"
+        );
+      },
+      (_) => (this.listaParametros.incidencias.cargando = false)
+    );
   }
 
   private impedimentosSincronizar() {
@@ -279,15 +282,18 @@ export class ParametrosComponent implements OnInit {
   }
 
   private impedimentosEliminar() {
-    this.listaParametros.incidencias.cargando = true;
+    this.listaParametros.impedimentos.cargando = true;
 
-    this.impedimentosService.offline.deleteAll().subscribe(() => {
-      this.listaParametros.impedimentos.cargando = false;
+    this.impedimentosService.offline.deleteAll().subscribe(
+      () => {
+        this.listaParametros.impedimentos.cargando = false;
 
-      this.notiService.toast.correcto(
-        "Se eliminaron los impedimentos sincronizados. Deberas descargarlos de nuevo"
-      );
-    });
+        this.notiService.toast.correcto(
+          "Se eliminaron los impedimentos sincronizados. Deberas descargarlos de nuevo"
+        );
+      },
+      (_) => (this.listaParametros.impedimentos.cargando = false)
+    );
   }
   private parametrosTicketSincronizar() {
     this.obtenerLecturista()
@@ -313,13 +319,16 @@ export class ParametrosComponent implements OnInit {
   private parametrosTicketEliminar() {
     this.listaParametros.ticket.cargando = true;
 
-    this.parametrosService.offline.eliminarParametrosTicket().subscribe(() => {
-      this.listaParametros.impedimentos.cargando = false;
+    this.parametrosService.offline.eliminarParametrosTicket().subscribe(
+      () => {
+        this.listaParametros.ticket.cargando = false;
 
-      this.notiService.toast.correcto(
-        "Se eliminaron los parametros del ticket sincronizados. Deberas descargarlos de nuevo"
-      );
-    });
+        this.notiService.toast.correcto(
+          "Se eliminaron los parametros del ticket sincronizados. Deberas descargarlos de nuevo"
+        );
+      },
+      (_) => (this.listaParametros.ticket.cargando = false)
+    );
   }
 
   archivarContratos() {
@@ -328,15 +337,31 @@ export class ParametrosComponent implements OnInit {
   }
 
   subiendoLecturasASimapa = false;
+  timerSubidaLecturas = new Date();
   subirLecturasASimapa() {
     {
       this.subiendoLecturasASimapa = true;
       this.simapaService.subirLecturasASimapa().subscribe(
-        (r) => {
+        (r: any) => {
+          console.log(r);
           this.subiendoLecturasASimapa = false;
-          this.notiService.toast.correcto(
-            "Se subieron los contratos correctamente"
-          );
+          let rechazos = r.rechazados.length;
+          if (rechazos > 0) {
+            this.notiService.toast.error(
+              `No se sincronizaron ${rechazos} contrato${
+                rechazos > "1" ? "s" : ""
+              } `
+            );
+          }
+          let correctos = r.correctos.length;
+          if (correctos > 0) {
+            this.notiService.toast.correcto(
+              `Se sincronizaron ${correctos} contrato${
+                correctos > "1" ? "s" : ""
+              }`
+            );
+          }
+
           this.cargarEstadisticas();
         },
         (_) => (this.subiendoLecturasASimapa = false)
