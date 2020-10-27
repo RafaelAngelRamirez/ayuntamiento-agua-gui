@@ -20,6 +20,11 @@ export class SimapaService {
     private idbService: IndexedDBService
   ) {}
 
+  error = (x: any) => {
+    this.notiService.error("500", x.nombre, x.error.err);
+    return throwError(x);
+  };
+
   subirLectura(lectura: any) {
     return this.http
       .put(URL_BASE("simapa/guardar/lectura"), lectura)
@@ -54,22 +59,12 @@ export class SimapaService {
   sincronizarParametros() {
     return this.http
       .put<any>(this.base.concat("/sincronizar/parametros"), null)
-      .pipe(
-        catchError((x) => {
-          this.notiService.error("500", "Algo malo paso", x);
-          return throwError(x);
-        })
-      );
+      .pipe(catchError(this.error));
   }
 
   subirLecturasASimapa() {
     return this.http
       .put(this.base.concat("/guardar/lecturas/listas"), null)
-      .pipe(
-        catchError((x) => {
-          this.notiService.error("500", "Algo malo paso", x);
-          return throwError(x);
-        })
-      );
+      .pipe(catchError(this.error));
   }
 }
