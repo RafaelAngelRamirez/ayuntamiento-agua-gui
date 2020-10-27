@@ -15,7 +15,7 @@ export const Pagesroutes: Routes = [
     loadChildren: () =>
       import("./usuario/usuario.module").then((m) => m.UsuarioModule),
       canLoad: [ValidaLoginGuard],
-      data: { permission: "super_admin" },
+      data: { permission: "administrador" },
   },
   {
     path: "contrato",

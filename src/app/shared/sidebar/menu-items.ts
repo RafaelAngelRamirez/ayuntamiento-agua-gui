@@ -32,7 +32,7 @@ export const ROUTES: RouteInfo[] = [
     labelClass: "",
     extralink: false,
     submenu: [],
-    permission:"super_admin"
+    permission:"administrador"
   },
   {
     path: "/contrato",
@@ -76,7 +76,7 @@ export const ROUTES: RouteInfo[] = [
     labelClass: "",
     extralink: false,
     submenu: [],
-    permission:"super_admin"
+    permission:"administrador"
   },
   // {
   //   path: "",
