@@ -47,9 +47,10 @@ export class HttpConfigInterceptor implements HttpInterceptor {
         return event;
       }),
       catchError((_) => {
-        let estatus = _ && _.error && _.error.reason ? _.error.reason : "";
-        let razon = _.status;
-        this.notiSerivce.error(estatus, razon, _);
+        // let estatus = _ && _.error && _.error.reason ? _.error.reason : "";
+        // let razon = _.status;
+        // this.notiSerivce.error(estatus, razon, _);
+        console.log(_)
         return throwError(_);
       })
     );
