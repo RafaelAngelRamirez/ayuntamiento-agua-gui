@@ -1,4 +1,10 @@
-import { Component, AfterViewInit, EventEmitter, Output } from "@angular/core";
+import {
+  Component,
+  AfterViewInit,
+  EventEmitter,
+  Output,
+  OnInit,
+} from "@angular/core";
 import {
   NgbModal,
   ModalDismissReasons,
@@ -7,19 +13,27 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import { PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
 import { LoginService } from "../../services/login.service";
+import { UsuarioService } from "../../services/usuario.service";
+import { Usuario } from "../../models/usuario.model";
 //declare var $: any;
 @Component({
   selector: "app-navigation",
   templateUrl: "./navigation.component.html",
 })
-export class NavigationComponent implements AfterViewInit {
+export class NavigationComponent implements OnInit {
   @Output() toggleSidebar = new EventEmitter<void>();
+
+  usuarioLogueado: Usuario | undefined;
 
   public config: PerfectScrollbarConfigInterface = {};
   constructor(
     public lgS: LoginService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private usuarioSerivce: UsuarioService
   ) {}
+  ngOnInit(): void {
+    this.usuarioLogueado = this.usuarioSerivce.obtenerUsuario();
+  }
 
   public showSearch = false;
 
@@ -86,6 +100,4 @@ export class NavigationComponent implements AfterViewInit {
       time: "9:00 AM",
     },
   ];
-
-  ngAfterViewInit() {}
 }
