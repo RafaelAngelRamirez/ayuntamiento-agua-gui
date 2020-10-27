@@ -76,6 +76,7 @@ export class ParametrosComponent implements OnInit {
         this.contratosPendientesDeSincronizar =
           resultado.contratosPendientesDeSincronizar;
         this.contratosSincronizados = resultado.contratosSincronizados;
+        this.notiService.toast.correcto("Estadisticas sincronizadas")
       },
       (_) => (this.cargandoEstadisticas = false)
     );
@@ -334,7 +335,7 @@ export class ParametrosComponent implements OnInit {
         (r) => {
           this.subiendoLecturasASimapa = false;
           this.notiService.toast.correcto(
-            "Se subieron losc contratos correctamente"
+            "Se subieron los contratos correctamente"
           );
           this.cargarEstadisticas();
         },
