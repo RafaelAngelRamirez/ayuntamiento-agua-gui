@@ -93,7 +93,11 @@ class OfflineParametros extends Offline {
     );
   }
 
-  eliminarParametrosVigenciaYPeriodo() {
+  eliminarVigenciaYPeriodo() {
     return this.codiIDBService.delete("vigenciaPeriodo", this.storeObject);
+  }
+
+  obtenerVigenciaYPeriodo(){
+    return this.codiIDBService.findById("vigenciaPeriodo", this.storeObject)
   }
 }
