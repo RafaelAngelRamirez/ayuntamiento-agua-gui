@@ -28,6 +28,54 @@
     </div>
   </div>
 
+  <div class="col-12 col-md-3">
+    <div class="card shadow">
+      <div class="card-body">
+        <h3>Vigencia</h3>
+
+        <small class="text-muted">
+          Debe coincidir con el definido en tauro. Esto permitira solo descargar
+          a los usuarios lecturistas solo aquellos contratos correspondientes a
+          la vigencia y periodo conicindente.
+        </small>
+
+        <div class="form-group">
+          <input
+            [(ngModel)]="vigencia"
+            type="number"
+            class="form-control"
+            [disabled]="cargandoVigenciaYPeriodo"
+          />
+          <small class="form-text text-muted">Vigencia</small>
+        </div>
+
+        <hr />
+
+        <h3>Periodo</h3>
+
+        <div class="form-group">
+          <input
+            [(ngModel)]="periodo"
+            type="number"
+            class="form-control"
+            [disabled]="cargandoVigenciaYPeriodo"
+          />
+          <small class="form-text text-muted">Periodo</small>
+        </div>
+        <hr />
+        <a
+          (click)="actualizarPeriodoYVigencia()"
+          class="btn btn-success btn-xs"
+          href="javascript:void(0)"
+          role="button"
+        >
+          <i *ngIf="cargandoVigenciaYPeriodo" class="fas fa-sync fa-spin"></i>
+          <i *ngIf="!cargandoVigenciaYPeriodo" class="fas fa-save"></i
+        ></a>
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="'administrador' | tienePermiso" class="col-12 col-md-3">
     <div class="card shadow">
       <div class="card-body">

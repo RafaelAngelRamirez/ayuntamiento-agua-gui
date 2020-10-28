@@ -42,6 +42,17 @@ export class ParametrosService {
     return this.http.put(this.base.concat("/archivar-contratos"), null);
   }
 
+  actualizarPeriodoYVigencia(periodo: number, vigencia: number) {
+    return this.http.put(this.base.concat("/vigencia-y-periodo"), {
+      periodo,
+      vigencia,
+    });
+  }
+
+  cargarPeriodoVigencia() {
+    return this.http.get(this.base.concat("/vigencia-y-periodo"));
+  }
+
   offline = new OfflineParametros(
     this.idbService.storeObjects.PARAMETROS,
     this.codiceIdbService

@@ -63,6 +63,7 @@ export class ParametrosComponent implements OnInit {
       this.cargarUsuariosSimapa();
       this.cargarEstadisticas();
       this.cargarUsuarios();
+      this.cargarPeriodoVigecina()
     }
   }
 
@@ -367,6 +368,50 @@ export class ParametrosComponent implements OnInit {
         (_) => (this.subiendoLecturasASimapa = false)
       );
     }
+  }
+
+  vigencia: number | null = null;
+  periodo: number | null = null;
+  cargandoVigenciaYPeriodo = false;
+  actualizarPeriodoYVigencia() {
+    //No pueden estar vacios.
+    if (!this.vigencia) {
+      this.notiService.toast.error("La vigencia no puede estar vacia");
+      return;
+    }
+
+    if (!this.periodo) {
+      this.notiService.toast.error("El periodo no puede estar vacio");
+      return;
+    }
+
+    this.cargandoVigenciaYPeriodo = true;
+    this.parametrosService
+      .actualizarPeriodoYVigencia(this.periodo, this.vigencia)
+      .subscribe(
+        () => {
+          this.cargandoVigenciaYPeriodo = false;
+
+          this.notiService.toast.correcto(
+            "Se actualizaron la vigencia y el periodo actuales"
+          );
+        },
+        () => {
+          this.cargandoVigenciaYPeriodo = false;
+        }
+      );
+  }
+
+  cargarPeriodoVigecina() {
+    this.cargandoVigenciaYPeriodo = true;
+    this.parametrosService.cargarPeriodoVigencia().subscribe(
+      (res: any) => {
+        this.periodo = res.periodo;
+        this.vigencia = res.vigencia;
+        this.cargandoVigenciaYPeriodo = false;
+      },
+      () => (this.cargandoVigenciaYPeriodo = false)
+    );
   }
 }
 
