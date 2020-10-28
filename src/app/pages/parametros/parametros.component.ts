@@ -150,32 +150,39 @@ export class ParametrosComponent implements OnInit {
   }
 
   listaParametros = {
+    vigenciaYPeriodo: new SincronizacionLecturista<{
+      vigencia: number;
+      periodo: number;
+    }>(
+      "1.- Vigencia",
+      this.parametrosVigenciaYPeriodoSincronizar.bind(this),
+      this.parametrosVigenciaYPeriodoEliminar.bind(this)
+    ),
     incidencias: new SincronizacionLecturista<Incidencia[]>(
-      "Incidencias",
+      "2.- Incidencias",
       this.incidenciasSincronizar.bind(this),
       this.incidenciasEliminar.bind(this)
     ),
 
     impedimentos: new SincronizacionLecturista<Impedimento[]>(
-      "Impedimentos",
+      "3.- Impedimentos",
       this.impedimentosSincronizar.bind(this),
       this.impedimentosEliminar.bind(this)
     ),
 
     ticket: new SincronizacionLecturista<Lecturista>(
-      "Parametros ticket",
+      "4.- Parametros ticket",
       this.parametrosTicketSincronizar.bind(this),
       this.parametrosTicketEliminar.bind(this)
     ),
-    vigenciaYPeriodo: new SincronizacionLecturista<{
-      vigencia: number;
-      periodo: number;
-    }>(
-      "Vigencia",
-      this.parametrosVigenciaYPeriodoSincronizar.bind(this),
-      this.parametrosVigenciaYPeriodoEliminar.bind(this)
-    ),
   };
+
+  obtenerListaDeParametrosOrdenados = [
+    "vigenciaYPeriodo",
+    "incidencias",
+    "impedimentos",
+    "ticket",
+  ];
 
   private obtenerLecturista(): Promise<Lecturista> {
     return new Promise(async (resolve, reject) => {
@@ -210,11 +217,26 @@ export class ParametrosComponent implements OnInit {
     });
   }
 
-  private incidenciasSincronizar() {
-    this.listaParametros.incidencias.cargando = true;
-    this.incidenciasSerivice
-      .findAll()
+  vigenciaYPeriodoCargados(): Promise<boolean> {
+    return this.parametrosService.offline
+      .obtenerVigenciaYPeriodo()
       .toPromise()
+      .then((dato: any) => {
+        if (!dato?.vigPer || !dato?.vigPer) {
+          throw new Error("No se ha definido vigencia y periodo");
+        }
+
+        return true;
+      });
+  }
+
+  private incidenciasSincronizar() {
+    this.vigenciaYPeriodoCargados()
+      .then((seguir) => {
+        this.listaParametros.incidencias.cargando = true;
+        return this.incidenciasSerivice.findAll().toPromise();
+      })
+
       .then((incidencias) => {
         if (incidencias.length === 0) {
           throw "No hay incidencias registradas";
@@ -254,10 +276,11 @@ export class ParametrosComponent implements OnInit {
   }
 
   private impedimentosSincronizar() {
-    this.listaParametros.impedimentos.cargando = true;
-    this.impedimentosService
-      .findAll()
-      .toPromise()
+    this.vigenciaYPeriodoCargados()
+      .then((seguir) => {
+        this.listaParametros.impedimentos.cargando = true;
+        return this.impedimentosService.findAll().toPromise();
+      })
       .then((impedimentos) => {
         if (impedimentos.length === 0) {
           throw "No hay impedimentos registradas";
@@ -298,7 +321,10 @@ export class ParametrosComponent implements OnInit {
     );
   }
   private parametrosTicketSincronizar() {
-    this.obtenerLecturista()
+    this.vigenciaYPeriodoCargados()
+      .then((seguir) => {
+        return this.obtenerLecturista();
+      })
       .then((lecturista) => {
         this.listaParametros.ticket.datos = lecturista;
 
@@ -358,18 +384,16 @@ export class ParametrosComponent implements OnInit {
   private parametrosVigenciaYPeriodoEliminar() {
     this.listaParametros.vigenciaYPeriodo.cargando = true;
 
-    this.parametrosService.offline
-      .eliminarParametrosVigenciaYPeriodo()
-      .subscribe(
-        () => {
-          this.listaParametros.vigenciaYPeriodo.cargando = false;
+    this.parametrosService.offline.eliminarVigenciaYPeriodo().subscribe(
+      () => {
+        this.listaParametros.vigenciaYPeriodo.cargando = false;
 
-          this.notiService.toast.correcto(
-            "Se eliminaron los parametros de vigencia y periodo sincronizados. Deberas descargarlos de nuevo"
-          );
-        },
-        () => (this.listaParametros.vigenciaYPeriodo.cargando = false)
-      );
+        this.notiService.toast.correcto(
+          "Se eliminaron los parametros de vigencia y periodo sincronizados. Deberas descargarlos de nuevo"
+        );
+      },
+      () => (this.listaParametros.vigenciaYPeriodo.cargando = false)
+    );
   }
 
   archivarContratos() {

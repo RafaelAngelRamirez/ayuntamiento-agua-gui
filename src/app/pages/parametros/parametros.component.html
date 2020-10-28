@@ -87,7 +87,7 @@
         <hr />
         <button
           (click)="sincronizarParametros()"
-          class="btn btn-primary btn-sm"
+          class="btn btn-success btn-sm"
           [disabled]="sincronizandoParametros"
         >
           <i *ngIf="sincronizandoParametros" class="fas fa-sync fa-spin"></i>
@@ -111,7 +111,7 @@
         <hr />
         <button
           (click)="sincronizarContratos()"
-          class="btn btn-primary btn-sm"
+          class="btn btn-success btn-sm"
           [disabled]="sincronizandoContratos"
         >
           <i *ngIf="!sincronizandoContratos" class="fas fa-server"></i>
@@ -128,7 +128,7 @@
         <h3>
           [ SIMAPA ] Sincronizacion
           <a
-            class="btn btn-primary btn-sm"
+            class="btn btn-success btn-sm"
             href="javascript:void(0)"
             role="button"
             (click)="cargarEstadisticas()"
@@ -147,7 +147,7 @@
         <hr />
         <h1 class="font-weight-bold">
           <small class="text-muted">Total de contratos: </small
-          >{{ totalDeContratos| number }}
+          >{{ totalDeContratos | number }}
         </h1>
         <hr />
         <h3 class="font-weight-bold">
@@ -158,7 +158,7 @@
           >Contratos en espera de ser sincronizados.
         </small>
 
-        <hr>
+        <hr />
         <h3 class="font-weight-bold">
           <small class="text-muted">Sincronizados: </small
           >{{ contratosSincronizados | number }}
@@ -229,25 +229,25 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let kv of listaParametros | keyvalue">
-              <td scope="row">{{ kv.value.nombre }}</td>
+            <tr *ngFor="let key of obtenerListaDeParametrosOrdenados">
+              <td scope="row">{{ listaParametros[key].nombre }}</td>
               <td>
                 <button
-                  (click)="kv.value.sincronizar()"
+                  (click)="listaParametros[key].sincronizar()"
                   type="button"
-                  class="btn btn-primary btn-xs"
+                  class="btn btn-success btn-xs"
                 >
                   <i
-                    [ngClass]="{ 'fa-spin': kv.value.cargando }"
+                    [ngClass]="{ 'fa-spin': listaParametros[key].cargando }"
                     class="fas fa-sync"
                   ></i>
                 </button>
               </td>
               <td>
                 <button
-                  (click)="kv.value.eliminar()"
+                  (click)="listaParametros[key].eliminar()"
                   type="button"
-                  class="btn btn-primary btn-xs"
+                  class="btn btn-danger btn-xs"
                 >
                   <i class="fas fa-times"></i>
                 </button>
