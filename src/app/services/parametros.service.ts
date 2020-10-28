@@ -50,7 +50,9 @@ export class ParametrosService {
   }
 
   cargarPeriodoVigencia() {
-    return this.http.get(this.base.concat("/vigencia-y-periodo"));
+    return this.http.get<{ vigencia: number; periodo: number }>(
+      this.base.concat("/vigencia-y-periodo")
+    );
   }
 
   offline = new OfflineParametros(
@@ -82,5 +84,16 @@ class OfflineParametros extends Offline {
 
   eliminarParametrosTicket() {
     return this.codiIDBService.delete("lecturista", this.storeObject);
+  }
+
+  guardarVigenciaYPeriodo(vigPer: { vigencia: number; periodo: number }) {
+    return this.codiIDBService.save(
+      { [this.key]: "vigenciaPeriodo", vigPer },
+      this.storeObject
+    );
+  }
+
+  eliminarParametrosVigenciaYPeriodo() {
+    return this.codiIDBService.delete("vigenciaPeriodo", this.storeObject);
   }
 }
