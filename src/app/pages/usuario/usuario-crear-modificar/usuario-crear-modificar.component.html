@@ -42,179 +42,211 @@
 
         <h3>Navegacion default</h3>
 
-        <div class="col-12 col-md-6">
-          <div class="form-check">
-            <label class="form-check-label">
-              <input
-                [(ngModel)]="usuario.navegacionDefault"
-                type="radio"
-                class="form-check-input"
-                [value]="rutaLecturista"
-              />
-              Lectura
-            </label>
-          </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input
+              [(ngModel)]="usuario.navegacionDefault"
+              type="radio"
+              class="form-check-input"
+              [value]="rutaLecturista"
+            />
+            Lectura
+          </label>
+        </div>
 
-          <div class="form-check">
-            <label class="form-check-label">
-              <input
-                [(ngModel)]="usuario.navegacionDefault"
-                type="radio"
-                class="form-check-input"
-                [value]="rutaTablero"
-              />
-              Tablero
-            </label>
-          </div>
+        <div class="form-check">
+          <label class="form-check-label">
+            <input
+              [(ngModel)]="usuario.navegacionDefault"
+              type="radio"
+              class="form-check-input"
+              [value]="rutaTablero"
+            />
+            Tablero
+          </label>
+        </div>
 
-          <hr />
+        <hr />
 
-          <button
-            *ngIf="usuario._id"
-            (click)="modificar()"
-            class="btn btn-primary"
-            role="button"
+        <button
+          *ngIf="usuario._id"
+          (click)="modificar()"
+          class="btn btn-success"
+          role="button"
+          [disabled]="cargando"
+        >
+          <i *ngIf="!cargando" class="fas fa-save"></i>
+          <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+
+          Modificar
+        </button>
+        <button
+          *ngIf="!usuario._id"
+          (click)="guardar()"
+          class="btn btn-primary"
+          role="button"
+          [disabled]="cargando"
+        >
+          <i *ngIf="!cargando" class="fas fa-save"></i>
+          <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+
+          Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    title="Modifica el password del usuario"
+    *ngIf="usuario?._id"
+    class="col-auto"
+  >
+    <div class="card shadow">
+      <div class="card-body">
+        <h3>Password</h3>
+
+        <div class="form-group">
+          <input
             [disabled]="cargando"
-          >
-            <i *ngIf="!cargando" class="fas fa-save"></i>
-            <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+            type="text"
+            class="form-control"
+            [(ngModel)]="usuario.password"
+          />
+          <small class="form-text text-muted">Ingresa nuevo password</small>
+        </div>
 
-            Modificar
-          </button>
-          <button
-            *ngIf="!usuario._id"
-            (click)="guardar()"
-            class="btn btn-primary"
-            role="button"
+        <button
+          (click)="modificarPassword()"
+          [disabled]="cargando"
+          type="button"
+          class="btn btn-success btn-sm"
+        >
+          <i *ngIf="!cargando" class="fas fa-save"></i>
+
+          <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    title="Ingresa el numero mac del dispositivo a utilizar por parte del usuario. El primer valor que se define por defecto es un numero aleatorio sin mas relevancia. "
+    *ngIf="usuario?._id"
+    class="col-auto"
+  >
+    <div class="card shadow">
+      <div class="card-body">
+        <h3>Dispositivo</h3>
+
+        <div class="form-group">
+          <input
+            [(ngModel)]="usuario.dispositivo"
             [disabled]="cargando"
-          >
-            <i *ngIf="!cargando" class="fas fa-save"></i>
-            <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+            type="text"
+            class="form-control"
+          />
+          <small class="form-text text-muted">Asginar UID dispositivo</small>
+        </div>
 
-            Guardar
-          </button>
+        <button
+          (click)="modificarDispositivo()"
+          [disabled]="cargando"
+          type="button"
+          class="btn-success btn-sm"
+        >
+          <i *ngIf="!cargando" class="fas fa-save"></i>
+
+          <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    title="Define la contraparte del usuario en SIMAPA. Es necesario para tomar lecturas."
+    *ngIf="usuario?._id"
+    class="col-auto"
+  >
+    <div class="card shadow">
+      <div class="card-body">
+        <h3>
+          Lecturista
+
+          <br />
+          <small>{{ usuario?.lecturista?.NombreLecturista }}</small>
+        </h3>
+
+        <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+
+        <div class="form-group">
+          <label for="">Selecciona lecturista</label>
+          <select
+            (change)="guardarLecturista()"
+            [(ngModel)]="usuario.lecturista"
+            class="form-control"
+          >
+            <option [ngValue]="item" *ngFor="let item of usuariosSimapa">
+              {{ item.NombreLecturista }}
+            </option>
+          </select>
         </div>
       </div>
     </div>
   </div>
 
-  <div *ngIf="usuario?._id" class="row">
-    <div class="col-auto">
-      <div class="card shadow">
-        <div class="card-body">
-          <h3>Password</h3>
+  <div *ngIf="usuario?._id" class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <h1>Permisos</h1>
 
-          <div class="form-group">
-            <input
-              [disabled]="cargando"
-              type="text"
-              class="form-control"
-              [(ngModel)]="usuario.password"
-            />
-            <small class="form-text text-muted">Ingresa nuevo password</small>
-          </div>
+        <a
+          class="btn btn-info btn-xs mr-5"
+          data-toggle="collapse"
+          data-target="#detallePermisos"
+          href="javascript:void(0)"
+          aria-expanded="false"
+          aria-controls="detallePermisos"
+          title="Muestra el detalle de los permisos para seleccionar"
+        >
+          <i class="fas fa-eye"></i>
+          Ver permisos en detalle
+        </a>
 
-          <button
-            (click)="modificarPassword()"
-            [disabled]="cargando"
-            type="button"
-            class="btn btn-primary"
-          >
-            <i *ngIf="!cargando" class="fas fa-save"></i>
+        <a
+          (click)="aplicarPermisosLecturista()"
+          class="btn btn-warning btn-xs"
+          href="javascript:void(0)"
+          role="button"
+          title="Aplica el perfil de lecturista remplazando todos los permisos del usuario"
+        >
+          <i class="fas fa-pen"></i> Perfil lecturista
+        </a>
 
-            <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
-          </button>
-        </div>
-      </div>
-    </div>
+        <hr />
 
-    <div *ngIf="usuario?._id" class="col-auto">
-      <div class="card shadow">
-        <div class="card-body">
-          <h3>Dispositivo</h3>
-
-          <div class="form-group">
-            <input
-              [(ngModel)]="usuario.dispositivo"
-              [disabled]="cargando"
-              type="text"
-              class="form-control"
-            />
-            <small class="form-text text-muted">Asginar UID dispositivo</small>
-          </div>
-
-          <button
-            (click)="modificarDispositivo()"
-            [disabled]="cargando"
-            type="button"
-            class="btn btn-primary"
-          >
-            <i *ngIf="!cargando" class="fas fa-save"></i>
-
-            <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="usuario?._id" class="col-auto">
-      <div class="card shadow">
-        <div class="card-body">
-          <h3>
-            Lecturista
-
-            <br />
-            <small>{{ usuario?.lecturista?.NombreLecturista }}</small>
-          </h3>
-
-          <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
-
-          <div class="form-group">
-            <label for="">Selecciona lecturista</label>
-            <select
-              (change)="guardarLecturista()"
-              [(ngModel)]="usuario.lecturista"
-              class="form-control"
-            >
-              <option [ngValue]="item" *ngFor="let item of usuariosSimapa">
-                {{ item.NombreLecturista }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="usuario?._id" class="row">
-      <div class="col-12">
-        <div class="card shadow">
-          <div class="card-body">
-            <h1>Permisos</h1>
-
-            <div class="row">
-              <div *ngFor="let kv of permisos | keyvalue" class="col-12">
-                <h4>
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input
-                        *ngIf="!modificandoPermisos"
-                        (change)="agregarOQuitarPermiso(kv.key, $event)"
-                        type="checkbox"
-                        class="form-check-input"
-                        value="checkedValue"
-                        [checked]="comprobarPermisos(kv.key)"
-                      />
-                      <i
-                        *ngIf="modificandoPermisos"
-                        class="fas fa-sync fa-spin"
-                      ></i>
-                      {{ kv.key }}
-                    </label>
-                  </div>
-                  <small class="text-muted">{{ kv.value }}</small>
-                  <br />
-                </h4>
+        <div class="collapse" id="detallePermisos">
+          <div *ngFor="let kv of permisos | keyvalue">
+            <h4>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input
+                    *ngIf="!modificandoPermisos"
+                    (change)="agregarOQuitarPermiso(kv.key, $event)"
+                    type="checkbox"
+                    class="form-check-input"
+                    value="checkedValue"
+                    [checked]="comprobarPermisos(kv.key)"
+                  />
+                  <i
+                    *ngIf="modificandoPermisos"
+                    class="fas fa-sync fa-spin"
+                  ></i>
+                  {{ kv.key }}
+                </label>
               </div>
-            </div>
+              <small class="text-muted">{{ kv.value }}</small>
+              <br />
+            </h4>
           </div>
         </div>
       </div>

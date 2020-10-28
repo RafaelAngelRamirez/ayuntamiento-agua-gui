@@ -119,12 +119,16 @@ export class UsuarioCrearModificarComponent implements OnInit {
     }
 
     this.usuario.permissions = Array.from(new Set(this.usuario.permissions));
+    this.guardarPermisos(
+      esSeleccion,
+      `Se ${esSeleccion ? "agrego" : "quito"} el permiso ${permiso}`
+    );
+  }
 
+  private guardarPermisos(esSeleccion: boolean, msj: string) {
     this.usuarioSerivce.updatePermisos(this.usuario).subscribe(
       (usuario) => {
-        this.notiService.toast.correcto(
-          `Se ${esSeleccion ? "agrego" : "quito"} el permiso ${permiso}`
-        );
+        this.notiService.toast.correcto(msj);
 
         this.usuario = usuario;
         this.modificandoPermisos = false;
@@ -200,13 +204,24 @@ export class UsuarioCrearModificarComponent implements OnInit {
       );
   }
 
+  rutaLecturista = "/app/lectura";
+  rutaTablero = "/app/tablero";
 
-  rutaLecturista = "/app/lectura"
-  rutaTablero = "/app/tablero"
+  aplicarPermisosLecturista() {
+    this.modificandoPermisos = true;
+    //Primero borramos toda la lista de permisos
 
+    let permisosLecturitas = [
+      "contrato:agregar:lectura",
+      "contrato:leer:contrato",
+      "contrato:leer:termino",
+      "contrato:leer:todo",
+      "login",
+      "usuario:leer:id",
+    ];
 
+    this.usuario.permissions = permisosLecturitas;
 
-
-
-
+    this.guardarPermisos(true, "Se aplico el perfil de lecturista");
+  }
 }
