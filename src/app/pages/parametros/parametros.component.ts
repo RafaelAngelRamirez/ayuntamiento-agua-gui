@@ -19,6 +19,7 @@ import {
 } from "../../services/incidencia.service";
 import { catchError } from "rxjs/operators";
 import { TienePermisoPipe } from "../../pipes/tiene-permiso.pipe";
+import { ContratosPendientesSincronizarComponent } from "../../components/contratos-pendientes-sincronizar/contratos-pendientes-sincronizar.component";
 import {
   Impedimento,
   ImpedimentoService,
@@ -39,10 +40,9 @@ export class ParametrosComponent implements OnInit {
     private impedimentosService: ImpedimentoService,
     private tienePermisoPipe: TienePermisoPipe
   ) {}
-
-  totalDeContratos = 0;
-  contratosPendientesDeSincronizar = 0;
-  contratosSincronizados = 0;
+  contratosPendientesSincronizarComponent:
+    | ContratosPendientesSincronizarComponent
+    | undefined;
 
   cargandoActualizandoPermisos = false;
 
@@ -61,26 +61,10 @@ export class ParametrosComponent implements OnInit {
 
     if (esAdministrador) {
       this.cargarUsuariosSimapa();
-      this.cargarEstadisticas();
+
       this.cargarUsuarios();
       this.cargarPeriodoVigecina();
     }
-  }
-
-  cargandoEstadisticas = false;
-  cargarEstadisticas() {
-    this.cargandoEstadisticas = true;
-    this.parametrosService.obtenerEstadisticasSincronizacion().subscribe(
-      (resultado: any) => {
-        this.cargandoEstadisticas = false;
-        this.totalDeContratos = resultado.totalDeContratos;
-        this.contratosPendientesDeSincronizar =
-          resultado.contratosPendientesDeSincronizar;
-        this.contratosSincronizados = resultado.contratosSincronizados;
-        this.notiService.toast.correcto("Estadisticas sincronizadas");
-      },
-      (_) => (this.cargandoEstadisticas = false)
-    );
   }
 
   cargarUsuarios() {
@@ -145,18 +129,21 @@ export class ParametrosComponent implements OnInit {
 
         if (!datos.vigencia) throw "No has definido la vigencia actual";
 
-        let vigYPer = this.lecturistas.map(
-          (x) =>
-            x.parametros.rutas.map((a) => {
-              return { vigencia: a.VigenciaRuta, periodo: a.PeriodoRuta };
-            })[0]
-        );
+        let vigYPer = this.lecturistas
+          .map(
+            (x) =>
+              x.parametros.rutas.map((a) => {
+                return { vigencia: a.VigenciaRuta, periodo: a.PeriodoRuta };
+              })[0]
+          )
+          .filter((x) => !!x);
 
         let vigencias = Array.from(new Set(vigYPer.map((x) => x.vigencia)));
         let periodos = Array.from(new Set(vigYPer.map((x) => x.periodo)));
 
         if (vigencias.length > 1)
           throw `Se detectaron multiples vigencias cargadas en los lecturistas del simapa: ${vigencias.toString()}`;
+
         if (periodos.length > 1)
           throw `Se detectaron multiples periodos cargados en los lecturistas del simapa: ${periodos.toString()}`;
 
@@ -164,10 +151,10 @@ export class ParametrosComponent implements OnInit {
         let periodoActualSimapa = Number(periodos.pop());
 
         if (datos.periodo !== periodoActualSimapa)
-          throw `El periodo de la app ${datos.periodo} difiere del SIMAPA ${periodoActualSimapa}. NO SE PUEDE CONTINUAR`;
+          throw `El periodo definido acltuamente (${datos.periodo}) difiere del SIMAPA (${periodoActualSimapa}). NO SE PUEDE CONTINUAR`;
 
         if (datos.vigencia !== vigenciaActualSimapa)
-          throw `La vigencia de la app ${datos.vigencia} difiere del SIMAPA ${vigenciaActualSimapa}. NO SE PUEDE CONTINUAR`;
+          throw `La vigencia definida acltuamente (${datos.vigencia}) difiere del SIMAPA (${vigenciaActualSimapa}). NO SE PUEDE CONTINUAR`;
 
         this.sincronizandoContratos = true;
         this.simapaService.sincronizarContratos().subscribe(
@@ -468,6 +455,10 @@ export class ParametrosComponent implements OnInit {
         (_) => (this.subiendoLecturasASimapa = false)
       );
     }
+  }
+
+  cargarEstadisticas() {
+    this.contratosPendientesSincronizarComponent?.cargarEstadisticas();
   }
 
   vigencia: number | null = null;
