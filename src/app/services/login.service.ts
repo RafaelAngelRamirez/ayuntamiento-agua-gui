@@ -7,6 +7,7 @@ import { map, catchError } from "rxjs/operators";
 import { throwError } from "rxjs";
 import { NotificacionesService } from "./notificaciones.service";
 import { Router } from "@angular/router";
+import { version } from "../../../package.json";
 
 @Injectable({
   providedIn: "root",
@@ -19,7 +20,8 @@ export class LoginService {
     public tkService: TokenService,
     public ls: LocalStorageService
   ) {}
-
+  version_gui = version;
+  version_api = version;
   base = URL_BASE("login");
 
   cerraSesion() {
@@ -31,6 +33,7 @@ export class LoginService {
     return this.http.post(this.base, { usuario, password }).pipe(
       map((resp: any) => {
         this.tkService.guardarToken(resp.token);
+        this.version_api = resp.version;
         return true;
       }),
       catchError((x: any) => {
