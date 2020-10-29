@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: "",
     data: {
-      title: "Dashboard",
+      title: "Tablero",
       urls: [{ title: "Dashboard", url: "/tablero" }, { title: "Dashboard" }],
     },
     component: DashboardComponent,
