@@ -16,6 +16,7 @@ import { RouterModule } from "@angular/router";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { DomicilioPipe } from "../pipes/domicilio.pipe";
 import { TienePermisoPipe } from "../pipes/tiene-permiso.pipe";
+import { ContratosPendientesSincronizarComponent } from "../components/contratos-pendientes-sincronizar/contratos-pendientes-sincronizar.component";
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
   wheelSpeed: 2,
@@ -33,6 +34,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NoPageFoundComponent,
     DomicilioPipe,
     TienePermisoPipe,
+
+    ContratosPendientesSincronizarComponent,
   ],
   exports: [
     FullComponent,
@@ -47,6 +50,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FormsModule,
     DomicilioPipe,
     TienePermisoPipe,
+    ContratosPendientesSincronizarComponent,
   ],
 
   imports: [
