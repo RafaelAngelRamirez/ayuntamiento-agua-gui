@@ -21,7 +21,7 @@ export class LoginService {
     public ls: LocalStorageService
   ) {}
   version_gui = version;
-  version_api = version;
+  version_api = "0.0.0";
   base = URL_BASE("login");
 
   cerraSesion() {
