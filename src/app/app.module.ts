@@ -25,12 +25,6 @@ import { TicketImprimirComponent } from "./print/ticket-imprimir/ticket-imprimir
 import { CiudadanosComponent } from "./ciudadanos/ciudadanos.component";
 
 export const Approutes: Routes = [
-  //Imprecion
-  {
-    path: "ticket",
-    canActivate: [ValidaLoginGuard],
-    component: TicketImprimirComponent,
-  },
   {
     path: "login",
     component: LoginComponent,
