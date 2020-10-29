@@ -137,16 +137,52 @@ export class ParametrosComponent implements OnInit {
 
   sincronizandoContratos = false;
   sincronizarContratos() {
-    this.sincronizandoContratos = true;
-    this.simapaService.sincronizarContratos().subscribe(
-      (resultado: any) => {
-        this.sincronizandoContratos = false;
-        this.notiService.toast.correcto(
-          "Contatos sincronizados: " + resultado.total
+    this.parametrosService
+      .cargarPeriodoVigencia()
+      .toPromise()
+      .then((datos) => {
+        if (!datos.periodo) throw "No has definido el periodo actual";
+
+        if (!datos.vigencia) throw "No has definido la vigencia actual";
+
+        let vigYPer = this.lecturistas.map(
+          (x) =>
+            x.parametros.rutas.map((a) => {
+              return { vigencia: a.VigenciaRuta, periodo: a.PeriodoRuta };
+            })[0]
         );
-      },
-      () => (this.sincronizandoContratos = false)
-    );
+
+        let vigencias = Array.from(new Set(vigYPer.map((x) => x.vigencia)));
+        let periodos = Array.from(new Set(vigYPer.map((x) => x.periodo)));
+
+        if (vigencias.length > 1)
+          throw `Se detectaron multiples vigencias cargadas en los lecturistas del simapa: ${vigencias.toString()}`;
+        if (periodos.length > 1)
+          throw `Se detectaron multiples periodos cargados en los lecturistas del simapa: ${periodos.toString()}`;
+
+        let vigenciaActualSimapa = Number(vigencias.pop());
+        let periodoActualSimapa = Number(periodos.pop());
+
+        if (datos.periodo !== periodoActualSimapa)
+          throw `El periodo de la app ${datos.periodo} difiere del SIMAPA ${periodoActualSimapa}. NO SE PUEDE CONTINUAR`;
+
+        if (datos.vigencia !== vigenciaActualSimapa)
+          throw `La vigencia de la app ${datos.vigencia} difiere del SIMAPA ${vigenciaActualSimapa}. NO SE PUEDE CONTINUAR`;
+
+        this.sincronizandoContratos = true;
+        this.simapaService.sincronizarContratos().subscribe(
+          (resultado: any) => {
+            this.sincronizandoContratos = false;
+            this.notiService.toast.correcto(
+              "Contatos sincronizados: " + resultado.total
+            );
+          },
+          () => (this.sincronizandoContratos = false)
+        );
+      })
+      .catch((error) => {
+        this.notiService.toast.error(error);
+      });
   }
 
   listaParametros = {

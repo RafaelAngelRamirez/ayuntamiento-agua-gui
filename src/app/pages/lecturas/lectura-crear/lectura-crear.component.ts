@@ -40,6 +40,9 @@ export class LecturaCrearComponent implements OnInit {
 
   incidencias: Incidencia[] = [];
   impedimentos: Impedimento[] = [];
+  vigencia: number | undefined = undefined;
+  periodo: number | undefined = undefined;
+
   constructor(
     private idbService: IndexedDBService,
     private constratoService: ContratoService,
@@ -56,6 +59,25 @@ export class LecturaCrearComponent implements OnInit {
     this.cargaContrato();
     this.cargarIncidencias();
     this.cargarImpedimentos();
+    this.cargarVigenciaYPeriodo();
+  }
+
+  cargarVigenciaYPeriodo() {
+    this.parametrosService.offline
+      .obtenerVigenciaYPeriodo()
+      .subscribe((datos) => {
+        if (!datos?.vigPer.vigencia || !datos?.vigPer.periodo) {
+          this.notiService.toast.error(
+            "No has cargado los parametros de vigencia y periodos"
+          );
+
+          this.router.navigate(["app/parametros"]);
+          return;
+        }
+
+        this.vigencia = datos.vigPer.vigencia;
+        this.periodo = datos.vigPer.periodo;
+      });
   }
 
   cargaContrato() {
