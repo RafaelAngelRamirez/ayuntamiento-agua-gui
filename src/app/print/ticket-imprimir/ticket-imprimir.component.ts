@@ -5,6 +5,8 @@ import { ImprimirService } from "app/services/imprimir.service";
 import { DomicilioPipe } from "../../pipes/domicilio.pipe";
 import { UsuarioService } from "../../services/usuario.service";
 import { ParametrosService } from "../../services/parametros.service";
+import { PeriodoAMesesService } from "../../services/periodo-ameses.service";
+import { DecimalPipe, CurrencyPipe } from "@angular/common";
 
 @Component({
   selector: "app-ticket-imprimir",
@@ -31,7 +33,10 @@ export class TicketImprimirComponent implements OnInit {
     private usuarioService: UsuarioService,
     private domicilioPipe: DomicilioPipe,
     private imprimirService: ImprimirService,
-    private router: Router
+    private router: Router,
+    private pMesesService: PeriodoAMesesService,
+    private decimalPipe: DecimalPipe,
+    private currencyPipe: CurrencyPipe
   ) {}
 
   ngOnInit(): void {
@@ -61,15 +66,24 @@ export class TicketImprimirComponent implements OnInit {
       Number(contrato.lectura.Periodo) - Number(contrato.PeriodoAnterior);
 
     this.datos["lectura"] = {
-      "Periodo anterior": contrato.PeriodoAnterior,
+      "Periodo anterior": this.pMesesService.convertir(
+        Number(contrato.PeriodoAnterior)
+      ),
       "Lectura anterior": contrato.LecturaAnterior,
-      "Periodo actual": contrato.lectura.Periodo,
+      "Periodo actual": this.pMesesService.convertir(
+        Number(contrato.lectura.Periodo)
+      ),
       "Lectura actual": contrato.lectura.LecturaActual,
       "Periodos generados": periodosGenerados,
-      "Consumo por periodo": contrato.lectura.LecturaActual / periodosGenerados,
-      "Consumo total": contrato.lectura.importe,
-      "Importe por periodo": contrato.lectura.importe / periodosGenerados,
-      "Importe total": contrato.lectura.importe,
+      "Consumo por periodo":
+        (contrato.lectura.LecturaActual - contrato.LecturaAnterior) /
+        periodosGenerados,
+      "Consumo total":
+        contrato.lectura.LecturaActual - contrato.LecturaAnterior,
+      "Importe por periodo": this.currencyPipe.transform(
+        contrato.lectura.importe / periodosGenerados
+      ),
+      "Importe total": this.currencyPipe.transform(contrato.lectura.importe),
     };
 
     let saldos = () => {
@@ -77,12 +91,13 @@ export class TicketImprimirComponent implements OnInit {
       return saldo > 0 ? saldo : 0;
     };
     this.datos["cuenta"] = {
-      Importe: contrato.lectura.importe,
-      "Adeudo anterior": contrato.Adeudo,
-      "Total a pagar":
-        contrato.Adeudo + contrato.lectura.importe - contrato.Saldo,
-      "Saldo a favor": contrato.Saldo,
-      "Nuevo saldo a favor": saldos(),
+      Importe: this.currencyPipe.transform(contrato.lectura.importe),
+      "Adeudo anterior": this.currencyPipe.transform(contrato.Adeudo),
+      "Total a pagar": this.currencyPipe.transform(
+        contrato.Adeudo + contrato.lectura.importe - contrato.Saldo
+      ),
+      "Saldo a favor": this.currencyPipe.transform(contrato.Saldo),
+      "Nuevo saldo a favor": this.currencyPipe.transform(saldos()),
     };
 
     console.log(`this.datos`, this.datos);

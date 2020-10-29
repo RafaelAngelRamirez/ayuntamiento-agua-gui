@@ -1,5 +1,10 @@
 import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormControl, Validators } from "@angular/forms";
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  AbstractControl,
+} from "@angular/forms";
 import { ActivatedRoute, RouterModule, Router } from "@angular/router";
 import {
   ContratoService,
@@ -40,6 +45,7 @@ export class LecturaCrearComponent implements OnInit {
 
   incidencias: Incidencia[] = [];
   impedimentos: Impedimento[] = [];
+  parametrosGenerales!: Lecturista;
   vigencia: number | undefined = undefined;
   periodo: number | undefined = undefined;
 
@@ -59,6 +65,7 @@ export class LecturaCrearComponent implements OnInit {
     this.cargaContrato();
     this.cargarIncidencias();
     this.cargarImpedimentos();
+    this.cargarParametrosTicket();
     this.cargarVigenciaYPeriodo();
   }
 
@@ -105,16 +112,44 @@ export class LecturaCrearComponent implements OnInit {
 
   cargarIncidencias() {
     this.incidenciaService.offline.findAll().subscribe((incidencias) => {
+      if (incidencias.length === 0) {
+        this.notiService.toast.error("No hay incidencias sincronizadas");
+        return;
+      }
       this.incidencias = incidencias;
     });
   }
   cargarImpedimentos() {
     this.impedimentoService.offline.findAll().subscribe((impedimentos) => {
+      if (impedimentos.length === 0) {
+        this.notiService.toast.error("No hay impedimentos sincronizadas");
+        return;
+      }
       this.impedimentos = impedimentos;
     });
   }
 
+  cargarParametrosTicket() {
+    this.parametrosService.offline
+      .obtenerParametrosGenerales()
+      .toPromise()
+      .then((para) => {
+        if (!para) {
+          this.notiService.toast.error(
+            "No se han cargado los parametros del ticket"
+          );
+          return;
+        }
+        this.parametrosGenerales = para.lecturista as Lecturista;
+        console.log(`this.parametrosGenerales`,this.parametrosGenerales)
+      });
+  }
+
   ngOnInit(): void {}
+
+  f(c: string): AbstractControl {
+    return this.formulario?.get(c) as AbstractControl;
+  }
 
   crearFormulario(contrato: Contrato) {
     this.formulario = new FormGroup({
@@ -138,20 +173,58 @@ export class LecturaCrearComponent implements OnInit {
       IdDispositivo: new FormControl(),
       Estado: new FormControl(),
     });
+
+    this.validacionesDeLectura(this.formulario);
+  }
+
+  permitirModificarImpedimento = true;
+  validacionesDeLectura(formulario: FormGroup) {
+    formulario.get("LecturaActual")?.valueChanges.subscribe((valor) => {
+      let impedimentoControl = this.f("IdImpedimento");
+      // Lectura actual menor que la lectura anterior HARCODE al id 2
+      console.log(valor);
+      if (!valor) {
+        //Cuando es null quitamos la validacion
+        impedimentoControl.setValue("");
+        this.permitirModificarImpedimento = true;
+        return;
+      }
+
+      let esMenor = this.contrato.LecturaAnterior > valor;
+      if (esMenor) {
+        this.permitirModificarImpedimento = false;
+        impedimentoControl.setValue("2");
+      } else {
+        impedimentoControl.setValue(null);
+        this.permitirModificarImpedimento = true;
+      }
+    });
+  }
+
+  obtenerStringImpedimento(id: string) {
+    return this.impedimentos.find((x) => x.IdImpedimento === id)
+      ?.NombreImpedimento;
   }
 
   guardandoLectura = false;
-    submit(model: Lectura, invalido: boolean, e: any) {
-    let parametrosGenerales: Lecturista;
+  submit(model: Lectura, invalido: boolean, e: any) {
+    
 
-    this.parametrosService.offline
-      .obtenerParametrosGenerales()
-      .toPromise()
-      .then((para) => {
-        parametrosGenerales = para.lecturista as Lecturista;
+    if (
+      this.incidencias.length === 0 ||
+      this.impedimentos.length === 0 ||
+      !this.parametrosGenerales || 
+      !this.vigencia || !this.periodo
+    ) {
+      this.notiService.toast.error(
+        "Debes sincronizar parametros de ticket, vigencia, periodo, incidencias e impedimentos para poder continuar",
+        "Faltan sincronizar parametros"
+      );
+      return;
+    }
 
-        return this.gpsService.findMe();
-      })
+    this.gpsService
+      .findMe()
       .then((position) => {
         if (invalido) {
           e.preventDefault();
@@ -167,10 +240,11 @@ export class LecturaCrearComponent implements OnInit {
         //Diez dias
 
         model.Contrato = this.contrato.Contrato;
+        console.log(this.parametrosGenerales)
 
         model.Vigencia =
-          parametrosGenerales.parametros.rutas[0].VigenciaRuta + "";
-        model.Periodo = parametrosGenerales.parametros.rutas[0].PeriodoRuta;
+          this.parametrosGenerales.parametros.rutas[0].VigenciaRuta + "";
+        model.Periodo = this.parametrosGenerales.parametros.rutas[0].PeriodoRuta;
 
         let usuario = this.usuarioService.obtenerUsuario();
 
@@ -187,7 +261,7 @@ export class LecturaCrearComponent implements OnInit {
         model.HoraLectura = new Date();
 
         model.IdDispositivo =
-          parametrosGenerales.parametros.parametros[0].IdLecturista;
+          this.parametrosGenerales.parametros.parametros[0].IdLecturista;
         // GPS
         model.longitud = position.coords.longitude;
         model.latitud = position.coords.latitude;
@@ -200,7 +274,7 @@ export class LecturaCrearComponent implements OnInit {
         model.importe = this.calcularImporte(
           model,
           this.contrato,
-          parametrosGenerales
+          this.parametrosGenerales
         );
 
         console.log("importe: ", model.importe);

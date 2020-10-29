@@ -3,6 +3,8 @@ import { Router } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 import { Contrato } from "./contrato.service";
 import { ZebraService } from "./zebra/zebra.service";
+import { UsuarioService } from "./usuario.service";
+import { NotificacionesService } from "./notificaciones.service";
 
 @Injectable({
   providedIn: "root",
@@ -16,11 +18,27 @@ export class ImprimirService {
     return this._imprimiendo;
   }
 
-  constructor(private router: Router, private zebraService: ZebraService) {}
+  constructor(
+    private router: Router,
+    private zebraService: ZebraService,
+    private usuarioService: UsuarioService,
+    private notiService: NotificacionesService
+  ) {}
 
   ticket(zpl: string) {
-    this._imprimiendo = true
-    this.zebraService.writeToSelectedPrinter(zpl);
+    this._imprimiendo = true;
+
+    let dispositivo = this.usuarioService.obtenerUsuario().dispositivo;
+
+    let uid = this.zebraService.selected_device?.uid;
+
+    if (uid !== dispositivo) {
+      this.notiService.toast.error(
+        "Imposible imprimir. El dispositivo no corresponde al usuario."
+      );
+    } else {
+      this.zebraService.writeToSelectedPrinter(zpl);
+    }
   }
 
   ticket1 = `

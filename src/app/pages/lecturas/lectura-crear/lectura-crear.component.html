@@ -19,7 +19,18 @@
       </p>
 
       <h5>
-        Lectura anterior: <b>{{ contrato.LecturaAnterior }}</b>
+        Lectura anterior: <b>{{ contrato.LecturaAnterior | number }}</b>
+      </h5>
+      <h5>
+        Promedio: <b>{{ contrato.Promedio | number }}</b>
+      </h5>
+      <h5>
+        Ultimos 4 consumos:
+        <b>
+          {{ contrato.Consumo2 | number }}, {{ contrato.Consumo3 | number }},
+          {{ contrato.Consumo4 | number }},
+          {{ contrato.Consumo5 | number }}
+        </b>
       </h5>
       <small class="text-muted">{{ contrato.Contribuyente }}</small>
     </a>
@@ -42,9 +53,14 @@
         />
         <small id="helpId" class="form-text text-muted">Lectura actual</small>
       </div>
+
       <div class="form-group">
-        <select formControlName="IdImpedimento" class="form-control">
-          <option [ngValue]="">Sin impedimento</option>
+        <select
+          *ngIf="permitirModificarImpedimento"
+          formControlName="IdImpedimento"
+          class="form-control"
+        >
+          <option [ngValue]=""></option>
           <option
             *ngFor="let impedimento of impedimentos"
             [ngValue]="impedimento.IdImpedimento"
@@ -53,11 +69,31 @@
           </option>
         </select>
 
+        <!-- 
+        =====================================
+         Para mostrarse cuando esta deshabilitado input
+        =====================================
+        -->
+        <input
+          *ngIf="!permitirModificarImpedimento"
+          [value]="obtenerStringImpedimento(f('IdImpedimento').value)"
+          type="text"
+          class="form-control"
+          readonly
+        />
+
+        <!-- 
+        =====================================
+         END Para mostrarse cuando esta deshabilitado input
+        =====================================
+        -->
+
         <small id="helpId" class="form-text text-muted">Impedimento</small>
       </div>
+
       <div class="form-group">
         <select formControlName="IdIncidencia" class="form-control">
-          <option [ngValue]="">Sin incidencias</option>
+          <option [ngValue]=""></option>
           <option
             *ngFor="let incidencia of incidencias"
             [ngValue]="incidencia.IdIncidencia"

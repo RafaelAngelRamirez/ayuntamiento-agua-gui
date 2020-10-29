@@ -156,6 +156,11 @@ export interface Contrato {
   ConsecutivoRuta: number;
   EnAuditoria: boolean;
 
+  Consumo2: number;
+  Consumo3: number;
+  Consumo4: number;
+  Consumo5: number;
+
   // Este cambia el schema
   // lecturas: [Lectura];
   tomada: boolean;

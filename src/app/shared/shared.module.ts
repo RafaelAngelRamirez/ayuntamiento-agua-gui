@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { CommonModule, CurrencyPipe, DecimalPipe } from "@angular/common";
 import { SpinnerComponent } from "./spinner.component";
 import { FullComponent } from "app/layouts/full/full.component";
 import { NavigationComponent } from "./header-navigation/navigation.component";
@@ -34,6 +34,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NoPageFoundComponent,
     DomicilioPipe,
     TienePermisoPipe,
+    // DecimalPipe,
+    // CurrencyPipe,
 
     ContratosPendientesSincronizarComponent,
   ],
@@ -50,6 +52,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FormsModule,
     DomicilioPipe,
     TienePermisoPipe,
+    // DecimalPipe,
+    // CurrencyPipe,
     ContratosPendientesSincronizarComponent,
   ],
 
@@ -73,6 +77,8 @@ export class SharedModule {
         },
         DomicilioPipe,
         TienePermisoPipe,
+        DecimalPipe,
+        CurrencyPipe,
       ],
     };
   }
