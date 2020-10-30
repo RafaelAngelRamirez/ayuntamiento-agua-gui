@@ -253,6 +253,7 @@ export class LecturaCrearComponent implements OnInit {
           return;
         }
         //Traer desde el usuario
+        model.idUsuario = usuario._id
         model.IdLecturista = usuario.lecturista.IdLecturista;
         model.IdRuta = this.contrato.IdRuta;
         model.IdTarifa = this.contrato.IdTarifa;

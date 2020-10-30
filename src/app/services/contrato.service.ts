@@ -172,6 +172,8 @@ export interface Contrato {
 }
 
 export interface Lectura {
+  idUsuario: string;
+
   Contrato: string;
   Vigencia: string;
   Periodo: string;
