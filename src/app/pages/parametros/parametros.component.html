@@ -28,7 +28,7 @@
     </div>
   </div>
 
-  <div class="col-12 col-md-3">
+  <div *ngIf="'administrador' | tienePermiso" class="col-12 col-md-3">
     <div class="card shadow">
       <div class="card-body">
         <h3>Vigencia</h3>
