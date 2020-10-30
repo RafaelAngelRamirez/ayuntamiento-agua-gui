@@ -28,7 +28,7 @@ export class TicketComponent implements OnInit {
   datos: any = {};
   ngOnInit(): void {
     this.cargaContrato();
-    this.zebraService.setup();
+    // this.zebraService.setup();
   }
 
   cargaContrato() {

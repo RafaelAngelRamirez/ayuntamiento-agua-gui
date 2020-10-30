@@ -1,4 +1,6 @@
 import { Injectable } from "@angular/core";
+import { NotificacionesService } from "../notificaciones.service";
+import { UsuarioService } from "../usuario.service";
 
 declare const BrowserPrint: any;
 
@@ -6,11 +8,15 @@ declare const BrowserPrint: any;
   providedIn: "root",
 })
 export class ZebraService {
-  constructor() {}
+  constructor(
+    private notiService: NotificacionesService,
+    private usuarioService: UsuarioService
+  ) {}
   selected_device: any;
   devices: any[] = [];
 
   opciones: string[] = [];
+  titulo = "[ IMPRESION ]";
 
   setup() {
     //Get the default device from the application as a first step. Discovery takes longer to complete.
@@ -37,14 +43,22 @@ export class ZebraService {
               }
             }
           },
-          function () {
-            alert("Error getting local devices");
+          () => {
+            console.log("Error getting local devices");
+            this.notiService.toast.error(
+              "Error obteniendo los dispositivos locales",
+              this.titulo
+            );
           },
           "printer"
         );
       },
-      function (error: any) {
-        alert(error);
+      (error: any) => {
+        this.notiService.toast.error(
+          error.concat(" Puede ser un error conexión?"),
+          this.titulo
+        );
+        console.log("error", error);
       }
     );
   }
@@ -61,18 +75,34 @@ export class ZebraService {
   }
 
   writeToSelectedPrinter(dataToWrite: string) {
-    this.selected_device.send(dataToWrite, undefined, this.errorCallback);
+    let dispositivo = this.usuarioService.obtenerUsuario().dispositivo;
+    let uid = this.selected_device?.uid;
+
+    if (uid !== dispositivo) {
+      this.notiService.toast.error(
+        this.titulo.concat(" Imposible imprimir"),
+        "No se reconoce el dispositivo. Reportalo al administrador".concat(
+          ` [${uid}]`
+        )
+      );
+    } else {
+      this.selected_device.send(dataToWrite, undefined, this.errorCallback);
+    }
   }
 
-  readCallback = function (readData: string) {
+  readCallback = (readData: string) => {
     if (readData === undefined || readData === null || readData === "") {
-      alert("No Response from Device");
+      this.notiService.toast.error(
+        "No hay respuesta del dispositivo",
+        this.titulo
+      );
     } else {
       alert(readData);
     }
   };
-  errorCallback = function (errorMessage: string) {
-    alert("Error: " + errorMessage);
+  errorCallback = (errorMessage: string) => {
+    this.notiService.toast.error(errorMessage, this.titulo);
+    console.error(errorMessage);
   };
   readFromSelectedPrinter() {
     this.selected_device.read(this.readCallback, this.errorCallback);

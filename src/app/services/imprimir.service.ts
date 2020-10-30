@@ -18,27 +18,11 @@ export class ImprimirService {
     return this._imprimiendo;
   }
 
-  constructor(
-    private router: Router,
-    private zebraService: ZebraService,
-    private usuarioService: UsuarioService,
-    private notiService: NotificacionesService
-  ) {}
+  constructor(private zebraService: ZebraService) {}
 
   ticket(zpl: string) {
     this._imprimiendo = true;
-
-    let dispositivo = this.usuarioService.obtenerUsuario().dispositivo;
-
-    let uid = this.zebraService.selected_device?.uid;
-
-    if (uid !== dispositivo) {
-      this.notiService.toast.error(
-        "Imposible imprimir. El dispositivo no corresponde al usuario."
-      );
-    } else {
-      this.zebraService.writeToSelectedPrinter(zpl);
-    }
+    this.zebraService.writeToSelectedPrinter(zpl);
   }
 
   ticket1 = `

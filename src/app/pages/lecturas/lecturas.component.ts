@@ -9,6 +9,7 @@ import { ContratoService, Contrato } from "../../services/contrato.service";
 import { FormControl } from "@angular/forms";
 import { debounceTime, distinctUntilChanged, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { ZebraService } from "../../services/zebra/zebra.service";
 
 @Component({
   selector: "app-lecturas",
@@ -22,6 +23,7 @@ export class LecturasComponent implements OnInit {
 
   contratos: Contrato[] = [];
   constructor(
+    private zebraService: ZebraService,
     private router: Router,
     private contratoService: ContratoService
   ) {}
@@ -29,6 +31,10 @@ export class LecturasComponent implements OnInit {
   ngOnInit(): void {
     document.getElementById("buscador")?.focus();
     this.registrarBuscador();
+
+    if (!this.zebraService.selected_device) {
+      this.zebraService.setup();
+    }
   }
 
   registrarBuscador() {
@@ -48,6 +54,6 @@ export class LecturasComponent implements OnInit {
 
   irA(contrato: Contrato) {
     let ruta = contrato.tomada ? "imprime" : "captura";
-    this.router.navigate(["app","lectura", ruta, contrato.Contrato]);
+    this.router.navigate(["app", "lectura", ruta, contrato.Contrato]);
   }
 }
