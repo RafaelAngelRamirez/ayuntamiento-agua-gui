@@ -21,6 +21,7 @@
         class="second"
         name="login"
         placeholder="usuario"
+        [disabled]="cargando"
       />
       <input
         #password
@@ -29,6 +30,7 @@
         class="third"
         name="login"
         placeholder="contraseña"
+        [disabled]="cargando"
       />
 
       <br />
