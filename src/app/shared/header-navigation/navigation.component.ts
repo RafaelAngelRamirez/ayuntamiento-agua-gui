@@ -29,9 +29,10 @@ export class NavigationComponent implements OnInit {
   constructor(
     public lgS: LoginService,
     private modalService: NgbModal,
-    private usuarioSerivce: UsuarioService,
+    private usuarioSerivce: UsuarioService
   ) {}
   ngOnInit(): void {
+    this.lgS.versionApi().subscribe();
     this.usuarioLogueado = this.usuarioSerivce.obtenerUsuario();
   }
 

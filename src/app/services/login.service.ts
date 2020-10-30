@@ -33,12 +33,20 @@ export class LoginService {
     return this.http.post(this.base, { usuario, password }).pipe(
       map((resp: any) => {
         this.tkService.guardarToken(resp.token);
-        this.version_api = resp.version;
         return true;
       }),
       catchError((x: any) => {
         this.notiService.toast.error(x.error.err);
         return throwError(x);
+      })
+    );
+  }
+
+  versionApi() {
+    return this.http.get(this.base.concat("/version")).pipe(
+      map((resp: any) => {
+        this.version_api = resp.version;
+        return this.version_api;
       })
     );
   }
