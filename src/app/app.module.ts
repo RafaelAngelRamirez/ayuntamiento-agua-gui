@@ -24,6 +24,8 @@ import { LoginComponent } from "./login/login.component";
 import { TicketImprimirComponent } from "./print/ticket-imprimir/ticket-imprimir.component";
 import { CiudadanosComponent } from "./ciudadanos/ciudadanos.component";
 
+import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2"
+
 export const Approutes: Routes = [
   {
     path: "login",
@@ -67,6 +69,7 @@ export const Approutes: Routes = [
     FormsModule,
     ToastrModule.forRoot(), // ToastrModule added
     SharedModule.forRoot(),
+    SweetAlert2Module.forRoot(),
     IndexedDBModule,
     EstatusConexionModule,
     QRCodeModule,

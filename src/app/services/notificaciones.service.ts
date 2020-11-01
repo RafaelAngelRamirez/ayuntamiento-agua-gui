@@ -1,12 +1,16 @@
 import { Injectable } from "@angular/core";
+import { SweetAlert2LoaderService } from "@sweetalert2/ngx-sweetalert2";
 import { ToastrService } from "ngx-toastr";
-import { NavigationComponent } from "../shared/header-navigation/navigation.component";
+
+import Swal, { SweetAlertOptions } from "sweetalert2/dist/sweetalert2.js";
 
 @Injectable({
   providedIn: "root",
 })
 export class NotificacionesService {
   public toast: Toast = new Toast(this.t);
+  public sweet: Sweet = new Sweet();
+
   constructor(private t: ToastrService) {}
 
   error(estatus: string, razon: string, err: any) {
@@ -37,5 +41,46 @@ class Toast {
 
   info(msj: string) {
     this.toast.info(msj, undefined, this.configuraciones);
+  }
+}
+
+class Sweet {
+  constructor() {}
+
+  alerta(
+    text: string,
+    titulo: string = "¡Bien!",
+    icono:
+      | "success"
+      | "error"
+      | "warning"
+      | "info"
+      | "question"
+      | undefined = "success"
+  ) {
+    Swal.fire(titulo, text, icono);
+  }
+
+  confirmacion(
+    text: string,
+    title = "¿Estas seguro que quieres hacer esto?",
+    cbCorrecto: Function,
+    cbIncorrecto: Function,
+    opciones: SweetAlertOptions = {
+      title,
+      html: text,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Si",
+      cancelButtonText: "No",
+    }
+  ) {
+    Swal.fire(opciones).then((result) => {
+      if (result.value) {
+        cbCorrecto();
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        cbIncorrecto();
+      }
+    });
   }
 }

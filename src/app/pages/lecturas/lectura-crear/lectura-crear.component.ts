@@ -141,7 +141,7 @@ export class LecturaCrearComponent implements OnInit {
           return;
         }
         this.parametrosGenerales = para.lecturista as Lecturista;
-        console.log(`this.parametrosGenerales`,this.parametrosGenerales)
+        console.log(`this.parametrosGenerales`, this.parametrosGenerales);
       });
   }
 
@@ -208,13 +208,12 @@ export class LecturaCrearComponent implements OnInit {
 
   guardandoLectura = false;
   submit(model: Lectura, invalido: boolean, e: any) {
-    
-
     if (
       this.incidencias.length === 0 ||
       this.impedimentos.length === 0 ||
-      !this.parametrosGenerales || 
-      !this.vigencia || !this.periodo
+      !this.parametrosGenerales ||
+      !this.vigencia ||
+      !this.periodo
     ) {
       this.notiService.toast.error(
         "Debes sincronizar parametros de ticket, vigencia, periodo, incidencias e impedimentos para poder continuar",
@@ -224,6 +223,7 @@ export class LecturaCrearComponent implements OnInit {
     }
 
     this.gpsService
+      // Obtenemos la ubicacion actual.
       .findMe()
       .then((position) => {
         if (invalido) {
@@ -233,14 +233,15 @@ export class LecturaCrearComponent implements OnInit {
 
           return;
         }
-        //Esto es para idb, no para la api
+        //Esto es para idb, no para la api, pero de aqui
+        // guardamos la lectura.
         this.contrato.tomada = true;
         this.contrato.lectura = model;
 
         //Diez dias
 
         model.Contrato = this.contrato.Contrato;
-        console.log(this.parametrosGenerales)
+        console.log(this.parametrosGenerales);
 
         model.Vigencia =
           this.parametrosGenerales.parametros.rutas[0].VigenciaRuta + "";
@@ -253,7 +254,7 @@ export class LecturaCrearComponent implements OnInit {
           return;
         }
         //Traer desde el usuario
-        model.idUsuario = usuario._id
+        model.idUsuario = usuario._id;
         model.IdLecturista = usuario.lecturista.IdLecturista;
         model.IdRuta = this.contrato.IdRuta;
         model.IdTarifa = this.contrato.IdTarifa;
@@ -261,8 +262,7 @@ export class LecturaCrearComponent implements OnInit {
         model.FechaLectura = new Date();
         model.HoraLectura = new Date();
 
-        model.IdDispositivo =
-          this.parametrosGenerales.parametros.parametros[0].IdLecturista;
+        model.IdDispositivo = this.parametrosGenerales.parametros.parametros[0].IdLecturista;
         // GPS
         model.longitud = position.coords.longitude;
         model.latitud = position.coords.latitude;
@@ -280,80 +280,137 @@ export class LecturaCrearComponent implements OnInit {
 
         console.log("importe: ", model.importe);
 
-        //Primero guardamos en local para que no haya problemas si nos falla
-        // la conexion
-
-        this.guardandoLectura = true;
-        this.constratoService.offline.update(this.contrato).subscribe(
-          () => {
-            //  Remplazamos los datos guardados en memoria.
-
-            let index = this.constratoService.contratos.findIndex(
-              (x) => x.Contrato === this.contrato.Contrato
-            );
-            this.constratoService.contratos[index] = this.contrato;
-
-            //Despues verificamos si hay conexion
-
-            if (this.constratoService.estaOnline) {
-              // Si hay conexion sincronizamos de una vez
-              this.constratoService
-                .sincronizarContratosTomadosOffline()
-                .subscribe(
-                  (cantidad) => {
-                    this.notiService.toast.correcto(
-                      `Se sincronizaron ${cantidad} ${
-                        cantidad > 1 ? "contratos" : "contrato"
-                      }`
-                    );
-
-                    // Sincronizar los contratos generados por otro
-                    // lecturista.
-                    this.constratoService
-                      .sincronizarContratosTomadosPorOtroLecturista()
-                      .subscribe((contratos) => {
-                        let subs = contratos.map((x) =>
-                          this.constratoService.offline.update(x)
-                        );
-
-                        forkJoin(subs).subscribe((r) => {
-                          console.log(
-                            "[WORKER] Sincronizados " +
-                              "" +
-                              (contratos.length - 1)
-                          );
-
-                          this.constratoService
-                            .confirmarNotificacion(contratos.map((x) => x._id))
-                            .subscribe(() => {
-                              console.log("Notificado");
-                            });
-                        });
-                      });
-                    // ----------------------------------------
-                    this.router.navigate([
-                      "/app/lectura/imprime",
-                      this.contrato.Contrato,
-                    ]);
-                  },
-                  (_) => {
-                    this.guardandoLectura = false;
-                  }
-                );
-            } else {
-              // Si no hay conexion continuamos.
-              this.notiService.toast.info("Lectura en espera de conexion");
-              this.router.navigate([
-                "/app/lectura/imprime",
-                this.contrato.Contrato,
-              ]);
+        let hayImpedimentos = this.hayAlgunImpedimento();
+        if (hayImpedimentos) {
+          this.notiService.sweet.confirmacion(
+            hayImpedimentos,
+            "¿La lectura es correcta?",
+            () => {
+              this.guardarLectura();
+            },
+            () => {
+              console.log("No continuar");
             }
-          },
-          () => (this.guardandoLectura = false)
-        );
+          );
+        } else {
+          this.guardarLectura();
+        }
       })
       .catch(this.gpsService.errorFATAL);
   }
+
+  private hayAlgunImpedimento() {
+    let problemas: string[] = [];
+
+    //Sobre pasa el doble del promedio dado por el contrato
+    let promedio = this.contrato.Promedio;
+    let consumoActual = this.contrato.lectura.ConsumoMts3;
+    if (promedio * 2 <= consumoActual) {
+      problemas.push(
+        `El consumo actual <b> ${consumoActual} </b> supera por dos el promedio <b> ${promedio}</b>`
+      );
+    }
+    let IdIncidencia = this.contrato.lectura.IdIncidencia;
+    //Tiene registrada una incidencia
+    if (IdIncidencia) {
+      let incidencia = this.incidencias.find(
+        (x) => x.IdIncidencia === IdIncidencia
+      );
+
+      problemas.push(`<b>INCIDENCIA</b>: ${incidencia?.NombreIncidencia}`);
+    }
+    let IdImpedimento = this.contrato.lectura.IdImpedimento;
+    //Tiene registrada una incidencia
+    if (IdImpedimento) {
+      let impedimento = this.impedimentos.find(
+        (x) => x.IdImpedimento === IdImpedimento
+      );
+
+      problemas.push(`<b>IMPEDIMENTO</b>: ${impedimento?.NombreImpedimento}`);
+    }
+
+    problemas = problemas.map((x) => `<li class="list-group-item">${x}</li>`);
+
+    return `
+    <ul class="list-group">
+      <li class="list-group-item bg-danger text-white">Se encontraron estos problemas el ticket.</li>
+      ${problemas.join(" ")}
+    </ul>
+
+    <h3>¿Aún así quieres continuar?</h3>
+
+    `;
+  }
+
+  private guardarLectura() {
+    //Primero guardamos en local para que no haya problemas si nos falla
+    // la conexion
+
+    this.guardandoLectura = true;
+    this.constratoService.offline.update(this.contrato).subscribe(
+      () => {
+        //  Remplazamos los datos guardados en memoria.
+
+        let index = this.constratoService.contratos.findIndex(
+          (x) => x.Contrato === this.contrato.Contrato
+        );
+        this.constratoService.contratos[index] = this.contrato;
+
+        //Despues verificamos si hay conexion
+
+        if (this.constratoService.estaOnline) {
+          // Si hay conexion sincronizamos de una vez
+          this.constratoService.sincronizarContratosTomadosOffline().subscribe(
+            (cantidad) => {
+              this.notiService.toast.correcto(
+                `Se sincronizaron ${cantidad} ${
+                  cantidad > 1 ? "contratos" : "contrato"
+                }`
+              );
+
+              this.sincronizarLecturasDeOtros();
+            },
+            (_) => {
+              this.guardandoLectura = false;
+            }
+          );
+        } else {
+          // Si no hay conexion continuamos.
+          this.notiService.toast.info("Lectura en espera de conexion");
+          this.router.navigate([
+            "/app/lectura/imprime",
+            this.contrato.Contrato,
+          ]);
+        }
+      },
+      () => (this.guardandoLectura = false)
+    );
+  }
+
+  private sincronizarLecturasDeOtros() {
+    // Sincronizar los contratos generados por otro
+    // lecturista.
+    this.constratoService
+      .sincronizarContratosTomadosPorOtroLecturista()
+      .subscribe((contratos) => {
+        let subs = contratos.map((x) =>
+          this.constratoService.offline.update(x)
+        );
+
+        forkJoin(subs).subscribe((r) => {
+          console.log("[WORKER] Sincronizados " + "" + (contratos.length - 1));
+
+          this.constratoService
+            .confirmarNotificacion(contratos.map((x) => x._id))
+            .subscribe(() => {
+              console.log("Notificado");
+            });
+        });
+      });
+    // ----------------------------------------
+    this.router.navigate(["/app/lectura/imprime", this.contrato.Contrato]);
+  }
+
   calcularImporte(
     model: Lectura,
     contrato: Contrato,

@@ -23,15 +23,19 @@
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
-            "assets": ["src/assets", "src/favicon.ico", "src/manifest.webmanifest"],
+            "assets": [
+              "src/assets",
+              "src/favicon.ico",
+              "src/manifest.webmanifest"
+            ],
             "styles": [
               "src/styles.css",
               "src/assets/scss/style.scss",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+
+              "node_modules/sweetalert2/src/sweetalert2.scss"
             ],
-            "scripts": [
-              "src/assets/js/zebra.js"
-            ]
+            "scripts": ["src/assets/js/zebra.js"]
           },
           "configurations": {
             "production": {
@@ -91,7 +95,11 @@
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [],
             "styles": ["src/styles.css", "src/assets/scss/style.scss"],
-            "assets": ["src/assets", "src/favicon.ico", "src/manifest.webmanifest"]
+            "assets": [
+              "src/assets",
+              "src/favicon.ico",
+              "src/manifest.webmanifest"
+            ]
           }
         },
         "lint": {

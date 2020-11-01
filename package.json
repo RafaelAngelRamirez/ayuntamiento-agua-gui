@@ -33,6 +33,7 @@
     "@codice-progressio/indexed-db": "^0.2.0",
     "@codice-progressio/reactive-error-handler": "0.0.2",
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
+    "@sweetalert2/ngx-sweetalert2": "^8.1.1",
     "angularx-qrcode": "^10.0.10",
     "bootstrap": "^4.1.1",
     "chart.js": "^2.8.0",
@@ -52,13 +53,14 @@
     "popper.js": "^1.12.5",
     "rxjs": "^6.6.0",
     "rxjs-compat": "^6.6.0",
+    "sweetalert2": "^10.9.0",
     "tslib": "^2.0.0",
     "typescript": "3.9.6",
     "xlsx": "^0.16.8",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1000.8",
+    "@angular-devkit/build-angular": "^0.1002.0",
     "@angular/language-service": "^10.1.0",
     "@types/chartist": "^0.9.46",
     "@types/jasmine": "~3.3.8",
