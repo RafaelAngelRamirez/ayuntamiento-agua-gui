@@ -289,7 +289,11 @@ export class LecturaCrearComponent implements OnInit {
               this.guardarLectura();
             },
             () => {
-              console.log("No continuar");
+              this.notiService.sweet.alerta(
+                "No se ha guardado la lectura",
+                "SIN GUARDAR",
+                "info"
+              );
             }
           );
         } else {
@@ -307,7 +311,7 @@ export class LecturaCrearComponent implements OnInit {
     let consumoActual = this.contrato.lectura.ConsumoMts3;
     if (promedio * 2 <= consumoActual) {
       problemas.push(
-        `El consumo actual <b> ${consumoActual} </b> supera por dos el promedio <b> ${promedio}</b>`
+        `El consumo actual <b> ${consumoActual} </b> supera al doble del promedio <b> ${promedio}</b>`
       );
     }
     let IdIncidencia = this.contrato.lectura.IdIncidencia;
@@ -329,12 +333,19 @@ export class LecturaCrearComponent implements OnInit {
       problemas.push(`<b>IMPEDIMENTO</b>: ${impedimento?.NombreImpedimento}`);
     }
 
-    problemas = problemas.map((x) => `<li class="list-group-item">${x}</li>`);
+    let problemasMostrar = problemas.map(
+      (x) => `<li class="list-group-item">${x}</li>`
+    );
+
+    //Esto es para que se imprima en el ticket de incidencias los problemas. 
+    // No agregamos aqui las observaciones para matenerlo separado. SE hace mas
+    // adeletante, en imprimir ticket. 
+    this.contrato.lectura.problemas = problemas.join("  ||  ");
 
     return `
     <ul class="list-group">
       <li class="list-group-item bg-danger text-white">Se encontraron estos problemas el ticket.</li>
-      ${problemas.join(" ")}
+      ${problemasMostrar.join(" ")}
     </ul>
 
     <h3>¿Aún así quieres continuar?</h3>

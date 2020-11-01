@@ -22,7 +22,7 @@ export class TicketComponent implements OnInit {
     public zebraService: ZebraService
   ) {}
 
-  datosAImprimir: any = {}
+  datosAImprimir: any = {};
 
   cargandoContrato = false;
   datos: any = {};
@@ -49,18 +49,20 @@ export class TicketComponent implements OnInit {
   }
 
   imprimir() {
-    let zpl = this.imprimirService.ticket1
-    let p = "@$@"
-    console.log(`this.datosAImprimir`,this.datosAImprimir)
-    Object.keys(this.datosAImprimir).forEach(key=>{
-      console.log(`${p}${key}${p}`)
-      zpl = zpl.replace(`${p}${key}${p}`, this.datosAImprimir[key])
+    let tieneIncidencias =
+      this.datosAImprimir.IdIncidencia || this.datosAImprimir.IdImpedimento;
 
+    let zpl = tieneIncidencias
+      ? this.imprimirService.ticket_impedimentos
+      : this.imprimirService.ticket1;
 
-    })
+    let p = "@$@";
+    console.log(`this.datosAImprimir`, this.datosAImprimir);
+    Object.keys(this.datosAImprimir).forEach((key) => {
+      console.log(`${p}${key}${p}`);
+      zpl = zpl.replace(`${p}${key}${p}`, this.datosAImprimir[key]);
+    });
 
-    console.log(zpl)
-
-    this.imprimirService.ticket(zpl);
+    this.imprimirService.ticket(zpl)
   }
 }

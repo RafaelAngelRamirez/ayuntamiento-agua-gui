@@ -188,6 +188,7 @@ export interface Lectura {
   ConsumoMts3: number;
   Mts3Cobrados: number;
   Observaciones: string;
+  problemas: string;
   IdDispositivo: string;
   Estado: string;
   latitud: number;

@@ -106,6 +106,9 @@ export class TicketImprimirComponent implements OnInit {
       ...this.datos.lectura,
       ...this.datos.cuenta,
       ...this.datos.generales,
+      problemas: contrato.lectura.problemas
+        .concat(" [Observaciones:] ")
+        .concat(contrato.lectura.Observaciones),
     };
 
     console.log(`paraTicket`, paraTicket);
