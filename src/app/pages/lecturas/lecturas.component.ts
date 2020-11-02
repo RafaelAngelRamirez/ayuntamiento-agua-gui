@@ -41,7 +41,9 @@ export class LecturasComponent implements OnInit {
 
       if (!this.equipoCorrecto()) {
         this.notiService.sweet.alerta(
-          "No estas usando la miniprinter que te fue asignada. Si es un error reportalo con el administrado. No podras tomar lecturas por el momento. "
+          "No estas usando la miniprinter que te fue asignada. Si es un error reportalo con el administrado. No podras tomar lecturas por el momento. ",
+          "¡Hay un problema!",
+          "info"
         );
       }
     }
@@ -49,7 +51,7 @@ export class LecturasComponent implements OnInit {
 
   equipoCorrecto() {
     let equipo = this.usuarioService.obtenerUsuario().dispositivo;
-    return this.zebraService.selected_device.uid === equipo;
+    return this.zebraService.selected_device?.uid === equipo;
   }
 
   registrarBuscador() {
@@ -71,7 +73,8 @@ export class LecturasComponent implements OnInit {
     if (!this.equipoCorrecto()) {
       this.notiService.sweet.alerta(
         "No puedes imprimir con este equipo. Si es un error reportaselo al administrador.",
-        "Mini printer no valida"
+        "Mini printer no valida", 
+        "error"
       );
 
       return;
