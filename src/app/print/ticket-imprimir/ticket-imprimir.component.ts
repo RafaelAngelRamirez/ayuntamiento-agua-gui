@@ -47,7 +47,7 @@ export class TicketImprimirComponent implements OnInit {
 
   definirContrato(contrato = this.contrato) {
     let d = new Date();
-    let fecha = `${d.getDate()}/${d.getMonth()}/${d.getFullYear()}`;
+    let fecha = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
     this.datos["generales"] = {
       Ruta: contrato.IdRuta,
       Fecha: fecha,
@@ -108,8 +108,8 @@ export class TicketImprimirComponent implements OnInit {
       ...this.datos.generales,
       problemas: contrato.lectura.problemas
         ? contrato.lectura.problemas
-            .concat(" [Observaciones:] ")
-            .concat(contrato.lectura.Observaciones)
+            .concat(" [Observaciones]: ")
+            .concat(contrato.lectura.Observaciones.trim())
         : "",
     };
 

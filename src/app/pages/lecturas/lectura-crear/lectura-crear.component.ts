@@ -337,10 +337,15 @@ export class LecturaCrearComponent implements OnInit {
       (x) => `<li class="list-group-item">${x}</li>`
     );
 
-    //Esto es para que se imprima en el ticket de incidencias los problemas. 
+    //Esto es para que se imprima en el ticket de incidencias los problemas.
     // No agregamos aqui las observaciones para matenerlo separado. SE hace mas
-    // adeletante, en imprimir ticket. 
-    this.contrato.lectura.problemas = problemas.join("  ||  ");
+    // adeletante, en imprimir ticket.
+    this.contrato.lectura.problemas = problemas
+      .map((x) => x.trim())
+      .join(" || ")
+      .toString()
+      .replace(/\<b>/gi, "")
+      .replace(/\<\/b>/gi, "");
 
     return `
     <ul class="list-group">
