@@ -22,32 +22,12 @@ export class ImprimirService {
 
   ticket(zpl: string) {
     this._imprimiendo = true;
+    console.log(zpl)
     this.zebraService.writeToSelectedPrinter(zpl);
   }
 
   ticket1 = `
   ^XA
-  ~TA000
-  ~JSN
-  ^LT0
-  ^MNW
-  ^MTD
-  ^PON
-  ^PMN
-  ^LH0,0
-  ^JMA
-  ^PR4,4
-  ~SD15
-  ^JUS
-  ^LRN
-  ^CI27
-  ^PA0,1,1,0
-  ^XZ
-  ^XA
-  ^MMT
-  ^PW575
-  ^LL1439
-  ^LS0
   ^FT331,1082^BQN,2,10
   ^FH\^FDLA,123456789012^FS
   ^FT142,67^A0N,22,18^FB379,1,6,C^FH\^CI28^FDH. AYUNTAMIENTO DE ZAPOTLANEJO^FS^CI27

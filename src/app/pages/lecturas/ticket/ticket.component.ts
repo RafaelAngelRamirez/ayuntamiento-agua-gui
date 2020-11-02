@@ -50,7 +50,9 @@ export class TicketComponent implements OnInit {
 
   imprimir() {
     let tieneIncidencias =
-      this.datosAImprimir.IdIncidencia || this.datosAImprimir.IdImpedimento;
+      !!this.datosAImprimir.problemas
+
+    console.log(`tieneIncidencias`, tieneIncidencias, this.datosAImprimir);
 
     let zpl = tieneIncidencias
       ? this.imprimirService.ticket_impedimentos
@@ -63,6 +65,6 @@ export class TicketComponent implements OnInit {
       zpl = zpl.replace(`${p}${key}${p}`, this.datosAImprimir[key]);
     });
 
-    this.imprimirService.ticket(zpl)
+    this.imprimirService.ticket(zpl);
   }
 }
