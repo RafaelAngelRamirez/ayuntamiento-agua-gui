@@ -3,14 +3,13 @@ import { URL_BASE } from "../../environments/config";
 import { HttpClient } from "@angular/common/http";
 import { IndexedDbService, Offline } from "./offline/indexed-db.service";
 import { IndexedDBService as CodiIDBService } from "@codice-progressio/indexed-db";
-import { catchError, map } from "rxjs/operators";
+import { Lecturista, Rutas } from "../models/usuario.model";
 import { throwError } from "rxjs";
-import { Lecturista } from "../models/usuario.model";
 import {
   IndexedDBService,
   IDBOpcionesObjectStore,
-  IDBOpciones,
 } from "@codice-progressio/indexed-db";
+import { catchError, map } from "rxjs/operators";
 @Injectable({
   providedIn: "root",
 })
@@ -52,6 +51,15 @@ export class ParametrosService {
   cargarPeriodoVigencia() {
     return this.http.get<{ vigencia: number; periodo: number }>(
       this.base.concat("/vigencia-y-periodo")
+    );
+  }
+
+  obtenerRutas() {
+    return this.http.get<Rutas[]>(this.base.concat("/rutas")).pipe(
+      catchError((err) => {
+        console.log(err);
+        return throwError(err);
+      })
     );
   }
 
@@ -97,7 +105,42 @@ class OfflineParametros extends Offline {
     return this.codiIDBService.delete("vigenciaPeriodo", this.storeObject);
   }
 
-  obtenerVigenciaYPeriodo(){
-    return this.codiIDBService.findById("vigenciaPeriodo", this.storeObject)
+  obtenerVigenciaYPeriodo() {
+    return this.codiIDBService.findById("vigenciaPeriodo", this.storeObject);
+  }
+
+  /**
+   *La ruta que se usara para sincronizar los contratos offline.
+   *
+   * @param {Rutas} ruta
+   * @returns
+   * @memberof OfflineParametros
+   */
+  guardarRuta(ruta: Rutas) {
+    return this.codiIDBService.save(
+      { [this.key]: "ruta", ruta },
+      this.storeObject
+    );
+  }
+  /**
+   *Obtiene la ruta para sincronizar contratos offline
+   *
+   * @returns
+   * @memberof OfflineParametros
+   */
+  obtenerRutaSeleccionada() {
+    return this.codiIDBService
+      .findById("ruta", this.storeObject)
+      .pipe(map((x) => (x ? x.ruta : null)));
+  }
+
+  /**
+   *Elimina la ruta para sincronizar contratos offline
+   *
+   * @returns
+   * @memberof OfflineParametros
+   */
+  eliminarRutaSeleccionada() {
+    return this.codiIDBService.delete("ruta", this.storeObject);
   }
 }

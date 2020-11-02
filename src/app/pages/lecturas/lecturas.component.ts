@@ -41,7 +41,7 @@ export class LecturasComponent implements OnInit {
 
       if (!this.equipoCorrecto()) {
         this.notiService.sweet.alerta(
-          "No estas usando la miniprinter que te fue asignada. Si es un error reportalo con el administrado. No podras tomar lecturas por el momento. ",
+          "No estas usando la miniprinter que te fue asignada. Si es un error reportalo con el administrador. No podras tomar lecturas por el momento. ",
           "¡Hay un problema!",
           "info"
         );

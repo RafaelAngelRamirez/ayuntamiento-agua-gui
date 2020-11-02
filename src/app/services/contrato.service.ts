@@ -44,6 +44,18 @@ export class ContratoService {
     );
   }
 
+  findAllInRoute(ruta: string) {
+    return this.http
+      .get<Contrato[]>(this.base.concat("/leer/ruta/" + ruta))
+      .pipe(
+        map((contratos) => {
+          this.contratos = contratos;
+          return contratos;
+        }),
+        catchError((x) => throwError(x))
+      );
+  }
+
   findByTerm(termino: string) {
     let termi = encodeURI(termino);
     return this.http

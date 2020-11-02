@@ -1,15 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ParametrosService } from "../../services/parametros.service";
 import { NotificacionesService } from "../../services/notificaciones.service";
-import {
-  Usuario,
-  Lecturista,
-  AguasResiduales,
-  Drenaje,
-  Infrastructura,
-  Rutas,
-  Tarifas,
-} from "../../models/usuario.model";
+import { Usuario, Lecturista, Rutas } from "../../models/usuario.model";
 import { UsuarioService } from "../../services/usuario.service";
 import { FormControl } from "@angular/forms";
 import { SimapaService } from "../../services/simapa.service";
@@ -17,7 +9,6 @@ import {
   Incidencia,
   IncidenciaService,
 } from "../../services/incidencia.service";
-import { catchError } from "rxjs/operators";
 import { TienePermisoPipe } from "../../pipes/tiene-permiso.pipe";
 import { ContratosPendientesSincronizarComponent } from "../../components/contratos-pendientes-sincronizar/contratos-pendientes-sincronizar.component";
 import {
@@ -54,6 +45,9 @@ export class ParametrosComponent implements OnInit {
 
   selectUsuario = new FormControl();
 
+  rutaSeleccionada: Rutas | undefined = undefined;
+  rutasDisponibles: Rutas[] = [];
+
   ngOnInit(): void {
     let esAdministrador = this.usuarioService
       .obtenerUsuario()
@@ -65,6 +59,48 @@ export class ParametrosComponent implements OnInit {
       this.cargarUsuarios();
       this.cargarPeriodoVigecina();
     }
+
+    this.cargarRutas();
+    this.obtenerRutaSeleccionada();
+  }
+
+  cargandoRutas = false;
+  cargarRutas() {
+    this.cargandoRutas = true;
+    this.parametrosService.obtenerRutas().subscribe(
+      (rutas) => {
+        this.cargandoRutas = false;
+        this.rutasDisponibles = rutas;
+      },
+      () => (this.cargandoRutas = false)
+    );
+  }
+
+  guardarRutaSeleccionada() {
+    if (!this.rutaSeleccionada) {
+      this.notiService.toast.error("Debes seleccionar una ruta de la lista");
+      return;
+    }
+    this.parametrosService.offline
+      .guardarRuta(this.rutaSeleccionada)
+      .subscribe(() => {
+        this.notiService.toast.correcto("Se guardo la ruta a descargar");
+      });
+  }
+
+  eliminarRutaSeleccionada() {
+    this.parametrosService.offline.eliminarRutaSeleccionada().subscribe(() => {
+      this.rutaSeleccionada = undefined;
+      this.notiService.toast.error("Se elimino ruta para sincronización");
+    });
+  }
+
+  obtenerRutaSeleccionada() {
+    this.parametrosService.offline
+      .obtenerRutaSeleccionada()
+      .subscribe((datos) => {
+        this.rutaSeleccionada = datos as Rutas;
+      });
   }
 
   cargarUsuarios() {

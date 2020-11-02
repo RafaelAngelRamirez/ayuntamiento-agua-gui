@@ -8,6 +8,7 @@ import { throwError } from "rxjs";
 import { NotificacionesService } from "./notificaciones.service";
 import { Router } from "@angular/router";
 import { version } from "../../../package.json";
+import { ContratoService } from "./contrato.service";
 
 @Injectable({
   providedIn: "root",
@@ -18,7 +19,8 @@ export class LoginService {
     public notiService: NotificacionesService,
     public http: HttpClient,
     public tkService: TokenService,
-    public ls: LocalStorageService
+    public ls: LocalStorageService,
+    public contratoService: ContratoService
   ) {}
   version_gui = version;
   version_api = "0.0.0";

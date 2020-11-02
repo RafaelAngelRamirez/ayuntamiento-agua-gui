@@ -221,4 +221,47 @@
       </div>
     </div>
   </div>
+
+  <div class="col-12 col-md-4">
+    <div class="card shadow">
+      <div class="card-body">
+        <h3>[ LECTURISTA ] Ruta para sincronizar</h3>
+
+        <h3 *ngIf="rutaSeleccionada">
+          SELECCIONADA:
+          <b
+            >{{ rutaSeleccionada.IdRuta }}.-{{ rutaSeleccionada.NombreRuta }}</b
+          >
+
+          <a
+            (click)="eliminarRutaSeleccionada()"
+            class="btn btn-danger btn-xs"
+            href="javascript:void(0)"
+            role="button"
+            ><i class="fas fa-times"></i
+          ></a>
+        </h3>
+
+        <small class="text-muted">
+          Define la ruta que se va a sincronizar para trabajar offline. Es
+          necesario que el administrador primero descarga los datos de SIMAPA
+          para obtener el total de las rutas sincronizadas.
+        </small>
+
+        <hr />
+
+        <div *ngIf="!rutaSeleccionada" class="form-group">
+          <select
+            (change)="this.guardarRutaSeleccionada()"
+            [(ngModel)]="rutaSeleccionada"
+            class="form-control"
+          >
+            <option [ngValue]="ruta" *ngFor="let ruta of rutasDisponibles">
+              {{ ruta.IdRuta }}.- {{ ruta.NombreRuta }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -4,6 +4,9 @@ import { IndexedDBService } from "@codice-progressio/indexed-db";
 import { forkJoin } from "rxjs";
 import { NotificacionesService } from "../../services/notificaciones.service";
 import { FormControl } from "@angular/forms";
+import { ParametrosService } from "../../services/parametros.service";
+import { Rutas } from "../../models/usuario.model";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-contratos",
@@ -12,12 +15,16 @@ import { FormControl } from "@angular/forms";
 })
 export class ContratosComponent implements OnInit {
   constructor(
+    private router: Router,
+    private parametrosService: ParametrosService,
     private notiService: NotificacionesService,
     private contratoService: ContratoService
   ) {}
 
   contratos: Contrato[] = [];
   contratosMostrar: Contrato[] = [];
+
+  rutaParaSincronizar: Rutas | undefined = undefined;
 
   desde = 0;
   limite = 30;
@@ -31,6 +38,15 @@ export class ContratosComponent implements OnInit {
   ngOnInit(): void {
     this.cargarDatos();
     this.registrarBuscador();
+    this.cargarRutaParaSincronizarContratos();
+  }
+
+  cargarRutaParaSincronizarContratos() {
+    this.parametrosService.offline
+      .obtenerRutaSeleccionada()
+      .subscribe((ruta) => {
+        this.rutaParaSincronizar = ruta as Rutas;
+      });
   }
 
   registrarBuscador() {
@@ -76,6 +92,25 @@ export class ContratosComponent implements OnInit {
       return;
     }
 
+    let idRuta = this.rutaParaSincronizar?.IdRuta;
+
+    if (!idRuta) {
+      this.notiService.sweet.confirmacion(
+        "No haz definido una ruta para sincronizar contratos. ¿Quieres ir parametros ahora? ",
+        "Faltan parametros",
+        () => {
+          this.router.navigate(["app", "parametros"]);
+        },
+        () => {
+          this.notiService.toast.error(
+            "No puedes sincronizar contratos si no defines la ruta a trabajar"
+          );
+        }
+      );
+
+      return;
+    }
+
     this.sincronizandoContratos = true;
 
     //Comprobamos que no tengamos contratos sin sincronizar con la BD
@@ -84,8 +119,8 @@ export class ContratosComponent implements OnInit {
       .sincronizarContratosTomadosOffline()
       .subscribe((cantidad) => {
         this.notiService.toast.correcto(`Se subieron ${cantidad} contratos`);
-
-        this.contratoService.findAll().subscribe(
+        if (!idRuta) return;
+        this.contratoService.findAllInRoute(idRuta).subscribe(
           (contratos) => {
             this.contratos = contratos;
             if (contratos.length === 0) {
