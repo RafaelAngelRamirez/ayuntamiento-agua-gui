@@ -11,6 +11,7 @@ import {
 } from "../../services/incidencia.service";
 import { TienePermisoPipe } from "../../pipes/tiene-permiso.pipe";
 import { ContratosPendientesSincronizarComponent } from "../../components/contratos-pendientes-sincronizar/contratos-pendientes-sincronizar.component";
+import { ContratoService } from "../../services/contrato.service";
 import {
   Impedimento,
   ImpedimentoService,
@@ -23,6 +24,7 @@ import {
 })
 export class ParametrosComponent implements OnInit {
   constructor(
+    private contratoService: ContratoService,
     private simapaService: SimapaService,
     private notiService: NotificacionesService,
     private parametrosService: ParametrosService,
@@ -538,6 +540,74 @@ export class ParametrosComponent implements OnInit {
         this.cargandoVigenciaYPeriodo = false;
       },
       () => (this.cargandoVigenciaYPeriodo = false)
+    );
+  }
+
+  archivandoPeriodo = false;
+  archivarPeriodo() {
+    this.archivandoPeriodo = true;
+
+    //Confirmar la accion
+    this.notiService.sweet.confirmacion(
+      "Esta acción <b>no se puede deshacer</b>. ¿Aun asi quieres continuar",
+      "ARCHIVAR CONTRATOS Y LECTURAS",
+
+      () => this.comprobarContratosPendientesSincronizar(),
+      () => {
+        this.notiService.sweet.alerta(
+          "No se archivaron los contratos",
+          "Cancelaste la acción",
+          "info"
+        );
+
+        this.archivandoPeriodo = false;
+      }
+    );
+  }
+
+  private comprobarContratosPendientesSincronizar() {
+    //Sincronizar los contratos faltantes con simapa
+
+    this.parametrosService.obtenerEstadisticasSincronizacion().subscribe(
+      (estadisticas: any) => {
+        let pendientes = estadisticas.contratosPendientesDeSincronizar;
+
+        if (pendientes > 0) {
+          this.notiService.sweet.confirmacion(
+            `Hay ${pendientes} ${
+              pendientes > 1 ? "contratos pendientes" : "contrato pendiente"
+            } por sincronizar con simapa. ¿Quieres sincronizarlos antes de archivar?`,
+
+            "Pendiente por sincronizar",
+            () => {
+              this.notiService.toast.warning(
+                "Sincroniza los contratos con simapa para poder continuar"
+              );
+              this.archivandoPeriodo = false;
+            },
+            () => {
+              this.ejecutarArchivado();
+            }
+          );
+        } else {
+          this.ejecutarArchivado();
+        }
+      },
+      () => (this.archivandoPeriodo = false)
+    );
+  }
+
+  private ejecutarArchivado() {
+    this.parametrosService.archivarContratos().subscribe(
+      () => {
+        this.notiService.sweet.alerta(
+          "Se archivaron los contratos de manera correcta",
+          "Archivado completo",
+          "success"
+        );
+        this.archivandoPeriodo = false;
+      },
+      (_) => (this.archivandoPeriodo = false)
     );
   }
 }
