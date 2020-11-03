@@ -78,16 +78,16 @@ export class ZebraService {
     let dispositivo = this.usuarioService.obtenerUsuario().dispositivo;
     let uid = this.selected_device?.uid;
 
-    if (uid !== dispositivo) {
-      this.notiService.toast.error(
-        this.titulo.concat(" Imposible imprimir"),
-        "No se reconoce el dispositivo. Reportalo al administrador".concat(
-          ` [${uid}]`
-        )
-      );
-    } else {
+    // if (uid !== dispositivo) {
+    //   this.notiService.toast.error(
+    //     this.titulo.concat(" Imposible imprimir"),
+    //     "No se reconoce el dispositivo. Reportalo al administrador".concat(
+    //       ` [${uid}]`
+    //     )
+    //   );
+    // } else {
       this.selected_device.send(dataToWrite, undefined, this.errorCallback);
-    }
+    // }
   }
 
   readCallback = (readData: string) => {
