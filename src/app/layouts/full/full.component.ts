@@ -3,6 +3,8 @@ import { Router } from "@angular/router";
 
 import { PerfectScrollbarConfigInterface } from "ngx-perfect-scrollbar";
 import { ImprimirService } from "../../services/imprimir.service";
+import { ZebraService } from "../../services/zebra/zebra.service";
+import { NotificacionesService } from "../../services/notificaciones.service";
 
 @Component({
   selector: "app-full-layout",
@@ -12,26 +14,42 @@ import { ImprimirService } from "../../services/imprimir.service";
 export class FullComponent implements OnInit {
   color = "defaultdark";
   showSettings = false;
-  showMinisidebar = false;
-  showDarktheme = false;
+  showMinisidebar = true;
+  showDarktheme = true;
 
   public innerWidth: number = -1;
 
   public config: PerfectScrollbarConfigInterface = {};
 
-  constructor(public imprimirService: ImprimirService, public router: Router) {}
-
+  constructor(
+    private notiService: NotificacionesService,
+    public imprimirService: ImprimirService,
+    public router: Router,
+    private zebraService: ZebraService
+  ) {}
 
   ngOnInit() {
     if (this.router.url === "/") {
       this.router.navigate(["/dashboard/dashboard1"]);
     }
-    this.handleLayout();
+
+    setTimeout(() => {
+      this.handleLayout();
+    }, 1000);
+
+    this.zebraService
+      .setup()
+      .then((device: any) => {
+        this.zebraService.selected_device = device;
+        this.notiService.toast.correcto(
+          "Mini printer configurada: " + device.uid
+        );
+      })
+      .catch((error) => this.notiService.toast.error(error));
   }
 
   @HostListener("window:resize", ["$event"])
   onResize(event: string) {
-    
     this.handleLayout();
   }
 
@@ -47,5 +65,4 @@ export class FullComponent implements OnInit {
       this.showMinisidebar = false;
     }
   }
-
 }

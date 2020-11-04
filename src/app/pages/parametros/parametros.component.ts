@@ -12,6 +12,7 @@ import {
 import { TienePermisoPipe } from "../../pipes/tiene-permiso.pipe";
 import { ContratosPendientesSincronizarComponent } from "../../components/contratos-pendientes-sincronizar/contratos-pendientes-sincronizar.component";
 import { ContratoService } from "../../services/contrato.service";
+import { ZebraService } from '../../services/zebra/zebra.service'
 import {
   Impedimento,
   ImpedimentoService,
@@ -31,7 +32,8 @@ export class ParametrosComponent implements OnInit {
     private usuarioService: UsuarioService,
     private incidenciasSerivice: IncidenciaService,
     private impedimentosService: ImpedimentoService,
-    private tienePermisoPipe: TienePermisoPipe
+    private tienePermisoPipe: TienePermisoPipe,
+    public zebraService: ZebraService
   ) {}
   contratosPendientesSincronizarComponent:
     | ContratosPendientesSincronizarComponent

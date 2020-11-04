@@ -12,55 +12,60 @@ export class ZebraService {
     private notiService: NotificacionesService,
     private usuarioService: UsuarioService
   ) {}
-  selected_device: any;
-  devices: any[] = [];
+  selected_device!: ZebraDevice;
+  devices: ZebraDevice[] = [];
 
   opciones: string[] = [];
   titulo = "[ IMPRESION ]";
 
   setup() {
-    //Get the default device from the application as a first step. Discovery takes longer to complete.
-    BrowserPrint.getDefaultDevice(
-      "printer",
-      (device: any) => {
-        //Add device to list of devices and to html select element
-        this.selected_device = device;
-        this.devices.push(device);
-        this.opciones.push(device.name);
+    return new Promise((resolve, reject) => {
+      //Get the default device from the application as a first step. Discovery takes longer to complete.
+      BrowserPrint.getDefaultDevice(
+        "printer",
+        (device: any) => {
+          console.log(device);
+          //Add device to list of devices and to html select element
+          // this.selected_device = device;
+          // this.devices.push(device);
+          // this.opciones.push(device.name);
 
-        //Discover any other devices available to the application
-        BrowserPrint.getLocalDevices(
-          (device_list: any[]) => {
-            for (var i = 0; i < device_list.length; i++) {
-              //Add device to list of devices and to html select element
-              var device = device_list[i];
-              if (
-                !this.selected_device ||
-                device.uid != this.selected_device.uid
-              ) {
-                this.devices.push(device);
-                this.opciones.push(device.name);
-              }
-            }
-          },
-          () => {
-            console.log("Error getting local devices");
-            this.notiService.toast.error(
-              "Error obteniendo los dispositivos locales",
-              this.titulo
-            );
-          },
-          "printer"
-        );
-      },
-      (error: any) => {
-        this.notiService.toast.error(
-          error.concat(" Puede ser un error conexión?"),
-          this.titulo
-        );
-        console.log("error", error);
-      }
-    );
+          return resolve(device);
+
+          //Discover any other devices available to the application
+          // BrowserPrint.getLocalDevices(
+          //   (device_list: any[]) => {
+          //     for (var i = 0; i < device_list.length; i++) {
+          //       //Add device to list of devices and
+          //       var device = device_list[i];
+          //       if (
+          //         !this.selected_device ||
+          //         device.uid != this.selected_device.uid
+          //       ) {
+          //         this.devices.push(device);
+          //         this.opciones.push(device.name);
+          //       }
+          //     }
+          //   },
+          //   () => {
+          //     console.log("Error getting local devices");
+          //     this.notiService.toast.error(
+          //       "Error obteniendo los dispositivos locales",
+          //       this.titulo
+          //     );
+          //   },
+          //   "printer"
+          // );
+        },
+        (error: any) => {
+          let msj = "¿Puede ser un error de conexión?";
+
+          this.notiService.toast.error(error.concat(msj), this.titulo);
+          console.log("error", error);
+          reject(error);
+        }
+      );
+    });
   }
 
   getConfig() {
@@ -78,16 +83,16 @@ export class ZebraService {
     let dispositivo = this.usuarioService.obtenerUsuario().dispositivo;
     let uid = this.selected_device?.uid;
 
-    // if (uid !== dispositivo) {
-    //   this.notiService.toast.error(
-    //     this.titulo.concat(" Imposible imprimir"),
-    //     "No se reconoce el dispositivo. Reportalo al administrador".concat(
-    //       ` [${uid}]`
-    //     )
-    //   );
-    // } else {
+    if (uid !== dispositivo) {
+      this.notiService.toast.error(
+        this.titulo.concat(" Imposible imprimir"),
+        "No se reconoce el dispositivo. Reportalo al administrador".concat(
+          ` [${uid}]`
+        )
+      );
+    } else {
       this.selected_device.send(dataToWrite, undefined, this.errorCallback);
-    // }
+    }
   }
 
   readCallback = (readData: string) => {
@@ -136,4 +141,30 @@ export class ZebraService {
       }
     }
   }
+}
+
+export interface ZebraDevice {
+  name: string;
+  deviceType: string;
+  connection: string;
+  uid: string;
+  version: number;
+
+  convertAndSendFile: Function;
+  manufacturer: string;
+  provider: string;
+  read: Function;
+  readAllAvailable: Function;
+  readErrorCallback: Function;
+  readFinishedCallback: Function;
+  readRetries: number;
+  readUntilStringReceived: Function;
+  send: Function;
+  sendErrorCallback: Function;
+  sendFile: Function;
+  sendFinishedCallback: Function;
+  sendThenRead: Function;
+  sendThenReadAllAvailable: Function;
+  sendThenReadUntilStringReceived: Function;
+  sendUrl: Function;
 }
