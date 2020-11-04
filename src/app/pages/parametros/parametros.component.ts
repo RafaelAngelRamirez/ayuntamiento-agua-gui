@@ -12,7 +12,7 @@ import {
 import { TienePermisoPipe } from "../../pipes/tiene-permiso.pipe";
 import { ContratosPendientesSincronizarComponent } from "../../components/contratos-pendientes-sincronizar/contratos-pendientes-sincronizar.component";
 import { ContratoService } from "../../services/contrato.service";
-import { ZebraService } from '../../services/zebra/zebra.service'
+import { ZebraService } from "../../services/zebra/zebra.service";
 import {
   Impedimento,
   ImpedimentoService,
@@ -203,6 +203,8 @@ export class ParametrosComponent implements OnInit {
             this.notiService.toast.correcto(
               "Contatos sincronizados: " + resultado.total
             );
+
+            this.cargarEstadisticas();
           },
           () => (this.sincronizandoContratos = false)
         );
