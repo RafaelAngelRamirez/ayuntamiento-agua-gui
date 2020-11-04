@@ -59,7 +59,7 @@ export class FullComponent implements OnInit {
 
   handleLayout() {
     this.innerWidth = window.innerWidth;
-    if (this.innerWidth < 1170) {
+    if (this.innerWidth < 925) {
       this.showMinisidebar = true;
     } else {
       this.showMinisidebar = false;
