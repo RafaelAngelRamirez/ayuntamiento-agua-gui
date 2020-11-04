@@ -284,28 +284,32 @@
   <div class="col-12 col-sm-6 col-md-4">
     <div class="card shadow">
       <div class="card-body">
+        <h3>[MINI PRINTER] {{ zebraService?.selected_device?.name }}</h3>
 
-        <h3>[MINI PRINTER] {{zebraService?.selected_device?.name}} </h3>
-
-       
-        
-          <b>NAME:</b> <br /> {{zebraService?.selected_device?.name}} <hr />
-          <b>DEVICETYPE:</b> <br /> {{zebraService?.selected_device?.deviceType}} <hr />
-          <b>CONNECTION:</b> <br /> {{zebraService?.selected_device?.connection}} <hr />
-          <b>UID:</b> <br /> {{zebraService?.selected_device?.uid}} <hr />
-          <b>VERSION:</b> <br /> {{zebraService?.selected_device?.version}} <hr />
-          <b>PROVIDER:</b> <br /> {{zebraService?.selected_device?.provider}} <hr />
-          <b>MANUFACTURER:</b> <br /> {{zebraService?.selected_device?.manufacturer}} <hr />
-          <b>READRETRIES:</b> <br /> {{zebraService?.selected_device?.readRetries}} <hr />
-  
-  
-          
-          
-        
-
-
-
-
+        <b>NAME:</b> <br />
+        {{ zebraService?.selected_device?.name }}
+        <hr />
+        <b>DEVICETYPE:</b> <br />
+        {{ zebraService?.selected_device?.deviceType }}
+        <hr />
+        <b>CONNECTION:</b> <br />
+        {{ zebraService?.selected_device?.connection }}
+        <hr />
+        <b>UID:</b> <br />
+        {{ zebraService?.selected_device?.uid }}
+        <hr />
+        <b>VERSION:</b> <br />
+        {{ zebraService?.selected_device?.version }}
+        <hr />
+        <b>PROVIDER:</b> <br />
+        {{ zebraService?.selected_device?.provider }}
+        <hr />
+        <b>MANUFACTURER:</b> <br />
+        {{ zebraService?.selected_device?.manufacturer }}
+        <hr />
+        <b>READRETRIES:</b> <br />
+        {{ zebraService?.selected_device?.readRetries }}
+        <hr />
 
         <pre>{{ zebraService.selected_device | json }}</pre>
       </div>
