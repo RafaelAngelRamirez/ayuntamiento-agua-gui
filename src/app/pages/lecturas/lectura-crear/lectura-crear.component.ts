@@ -333,6 +333,9 @@ export class LecturaCrearComponent implements OnInit {
       problemas.push(`<b>IMPEDIMENTO</b>: ${impedimento?.NombreImpedimento}`);
     }
 
+
+    if ( problemas.length === 0) return null
+
     let problemasMostrar = problemas.map(
       (x) => `<li class="list-group-item">${x}</li>`
     );
