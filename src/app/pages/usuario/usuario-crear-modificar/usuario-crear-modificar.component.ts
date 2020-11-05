@@ -167,6 +167,11 @@ export class UsuarioCrearModificarComponent implements OnInit {
       return;
     }
 
+    if (this.usuario.esIphone) {
+      this.notiService.toast.error("Debes quitar la opcion de iphone.");
+      return;
+    }
+
     if (!this.usuario._id) return;
 
     this.cargando = true;
@@ -181,6 +186,21 @@ export class UsuarioCrearModificarComponent implements OnInit {
         },
         (_) => (this.cargando = false)
       );
+  }
+
+  modificarDispositivoIPhone(event: boolean) {
+    console.log(event);
+    this.cargando = true;
+    this.usuarioSerivce.updateIPhone(this.usuario._id, event).subscribe(
+      (usuario) => {
+        this.notiService.toast.correcto(
+          "Se definio el uso de iPhone " + usuario.esIphone
+        );
+        this.usuario = usuario;
+        this.cargando = false;
+      },
+      (_) => (this.cargando = false)
+    );
   }
 
   guardarLecturista() {

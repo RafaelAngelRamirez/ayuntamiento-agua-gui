@@ -6,6 +6,9 @@ import { NotificacionesService } from "../../../services/notificaciones.service"
 import { ImprimirService } from "../../../services/imprimir.service";
 import { ZebraService } from "../../../services/zebra/zebra.service";
 import { IndexedDbService } from "../../../services/offline/indexed-db.service";
+import { UsuarioService } from "../../../services/usuario.service";
+import { Usuario } from "../../../models/usuario.model";
+import { DomSanitizer } from "@angular/platform-browser"
 
 @Component({
   selector: "app-ticket",
@@ -15,14 +18,43 @@ import { IndexedDbService } from "../../../services/offline/indexed-db.service";
 export class TicketComponent implements OnInit {
   contrato!: Contrato;
   constructor(
+    private usuarioSerivce: UsuarioService,
     private contratoService: ContratoService,
     private imprimirService: ImprimirService,
     private activatedRoute: ActivatedRoute,
     private location: Location,
-    public zebraService: ZebraService
+    public zebraService: ZebraService,
+    public sanitization: DomSanitizer
   ) {}
 
-  datosAImprimir: any = {};
+  zpl_code: string = "";
+  listoParaImprimir = false;
+  private _datosAImprimir: any = {};
+  usuario: Usuario = this.usuarioSerivce.obtenerUsuario();
+
+  set datosAImprimir(d: any) {
+    this._datosAImprimir = d;
+
+    let tieneIncidencias = !!this.datosAImprimir.problemas;
+
+    let zpl = tieneIncidencias
+      ? this.imprimirService.ticket_impedimentos
+      : this.imprimirService.ticket1;
+
+    let p = "@$@";
+    Object.keys(this.datosAImprimir).forEach((key) => {
+      zpl = zpl.replace(`${p}${key}${p}`, this.datosAImprimir[key]);
+    });
+
+    // Sies un usuario iphone tenemos que convertir el codigo zpl en
+    // en base 64 para que mobi print funcione.
+    this.zpl_code = this.usuario.esIphone ? btoa(zpl) : zpl;
+    this.listoParaImprimir = true;
+  }
+
+  get datosAImprimir(): any {
+    return this._datosAImprimir;
+  }
 
   cargandoContrato = false;
   datos: any = {};
@@ -49,22 +81,8 @@ export class TicketComponent implements OnInit {
   }
 
   imprimir() {
-    let tieneIncidencias =
-      !!this.datosAImprimir.problemas
+    if (this.cargandoContrato) return;
 
-    console.log(`tieneIncidencias`, tieneIncidencias, this.datosAImprimir);
-
-    let zpl = tieneIncidencias
-      ? this.imprimirService.ticket_impedimentos
-      : this.imprimirService.ticket1;
-
-    let p = "@$@";
-    console.log(`this.datosAImprimir`, this.datosAImprimir);
-    Object.keys(this.datosAImprimir).forEach((key) => {
-      console.log(`${p}${key}${p}`);
-      zpl = zpl.replace(`${p}${key}${p}`, this.datosAImprimir[key]);
-    });
-
-    this.imprimirService.ticket(zpl);
+    this.imprimirService.ticket(this.zpl_code);
   }
 }

@@ -50,7 +50,10 @@ export class LecturasComponent implements OnInit {
   }
 
   equipoCorrecto() {
-    let equipo = this.usuarioService.obtenerUsuario().dispositivo;
+    let usuario = this.usuarioService.obtenerUsuario();
+    if (usuario.esIphone) return true;
+    
+    let equipo = usuario.dispositivo;
     return this.zebraService.selected_device?.uid === equipo;
   }
 
@@ -73,7 +76,7 @@ export class LecturasComponent implements OnInit {
     if (!this.equipoCorrecto()) {
       this.notiService.sweet.alerta(
         "No puedes imprimir con este equipo. Si es un error reportaselo al administrador.",
-        "Mini printer no valida", 
+        "Mini printer no valida",
         "error"
       );
 

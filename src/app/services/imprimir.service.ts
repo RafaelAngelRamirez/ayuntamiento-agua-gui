@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 import { Contrato } from "./contrato.service";
 import { ZebraService } from "./zebra/zebra.service";
-import { UsuarioService } from "./usuario.service";
+import { UsuarioService } from './usuario.service'
 import { NotificacionesService } from "./notificaciones.service";
 
 @Injectable({
@@ -18,11 +18,16 @@ export class ImprimirService {
     return this._imprimiendo;
   }
 
-  constructor(private zebraService: ZebraService) {}
+  constructor(
+    private zebraService: ZebraService,
+    private UsuarioService: UsuarioService
+    
+    ) {}
 
   ticket(zpl: string) {
+    
+    
     this._imprimiendo = true;
-    console.log(zpl)
     this.zebraService.writeToSelectedPrinter(zpl);
   }
 

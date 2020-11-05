@@ -138,12 +138,25 @@
       <div class="card-body">
         <h3>Dispositivo</h3>
 
+        <div class="form-check">
+          <label class="form-check-label">
+            <input
+              (change)="modificarDispositivoIPhone($event.target.checked)"
+              type="checkbox"
+              class="form-check-input"
+              [(ngModel)]="usuario.esIphone"
+            />
+            Usar en iphone
+          </label>
+        </div>
+
         <div class="form-group">
           <input
             [(ngModel)]="usuario.dispositivo"
             [disabled]="cargando"
             type="text"
             class="form-control"
+            [disabled]="usuario?.esIphone"
           />
           <small class="form-text text-muted">Asginar UID dispositivo</small>
         </div>

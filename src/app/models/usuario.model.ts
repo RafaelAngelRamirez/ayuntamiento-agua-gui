@@ -8,6 +8,11 @@ export class Usuario {
     public dispositivo?: string,
     public lecturista?: Lecturista,
     public navegacionDefault: string = "tablero",
+
+    //Si es un iphone tenemos que usar mobi print 
+    // que es de paga. Utiliza una url con base64
+    // arrowhead://x-callback-url/zplcode?code=<ZPL_CODE>
+    public esIphone:boolean = false
   ) {}
 }
 

@@ -82,7 +82,6 @@ export class ZebraService {
   writeToSelectedPrinter(dataToWrite: string) {
     let dispositivo = this.usuarioService.obtenerUsuario().dispositivo;
     let uid = this.selected_device?.uid;
-
     if (uid !== dispositivo) {
       this.notiService.toast.error(
         this.titulo.concat(" Imposible imprimir"),

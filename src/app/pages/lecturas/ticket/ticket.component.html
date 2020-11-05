@@ -12,21 +12,53 @@
         >
           <i class="fas fa-arrow-circle-left"></i> Regresar a lecturas</a
         >
-        Impresora activa:
-        {{
-          this.zebraService.selected_device?.name
-            ? this.zebraService.selected_device?.name
-            : "NO DISPONIBLE"
-        }}
 
-        <a
-          class="btn btn-primary"
-          href="javascript:void(0)"
-          role="button"
-          (click)="imprimir()"
-        >
-          <i class="fas fa-print"></i>
-        </a>
+        <ng-container *ngIf="usuario.esIphone; else esAndroid">
+          <a
+            [href]="
+              this.sanitization.bypassSecurityTrustUrl(
+                'arrowhead://x-callback-url/zplcode?code=' + zpl_code
+              )
+            "
+            class="btn btn-primary"
+            role="button"
+          >
+            <i
+              *ngIf="!cargandoContrato"
+              class="fas fa-print"
+            ></i>
+            <i
+              *ngIf="cargandoContrato 
+              && !listoParaImprimir"
+              class="fas fa-sync fa-spin"
+            ></i>
+          </a>
+        </ng-container>
+
+        <ng-template #esAndroid>
+          Impresora activa:
+          {{
+            this.zebraService.selected_device?.name
+              ? this.zebraService.selected_device?.name
+              : "NO DISPONIBLE"
+          }}
+
+          <a
+            class="btn btn-primary"
+            href="javascript:void(0)"
+            role="button"
+            (click)="imprimir()"
+          >
+            <i
+              *ngIf="!cargandoContrato && listoParaImprimir"
+              class="fas fa-print"
+            ></i>
+            <i
+              *ngIf="cargandoContrato && !listoParaImprimir"
+              class="fas fa-sync fa-spin"
+            ></i>
+          </a>
+        </ng-template>
       </div>
     </div>
   </div>

@@ -130,4 +130,16 @@ export class UsuarioService {
         })
       );
   }
+  updateIPhone(id: string, esIphone: boolean) {
+    return this.http
+      .put<Usuario>(this.base.concat("/modificar/iphone/" + id), {
+        esIphone,
+      })
+      .pipe(
+        catchError((x: any) => {
+          this.notiService.toast.error(x.err);
+          return throwError(x);
+        })
+      );
+  }
 }
