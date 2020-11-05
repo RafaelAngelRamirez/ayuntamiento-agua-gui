@@ -36,7 +36,6 @@ export class ContratosComponent implements OnInit {
   buscador = new FormControl();
 
   ngOnInit(): void {
-    this.cargarDatos();
     this.registrarBuscador();
     this.cargarRutaParaSincronizarContratos();
   }
@@ -46,6 +45,7 @@ export class ContratosComponent implements OnInit {
       .obtenerRutaSeleccionada()
       .subscribe((ruta) => {
         this.rutaParaSincronizar = ruta as Rutas;
+        this.cargarDatos();
       });
   }
 
