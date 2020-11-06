@@ -75,7 +75,7 @@
         =====================================
         -->
         <input
-          *ngIf="!permitirModificarImpedimento && guardandoLectura"
+          *ngIf="!permitirModificarImpedimento || guardandoLectura"
           [value]="obtenerStringImpedimento(f('IdImpedimento').value)"
           type="text"
           class="form-control"

@@ -333,8 +333,7 @@ export class LecturaCrearComponent implements OnInit {
       problemas.push(`<b>IMPEDIMENTO</b>: ${impedimento?.NombreImpedimento}`);
     }
 
-
-    if ( problemas.length === 0) return null
+    if (problemas.length === 0) return null;
 
     let problemasMostrar = problemas.map(
       (x) => `<li class="list-group-item">${x}</li>`
@@ -352,7 +351,7 @@ export class LecturaCrearComponent implements OnInit {
 
     return `
     <ul class="list-group">
-      <li class="list-group-item bg-danger text-white">Se encontraron estos problemas el ticket.</li>
+      <li class="list-group-item bg-danger text-white">Se encontraron estos problemas en el ticket.</li>
       ${problemasMostrar.join(" ")}
     </ul>
 

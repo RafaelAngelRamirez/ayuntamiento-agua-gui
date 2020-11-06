@@ -75,32 +75,53 @@ export class TicketImprimirComponent implements OnInit {
       ),
       "Lectura actual": contrato.lectura.LecturaActual,
       "Periodos generados": periodosGenerados,
-      "Consumo por periodo":
+      "Consumo por periodo": this.hayIncidenciasOImpedimentos(
+        contrato,
         (contrato.lectura.LecturaActual - contrato.LecturaAnterior) /
-        periodosGenerados,
-      "Consumo total":
-        contrato.lectura.LecturaActual - contrato.LecturaAnterior,
-      "Importe por periodo": this.currencyPipe.transform(
-        contrato.lectura.importe / periodosGenerados
+          periodosGenerados
       ),
-      "Importe total": this.currencyPipe.transform(contrato.lectura.importe),
+      "Consumo total": this.hayIncidenciasOImpedimentos(
+        contrato,
+        contrato.lectura.LecturaActual - contrato.LecturaAnterior
+      ),
+      "Importe por periodo": this.hayIncidenciasOImpedimentos(
+        contrato,
+        this.currencyPipe.transform(
+          contrato.lectura.importe / periodosGenerados
+        )
+      ),
+      "Importe total": this.hayIncidenciasOImpedimentos(
+        contrato,
+        this.currencyPipe.transform(contrato.lectura.importe)
+      ),
     };
 
     let saldos = () => {
       let saldo = contrato.Saldo - contrato.Adeudo - contrato.lectura.importe;
       return saldo > 0 ? saldo : 0;
     };
-    this.datos["cuenta"] = {
-      Importe: this.currencyPipe.transform(contrato.lectura.importe),
-      "Adeudo anterior": this.currencyPipe.transform(contrato.Adeudo),
-      "Total a pagar": this.currencyPipe.transform(
-        contrato.Adeudo + contrato.lectura.importe - contrato.Saldo
-      ),
-      "Saldo a favor": this.currencyPipe.transform(contrato.Saldo),
-      "Nuevo saldo a favor": this.currencyPipe.transform(saldos()),
-    };
 
-    console.log(`this.datos`, this.datos);
+    let totalAPagar =
+      contrato.Adeudo + contrato.lectura.importe - contrato.Saldo;
+    this.datos["cuenta"] = {
+      Importe: this.hayIncidenciasOImpedimentos(
+        contrato,
+        this.currencyPipe.transform(contrato.lectura.importe)
+      ),
+      "Adeudo anterior": this.currencyPipe.transform(contrato.Adeudo),
+      "Total a pagar": this.hayIncidenciasOImpedimentos(
+        contrato,
+        this.currencyPipe.transform(totalAPagar < 0 ? 0 : totalAPagar)
+      ),
+      "Saldo a favor": this.hayIncidenciasOImpedimentos(
+        contrato,
+        this.currencyPipe.transform(contrato.Saldo)
+      ),
+      "Nuevo saldo a favor": this.hayIncidenciasOImpedimentos(
+        contrato,
+        this.currencyPipe.transform(saldos())
+      ),
+    };
 
     let paraTicket = {
       ...this.datos.lectura,
@@ -109,7 +130,7 @@ export class TicketImprimirComponent implements OnInit {
       problemas: contrato.lectura.problemas
         ? contrato.lectura.problemas
             .concat(" [Observaciones]: ")
-            .concat(contrato.lectura.Observaciones.trim())
+            .concat(contrato.lectura.Observaciones?.trim())
         : "",
     };
 
@@ -119,5 +140,20 @@ export class TicketImprimirComponent implements OnInit {
 
   retornar() {
     this.router.navigate(["/app/lectura"]);
+  }
+
+  hayIncidenciasOImpedimentos(
+    contrato: Contrato,
+    resultado: number | string | null
+  ): number | string | null {
+    if (resultado === null) return 0;
+    if (
+      contrato.lectura.IdIncidencia ||
+      contrato.lectura.IdImpedimento ||
+      resultado < 0
+    )
+      return 0;
+
+    return resultado;
   }
 }
