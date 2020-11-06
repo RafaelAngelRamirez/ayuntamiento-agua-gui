@@ -262,11 +262,12 @@ export class LecturaCrearComponent implements OnInit {
         model.FechaLectura = new Date();
         model.HoraLectura = new Date();
 
-        model.IdDispositivo = this.parametrosGenerales.parametros.parametros[0].IdLecturista;
+        model.IdDispositivo = this.parametrosGenerales.parametros.parametros[0].IdDispositivo;
         // GPS
         model.longitud = position.coords.longitude;
         model.latitud = position.coords.latitude;
 
+        //El consumo actul
         model.ConsumoMts3 = model.LecturaActual - this.contrato.LecturaAnterior;
 
         model.Mts3Cobrados =
@@ -442,10 +443,16 @@ export class LecturaCrearComponent implements OnInit {
     });
 
     console.log(`tarifas`, tarifas);
+    
+    //La cantidad de periodos que se estan cobrando. 
+    let periodosGenerados =
+    Number(contrato.lectura.Periodo) - Number(contrato.PeriodoAnterior);
+    let mesesGenerados = periodosGenerados * 2;
+    
     // El consumo que viene de la diferencia de la lectura anterior y la lectura actual.
-    let consumoActual = model.ConsumoMts3;
+    let consumoActualPorMes = model.ConsumoMts3 / mesesGenerados;
 
-    console.log(`consumoActual`, consumoActual);
+    console.log(`consumoActual`, consumoActualPorMes);
 
     let servicios = [];
     // Obtenemos aguasResiduales
@@ -489,21 +496,23 @@ export class LecturaCrearComponent implements OnInit {
         tarifa: t,
         min: t.ConsumoMinimo,
         max: t.ConsmuoMaximo,
-        consumoActualMt3: consumoActual,
+        // El consumo actual tiene que ser divido entre la cantidad de periodos
+        // generados y el total  de periodos.
+        consumoActualMt3: consumoActualPorMes,
         costoM3: t.CostoMt3Excedente,
         cuotaMinima: t.CuotaMinima,
       };
       let subImporte = 0;
-      if (consumoActual >= t.ConsmuoMaximo) {
+      if (consumoActualPorMes >= t.ConsmuoMaximo) {
         //El costo del rango
         desglose.metrosCalculados = t.ConsmuoMaximo - t.ConsumoMinimo + 1;
 
         subImporte =
           desglose.metrosCalculados * t.CostoMt3Excedente + t.CuotaMinima;
       } else {
-        if (consumoActual >= t.ConsumoMinimo) {
+        if (consumoActualPorMes >= t.ConsumoMinimo) {
           //AQUI LA HAN CAGAO con el -1
-          desglose.metrosCalculados = consumoActual - t.ConsumoMinimo;
+          desglose.metrosCalculados = consumoActualPorMes - t.ConsumoMinimo - 1;
           subImporte =
             desglose.metrosCalculados * t.CostoMt3Excedente + t.CuotaMinima;
         }
@@ -535,11 +544,12 @@ export class LecturaCrearComponent implements OnInit {
 
     console.log(`importeDrenaje`, importeDrenaje);
 
-    return (
-      importeTotal +
-      importeDrenaje +
-      importeInfrastructura +
-      importeAguasResiduales
-    );
+    let granTotal =
+      (importeTotal +
+        importeDrenaje +
+        importeInfrastructura +
+        importeAguasResiduales) *
+      2;
+    return granTotal;
   }
 }
