@@ -69,7 +69,8 @@ export class ContratosComponent implements OnInit {
         if (datos.length === 0) {
           this.sincronizar();
         } else {
-          this.contratos = this.contratoService.contratos = datos;
+          this.contratos = datos;
+          this.contratoService.contratos = datos;
           this.mostrarContratos();
 
           this.leyendoContratosOffline = false;
@@ -120,31 +121,58 @@ export class ContratosComponent implements OnInit {
       .subscribe((cantidad) => {
         this.notiService.toast.correcto(`Se subieron ${cantidad} contratos`);
         if (!idRuta) return;
+
         this.contratoService.findAllInRoute(idRuta).subscribe(
           (contratos) => {
             this.contratos = contratos;
+            this.contratoService.contratos = contratos;
+
             if (contratos.length === 0) {
               this.sincronizandoContratos = false;
               this.leyendoContratosOffline = false;
               this.buscador.enable();
+              //Borramos todos los contratos que estan almacenados en indexdb
+              this.contratoService.offline.deleteAll().subscribe(
+                (r) => {
+                  this.notiService.toast.info(
+                    "Eliminados los contratos sincronizados"
+                  );
+                },
+                (_) => {
+                  console.log(_);
+                }
+              );
+
               this.notiService.toast.warning(
                 "No hay contratos para sincronizar"
               );
               return;
             }
-            forkJoin(
-              contratos.map((c) => this.contratoService.offline.update(c))
-            ).subscribe(
-              () => {
-                this.sincronizandoContratos = false;
-                this.leyendoContratosOffline = false;
-                this.buscador.enable();
-                this.notiService.toast.correcto(
-                  `Se sincronizaron ${this.contratos.length} contratos`
-                );
-                this.mostrarContratos();
-              },
 
+            //Eliminamos todo lo sincronizado offline
+
+            this.contratoService.offline.deleteAll().subscribe(
+              () => {
+                forkJoin(
+                  contratos.map((c) => this.contratoService.offline.update(c))
+                ).subscribe(
+                  () => {
+                    this.sincronizandoContratos = false;
+                    this.leyendoContratosOffline = false;
+                    this.buscador.enable();
+                    this.notiService.toast.correcto(
+                      `Se sincronizaron ${this.contratos.length} contratos`
+                    );
+                    this.mostrarContratos();
+                  },
+
+                  (_) => {
+                    this.sincronizandoContratos = false;
+                    this.leyendoContratosOffline = false;
+                    this.buscador.enable();
+                  }
+                );
+              },
               (_) => {
                 this.sincronizandoContratos = false;
                 this.leyendoContratosOffline = false;
