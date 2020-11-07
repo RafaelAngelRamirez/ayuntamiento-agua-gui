@@ -107,7 +107,6 @@ export class LecturaCrearComponent implements OnInit {
           document.getElementById("lecturaActual")?.focus();
         }, 100);
       }, error);
-      Z;
     }, error);
   }
 
