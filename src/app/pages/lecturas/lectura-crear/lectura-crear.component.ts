@@ -107,6 +107,7 @@ export class LecturaCrearComponent implements OnInit {
           document.getElementById("lecturaActual")?.focus();
         }, 100);
       }, error);
+      Z;
     }, error);
   }
 
@@ -253,6 +254,14 @@ export class LecturaCrearComponent implements OnInit {
           this.notiService.toast.error("No se pudo encontrar al lecturista");
           return;
         }
+
+        if (!usuario.lecturista.IdLecturista) {
+          this.notiService.toast.error(
+            "Este usuario no tiene id de lecturista. No se puede continuar. "
+          );
+          return;
+        }
+
         //Traer desde el usuario
         model.idUsuario = usuario._id;
         model.IdLecturista = usuario.lecturista.IdLecturista;
@@ -443,12 +452,12 @@ export class LecturaCrearComponent implements OnInit {
     });
 
     console.log(`tarifas`, tarifas);
-    
-    //La cantidad de periodos que se estan cobrando. 
+
+    //La cantidad de periodos que se estan cobrando.
     let periodosGenerados =
-    Number(contrato.lectura.Periodo) - Number(contrato.PeriodoAnterior);
+      Number(contrato.lectura.Periodo) - Number(contrato.PeriodoAnterior);
     let mesesGenerados = periodosGenerados * 2;
-    
+
     // El consumo que viene de la diferencia de la lectura anterior y la lectura actual.
     let consumoActualPorMes = model.ConsumoMts3 / mesesGenerados;
 
