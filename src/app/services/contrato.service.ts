@@ -82,7 +82,10 @@ export class ContratoService {
         let observables: Observable<any>[] = [];
 
         paraSincronizar.forEach((c) => {
+          //Esto es solo para afectar la gui. De esta manera sabemos que
+          // los contratos ya fueron sincronizados.
           c.sincronizada = true;
+          //Se actualiza el contrato
           observables.push(this.update(c));
           //Actualizamos el contrato en indexed-db
           observables.push(this.offline.update(c));

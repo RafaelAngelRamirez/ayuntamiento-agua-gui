@@ -233,9 +233,15 @@ export class LecturaCrearComponent implements OnInit {
 
           return;
         }
-        //Esto es para idb, no para la api, pero de aqui
-        // guardamos la lectura.
+        //Esto es para idb, no para la api. En la api, cuando se guarde
+        // la lectura se setean de nuevo. Esto por que se ignora alguna 
+        // modificacion hecha al contrato fuera de la lectura tomada. 
         this.contrato.tomada = true;
+        // Ponemos este en false para que la funcion de sincronizacion 
+        // encuentre el contrato cuanto se este online
+        this.contrato.sincronizada = false
+
+
         this.contrato.lectura = model;
 
         //Diez dias
@@ -248,13 +254,15 @@ export class LecturaCrearComponent implements OnInit {
         model.Periodo = this.parametrosGenerales.parametros.rutas[0].PeriodoRuta;
 
         let usuario = this.usuarioService.obtenerUsuario();
+        let idDispositivo = this.parametrosGenerales.parametros.parametros[0]
+          .IdDispositivo;
 
         if (!usuario.lecturista) {
           this.notiService.toast.error("No se pudo encontrar al lecturista");
           return;
         }
 
-        if (!usuario.lecturista.IdLecturista) {
+        if (!this.parametrosGenerales.IdLecturista) {
           this.notiService.toast.error(
             "Este usuario no tiene id de lecturista. No se puede continuar. "
           );
@@ -263,14 +271,17 @@ export class LecturaCrearComponent implements OnInit {
 
         //Traer desde el usuario
         model.idUsuario = usuario._id;
-        model.IdLecturista = usuario.lecturista.IdLecturista;
+        model.IdLecturista = this.parametrosGenerales.IdLecturista;
         model.IdRuta = this.contrato.IdRuta;
         model.IdTarifa = this.contrato.IdTarifa;
 
         model.FechaLectura = new Date();
         model.HoraLectura = new Date();
 
-        model.IdDispositivo = this.parametrosGenerales.parametros.parametros[0].IdDispositivo;
+        //Dejamos un espacio en blanco por que
+        model.IdDispositivo = idDispositivo ? idDispositivo : " ";
+        console.log(`idDispositivo`, idDispositivo);
+
         // GPS
         model.longitud = position.coords.longitude;
         model.latitud = position.coords.latitude;
@@ -377,7 +388,6 @@ export class LecturaCrearComponent implements OnInit {
     this.constratoService.offline.update(this.contrato).subscribe(
       () => {
         //  Remplazamos los datos guardados en memoria.
-
         let index = this.constratoService.contratos.findIndex(
           (x) => x.Contrato === this.contrato.Contrato
         );
@@ -394,8 +404,11 @@ export class LecturaCrearComponent implements OnInit {
                   cantidad > 1 ? "contratos" : "contrato"
                 }`
               );
-
-              this.sincronizarLecturasDeOtros();
+              this.router.navigate([
+                "/app/lectura/imprime",
+                this.contrato.Contrato,
+              ]);
+              // this.sincronizarLecturasDeOtros();
             },
             (_) => {
               this.guardandoLectura = false;
@@ -417,25 +430,22 @@ export class LecturaCrearComponent implements OnInit {
   private sincronizarLecturasDeOtros() {
     // Sincronizar los contratos generados por otro
     // lecturista.
-    this.constratoService
-      .sincronizarContratosTomadosPorOtroLecturista()
-      .subscribe((contratos) => {
-        let subs = contratos.map((x) =>
-          this.constratoService.offline.update(x)
-        );
-
-        forkJoin(subs).subscribe((r) => {
-          console.log("[WORKER] Sincronizados " + "" + (contratos.length - 1));
-
-          this.constratoService
-            .confirmarNotificacion(contratos.map((x) => x._id))
-            .subscribe(() => {
-              console.log("Notificado");
-            });
-        });
-      });
+    // this.constratoService
+    //   .sincronizarContratosTomadosPorOtroLecturista()
+    //   .subscribe((contratos) => {
+    //     let subs = contratos.map((x) =>
+    //       this.constratoService.offline.update(x)
+    //     );
+    //     forkJoin(subs).subscribe((r) => {
+    //       console.log("[WORKER] Sincronizados " + "" + (contratos.length - 1));
+    //       this.constratoService
+    //         .confirmarNotificacion(contratos.map((x) => x._id))
+    //         .subscribe(() => {
+    //           console.log("Notificado");
+    //         });
+    //     });
+    //   });
     // ----------------------------------------
-    this.router.navigate(["/app/lectura/imprime", this.contrato.Contrato]);
   }
 
   calcularImporte(

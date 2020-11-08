@@ -250,12 +250,10 @@ export class ParametrosComponent implements OnInit {
   ];
 
   private obtenerLecturista(): Promise<Lecturista> {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let usuarioLocal = this.usuarioService.obtenerUsuario();
-      let usuario = await this.usuarioService
-        .findById(usuarioLocal._id)
-        .toPromise();
-      if (!usuario) {
+
+      if (!usuarioLocal) {
         this.notiService.toast.error(
           "No de pudo cargar el usuario. Vuelve a iniciar sesión. "
         );
@@ -263,22 +261,17 @@ export class ParametrosComponent implements OnInit {
         return reject("No se encontro el usuario");
       }
 
-      if (!usuario._id) return reject("No se puede buscar el usuario");
-      this.usuarioService.findById(usuario._id).subscribe(
-        (usuario: Usuario) => {
-          console.log(usuario);
-          if (!usuario.lecturista) {
-            this.notiService.toast.error(
-              "Debes comunicarte con el administrador para asiganar un lecturista a este usuario",
-              "USUARIO SIN LECTURISTA"
-            );
-            return reject();
-          }
+      if (!usuarioLocal._id) return reject("No se puede buscar el usuario");
 
-          return resolve(usuario.lecturista);
-        },
-        (err: any) => reject(err)
-      );
+      if (!usuarioLocal.lecturista) {
+        this.notiService.toast.error(
+          "Debes comunicarte con el administrador para asiganar un lecturista a este usuario",
+          "USUARIO SIN LECTURISTA"
+        );
+        return reject();
+      }
+
+      return resolve(usuarioLocal.lecturista);
     });
   }
 
