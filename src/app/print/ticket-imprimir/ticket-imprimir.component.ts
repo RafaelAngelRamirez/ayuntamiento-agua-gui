@@ -72,12 +72,12 @@ export class TicketImprimirComponent implements OnInit {
 
   encontrarImpedimento(id: string): string {
     let imp = this.impedimentos.find((x) => x.IdImpedimento === id);
-    if (!imp) return "[ERROR] IMPEDIMENTO NO REGISTRADO";
+    if (!imp) return "[ IMPEDIMENTO NO REGISTRADO ]";
     return imp.NombreImpedimento;
   }
   encontrarIncidencia(id: string): string {
     let imp = this.incidencias.find((x) => x.IdIncidencia === id);
-    if (!imp) return "[ERROR] INCIDENCIA NO REGISTRADA";
+    if (!imp) return "[ INCIDENCIA NO REGISTRADA ]";
     return imp.NombreIncidencia;
   }
 
