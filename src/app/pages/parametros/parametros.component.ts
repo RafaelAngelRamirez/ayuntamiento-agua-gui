@@ -35,9 +35,7 @@ export class ParametrosComponent implements OnInit {
     private tienePermisoPipe: TienePermisoPipe,
     public zebraService: ZebraService
   ) {}
-  contratosPendientesSincronizarComponent:
-    | ContratosPendientesSincronizarComponent
-    | undefined;
+  contratosPendientesSincronizarComponent!: ContratosPendientesSincronizarComponent;
 
   cargandoActualizandoPermisos = false;
 

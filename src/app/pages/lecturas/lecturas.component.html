@@ -28,12 +28,21 @@
     <a
       *ngFor="let contrato of contratos"
       class="list-group-item list-group-item-action mt-2 shadow"
-      [ngClass]="{ 'bg-dark text-white': contrato.tomada }"
+      [ngClass]="{
+        'bg-dark text-white': contrato.tomada
+      }"
       (click)="irA(contrato)"
     >
       <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">
           {{ contrato.Contrato }}
+          <i
+            *ngIf="
+              contrato.lectura?.IdIncidencia || contrato.lectura?.IdImpedimento
+            "
+            class="fas fa-exclamation-circle text-warning"
+          ></i>
+
           <i
             *ngIf="contrato.tomada && !contrato.sincronizada"
             class="fas fa-cloud-upload-alt text-primary animate pulse infinite"

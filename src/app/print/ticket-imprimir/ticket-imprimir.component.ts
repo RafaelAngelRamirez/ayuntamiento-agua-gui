@@ -7,6 +7,14 @@ import { UsuarioService } from "../../services/usuario.service";
 import { ParametrosService } from "../../services/parametros.service";
 import { PeriodoAMesesService } from "../../services/periodo-ameses.service";
 import { DecimalPipe, CurrencyPipe } from "@angular/common";
+import {
+  IncidenciaService,
+  Incidencia,
+} from "../../services/incidencia.service";
+import {
+  ImpedimentoService,
+  Impedimento,
+} from "../../services/impedimento.service";
 
 @Component({
   selector: "app-ticket-imprimir",
@@ -26,6 +34,9 @@ export class TicketImprimirComponent implements OnInit {
     return this._contrato;
   }
 
+  incidencias: Incidencia[] = [];
+  impedimentos: Impedimento[] = [];
+
   datos: any = {};
 
   constructor(
@@ -36,13 +47,38 @@ export class TicketImprimirComponent implements OnInit {
     private router: Router,
     private pMesesService: PeriodoAMesesService,
     private decimalPipe: DecimalPipe,
-    private currencyPipe: CurrencyPipe
+    private currencyPipe: CurrencyPipe,
+    public incidenciaService: IncidenciaService,
+    public impedimentoService: ImpedimentoService
   ) {}
 
   ngOnInit(): void {
     this.imprimirService.actualizar.subscribe((contrato) => {
       if (contrato) this.definirContrato(contrato);
     });
+
+    this.incidenciaService.offline
+      .findAll()
+      .subscribe(
+        (incidencias: Incidencia[]) => (this.incidencias = incidencias)
+      );
+
+    this.impedimentoService.offline
+      .findAll()
+      .subscribe(
+        (impedimentos: Impedimento[]) => (this.impedimentos = impedimentos)
+      );
+  }
+
+  encontrarImpedimento(id: string): string {
+    let imp = this.impedimentos.find((x) => x.IdImpedimento === id);
+    if (!imp) return "[ERROR] IMPEDIMENTO NO REGISTRADO";
+    return imp.NombreImpedimento;
+  }
+  encontrarIncidencia(id: string): string {
+    let imp = this.incidencias.find((x) => x.IdIncidencia === id);
+    if (!imp) return "[ERROR] INCIDENCIA NO REGISTRADA";
+    return imp.NombreIncidencia;
   }
 
   definirContrato(contrato = this.contrato) {

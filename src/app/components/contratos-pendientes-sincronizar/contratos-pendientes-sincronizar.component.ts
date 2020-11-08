@@ -19,11 +19,12 @@ export class ContratosPendientesSincronizarComponent implements OnInit {
     private parametrosService: ParametrosService,
     private notiService: NotificacionesService
   ) {
-    this.esteComponente.emit(this);
+    
   }
 
   ngOnInit(): void {
     this.cargarEstadisticas();
+    this.esteComponente.emit(this);
   }
 
   cargandoEstadisticas = false;

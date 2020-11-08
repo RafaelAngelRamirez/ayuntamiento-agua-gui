@@ -31,7 +31,7 @@ export class ImpedimentoService {
 }
 
 export interface Impedimento {
-  AsignarAuditoria: String;
-  IdImpedimento: String;
-  NombreImpedimento: String;
+  AsignarAuditoria: string;
+  IdImpedimento: string;
+  NombreImpedimento: string;
 }
