@@ -37,15 +37,18 @@ export class LecturasComponent implements OnInit {
     this.registrarBuscador();
 
     if (!this.zebraService.selected_device) {
-      this.zebraService.setup();
+      this.zebraService.setup().then((device:any)=>{
+        this.zebraService.selected_device = device;
+        if (!this.equipoCorrecto()) {
+          this.notiService.sweet.alerta(
+            "No estas usando la miniprinter que te fue asignada. Si es un error reportalo con el administrador. No podras tomar lecturas por el momento. ",
+            "¡Hay un problema!",
+            "info"
+          );
+        }
 
-      if (!this.equipoCorrecto()) {
-        this.notiService.sweet.alerta(
-          "No estas usando la miniprinter que te fue asignada. Si es un error reportalo con el administrador. No podras tomar lecturas por el momento. ",
-          "¡Hay un problema!",
-          "info"
-        );
-      }
+      } )
+
     }
   }
 
