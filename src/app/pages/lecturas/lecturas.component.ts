@@ -36,20 +36,20 @@ export class LecturasComponent implements OnInit {
     document.getElementById("buscador")?.focus();
     this.registrarBuscador();
 
-    // if (!this.zebraService.selected_device) {
-    //   this.zebraService.setup().then((device:any)=>{
-    //     this.zebraService.selected_device = device;
-    //     if (!this.equipoCorrecto()) {
-    //       this.notiService.sweet.alerta(
-    //         "No estas usando la miniprinter que te fue asignada. Si es un error reportalo con el administrador. No podras tomar lecturas por el momento. ",
-    //         "¡Hay un problema!",
-    //         "info"
-    //       );
-    //     }
+    if (!this.zebraService.selected_device) {
+      this.zebraService.setup().then((device:any)=>{
+        this.zebraService.selected_device = device;
+        if (!this.equipoCorrecto()) {
+          this.notiService.sweet.alerta(
+            "No estas usando la miniprinter que te fue asignada. Si es un error reportalo con el administrador. No podras tomar lecturas por el momento. ",
+            "¡Hay un problema!",
+            "info"
+          );
+        }
 
-    //   } )
+      } )
 
-    // }
+    }
   }
 
   equipoCorrecto() {
@@ -76,15 +76,15 @@ export class LecturasComponent implements OnInit {
   }
 
   irA(contrato: Contrato) {
-    // if (!this.equipoCorrecto()) {
-    //   this.notiService.sweet.alerta(
-    //     "No puedes imprimir con este equipo. Si es un error reportaselo al administrador.",
-    //     "Mini printer no valida",
-    //     "error"
-    //   );
+    if (!this.equipoCorrecto()) {
+      this.notiService.sweet.alerta(
+        "No puedes imprimir con este equipo. Si es un error reportaselo al administrador.",
+        "Mini printer no valida",
+        "error"
+      );
 
-    //   return;
-    // }
+      return;
+    }
     let ruta = contrato.tomada ? "imprime" : "captura";
     this.router.navigate(["app", "lectura", ruta, contrato.Contrato]);
   }
