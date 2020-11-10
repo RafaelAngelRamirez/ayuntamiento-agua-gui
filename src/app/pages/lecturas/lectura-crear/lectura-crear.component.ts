@@ -326,14 +326,14 @@ export class LecturaCrearComponent implements OnInit {
   private hayAlgunImpedimento() {
     let problemas: string[] = [];
 
-    //Sobre pasa el doble del promedio dado por el contrato
-    let promedio = this.contrato.Promedio;
-    let consumoActual = this.contrato.lectura.ConsumoMts3;
-    if (promedio * 2 <= consumoActual) {
-      problemas.push(
-        `El consumo actual <b> ${consumoActual} </b> supera al doble del promedio <b> ${promedio}</b>`
-      );
-    }
+    // //Sobre pasa el triple del promedio dado por el contrato
+    // let promedio = this.contrato.Promedio;
+    // let consumoActual = this.contrato.lectura.ConsumoMts3;
+    // if (promedio * 3 <= consumoActual) {
+    //   problemas.push(
+    //     `El consumo actual <b> ${consumoActual} </b> supera al doble del promedio <b> ${promedio}</b>`
+    //   );
+    // }
     let IdIncidencia = this.contrato.lectura.IdIncidencia;
     //Tiene registrada una incidencia
     if (IdIncidencia) {
