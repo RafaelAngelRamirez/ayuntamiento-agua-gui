@@ -567,7 +567,7 @@ export class LecturaCrearComponent implements OnInit {
         importeDrenaje +
         importeInfrastructura +
         importeAguasResiduales) *
-      2;
+      mesesGenerados;
     return granTotal;
   }
 }
