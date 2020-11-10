@@ -286,11 +286,11 @@ export class LecturaCrearComponent implements OnInit {
         model.longitud = position.coords.longitude;
         model.latitud = position.coords.latitude;
 
-        //El consumo actul
-        model.ConsumoMts3 = model.LecturaActual - this.contrato.LecturaAnterior;
+        //El consumo actual
+        let mt3 = model.LecturaActual - this.contrato.LecturaAnterior
+        model.ConsumoMts3 = mt3;
 
-        model.Mts3Cobrados =
-          model.LecturaActual - this.contrato.LecturaAnterior;
+        model.Mts3Cobrados =mt3;
 
         model.importe = this.calcularImporte(
           model,
@@ -472,7 +472,7 @@ export class LecturaCrearComponent implements OnInit {
 
     console.log(`consumoActual`, consumoActualPorMes);
 
-    let servicios = [];
+    // let servicios = [];
     // Obtenemos aguasResiduales
     let aguasResiduales = parametros.aguasResiduales[0]
       ? parametros.aguasResiduales[0].Porcentaje
@@ -530,7 +530,7 @@ export class LecturaCrearComponent implements OnInit {
       } else {
         if (consumoActualPorMes >= t.ConsumoMinimo) {
           //AQUI LA HAN CAGAO con el -1
-          desglose.metrosCalculados = consumoActualPorMes - t.ConsumoMinimo - 1;
+          desglose.metrosCalculados = consumoActualPorMes - t.ConsumoMinimo;
           subImporte =
             desglose.metrosCalculados * t.CostoMt3Excedente + t.CuotaMinima;
         }
