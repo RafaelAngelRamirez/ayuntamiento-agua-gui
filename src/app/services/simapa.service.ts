@@ -64,7 +64,7 @@ export class SimapaService {
 
   subirLecturasASimapa() {
     return this.http
-      .put(this.base.concat("/guardar/lecturas/listas"), null)
+      .get(this.base.concat("/guardar/lecturas/listas"))
       .pipe(catchError(this.error));
   }
 }
