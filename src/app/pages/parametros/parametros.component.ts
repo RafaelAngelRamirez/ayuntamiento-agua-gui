@@ -473,6 +473,8 @@ export class ParametrosComponent implements OnInit {
                 rechazos > "1" ? "s" : ""
               } `
             );
+
+            console.log("Contratos rechazados: ", r.rechazados);
           }
           let correctos = r.correctos.length;
           if (correctos > 0) {
@@ -483,7 +485,11 @@ export class ParametrosComponent implements OnInit {
             );
           }
 
-          this.cargarEstadisticas();
+          if (r.contratosPorSincronizar > 0) {
+            this.subirLecturasASimapa();
+          } else {
+            this.cargarEstadisticas();
+          }
         },
         (_) => (this.subiendoLecturasASimapa = false)
       );
