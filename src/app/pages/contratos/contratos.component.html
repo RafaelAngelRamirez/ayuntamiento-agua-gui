@@ -1,66 +1,91 @@
-<div class="row">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-body d-flex justify-content-between align-items-center">
-        <h1>
-          <small> Contratos sincronizados : </small>
+<a
+  (click)="contratosOffline = !contratosOffline"
+  class="btn btn-primary"
+  href="javascript:void(0)"
+  role="button"
+>
+  <span *ngIf="!contratosOffline">
+    <i class="fas fa-wifi-slash"> </i> Ver contratos offline
+  </span>
+  <span *ngIf="contratosOffline">
+    <i class="fas fa-wifi-slash"> </i> Ver contratos online
+  </span>
+</a>
 
-          <span *ngIf="!sincronizandoContratos">{{
-            contratos.length | number
-          }}</span>
-
-          <i *ngIf="sincronizandoContratos" class="fas fa-sync fa-spin"></i>
-        </h1>
-
-        <button
-          (click)="sincronizar()"
-          class="btn btn-primary"
-          role="button"
-          [disabled]="sincronizandoContratos"
+<ng-container *ngIf="contratosOffline">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div
+          class="card-body d-flex justify-content-between align-items-center"
         >
-          <i
-            [ngClass]="{ 'fa-spin': sincronizandoContratos }"
-            class="fas fa-sync"
-          ></i>
+          <h1>
+            <small> Contratos sincronizados : </small>
 
-          Sincroniza
-        </button>
+            <span *ngIf="!sincronizandoContratos">{{
+              contratos.length | number
+            }}</span>
 
-        <div class="form-group">
-          <input type="text" class="form-control" [formControl]="buscador" />
-          <small id="helpId" class="form-text text-muted"
-            >Filtrar contratos</small
+            <i *ngIf="sincronizandoContratos" class="fas fa-sync fa-spin"></i>
+          </h1>
+
+          <button
+            (click)="sincronizar()"
+            class="btn btn-primary"
+            role="button"
+            [disabled]="sincronizandoContratos"
           >
+            <i
+              [ngClass]="{ 'fa-spin': sincronizandoContratos }"
+              class="fas fa-sync"
+            ></i>
+
+            Sincroniza
+          </button>
+
+          <div class="form-group">
+            <input type="text" class="form-control" [formControl]="buscador" />
+            <small id="helpId" class="form-text text-muted"
+              >Filtrar contratos</small
+            >
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="col-12">
-  <div class="card">
-    <div class="card-body table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Contrato</th>
-            <th>Contribuyente</th>
-            <th>Poblacion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let u of contratosMostrar">
-            <td>{{ u.Contrato }}</td>
-            <td>{{ u.Contribuyente }}</td>
-            <td>{{ u.Poblacion }}</td>
-            <td>
-              <a class="btn btn-primary" href="javascript:void(0)" role="button"
-                ><i class="fas fa-edit"></i>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Contrato</th>
+              <th>Contribuyente</th>
+              <th>Poblacion</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of contratosMostrar">
+              <td>{{ u.Contrato }}</td>
+              <td>{{ u.Contribuyente }}</td>
+              <td>{{ u.Poblacion }}</td>
+              <td>
+                <a
+                  class="btn btn-primary"
+                  href="javascript:void(0)"
+                  role="button"
+                  ><i class="fas fa-edit"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-</div>
+</ng-container>
+
+<ng-container *ngIf="!contratosOffline">
+  <app-contratos-online></app-contratos-online>
+</ng-container>

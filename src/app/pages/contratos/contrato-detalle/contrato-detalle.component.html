@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <H1>Contrato</H1>
+        <div class="row">
+          <ng-container *ngFor="let kv of contrato | keyvalue">
+            <span
+              *ngIf="kv.key !== 'lectura' && kv.key !== 'historialLectura'"
+              class="col-12 col-md-4"
+            >
+              <h6 class="font-weight-boldF">{{ kv.key | uppercase }}:</h6>
+              {{ kv.value }}
+              <hr />
+            </span>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <h2>Lectura</h2>
+        <div class="row">
+          <ng-container *ngFor="let kv of contrato?.lectura | keyvalue">
+            <span class="col-12 col-md-4">
+              <h6 class="font-weight-boldF">{{ kv.key | uppercase }}:</h6>
+              {{ kv.value ? kv.value : "SIN DATO" }}
+              <hr />
+            </span>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
