@@ -24,7 +24,7 @@ import { LoginComponent } from "./login/login.component";
 import { TicketImprimirComponent } from "./print/ticket-imprimir/ticket-imprimir.component";
 import { CiudadanosComponent } from "./ciudadanos/ciudadanos.component";
 
-import {SweetAlert2Module} from "@sweetalert2/ngx-sweetalert2"
+import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
 
 export const Approutes: Routes = [
   {

@@ -1,0 +1,18 @@
+<h1 class="display-3">
+  <span *ngIf="!cargando">
+    {{ totalContratos | number }}
+  </span>
+
+  <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+</h1>
+<h3>
+  <a
+    title="Volver a cargar"
+    (click)="cargar()"
+    class="btn btn-success btn-xs"
+    href="javascript:void(0)"
+    role="button"
+    ><i [ngClass]="{ 'fa-spin': cargando }" class="fas fa-sync"></i
+  ></a>
+  Contratos registrados
+</h3>
