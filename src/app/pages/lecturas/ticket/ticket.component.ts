@@ -8,7 +8,8 @@ import { ZebraService } from "../../../services/zebra/zebra.service";
 import { IndexedDbService } from "../../../services/offline/indexed-db.service";
 import { UsuarioService } from "../../../services/usuario.service";
 import { Usuario } from "../../../models/usuario.model";
-import { DomSanitizer } from "@angular/platform-browser"
+import { DomSanitizer } from "@angular/platform-browser";
+import { TienePermisoPipe } from "../../../pipes/tiene-permiso.pipe";
 
 @Component({
   selector: "app-ticket",
@@ -24,7 +25,8 @@ export class TicketComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private location: Location,
     public zebraService: ZebraService,
-    public sanitization: DomSanitizer
+    public sanitization: DomSanitizer,
+    private tienePermiso: TienePermisoPipe
   ) {}
 
   zpl_code: string = "";
@@ -73,10 +75,18 @@ export class TicketComponent implements OnInit {
       let conPara: string = dato.get("contrato") || "";
       this.cargandoContrato = true;
 
-      this.contratoService.offline.findById(conPara).subscribe((contrato) => {
+      let resultado = (contrato: Contrato) => {
         this.contrato = contrato as Contrato;
         this.cargandoContrato = false;
-      }, error);
+      };
+
+      if (this.tienePermiso.transform("administrador")) {
+        this.contratoService.findContrato(conPara).subscribe(resultado, error);
+      } else {
+        this.contratoService.offline
+          .findById(conPara)
+          .subscribe(resultado, error);
+      }
     }, error);
   }
 

@@ -12,6 +12,7 @@ import { Router } from "@angular/router";
 import { ZebraService } from "../../services/zebra/zebra.service";
 import { UsuarioService } from "../../services/usuario.service";
 import { NotificacionesService } from "../../services/notificaciones.service";
+import { TienePermisoPipe } from "../../pipes/tiene-permiso.pipe";
 
 @Component({
   selector: "app-lecturas",
@@ -29,7 +30,8 @@ export class LecturasComponent implements OnInit {
     private router: Router,
     private contratoService: ContratoService,
     private usuarioService: UsuarioService,
-    private notiService: NotificacionesService
+    private notiService: NotificacionesService,
+    private tienePermiso: TienePermisoPipe
   ) {}
 
   ngOnInit(): void {
@@ -37,7 +39,7 @@ export class LecturasComponent implements OnInit {
     this.registrarBuscador();
 
     if (!this.zebraService.selected_device) {
-      this.zebraService.setup().then((device:any)=>{
+      this.zebraService.setup().then((device: any) => {
         this.zebraService.selected_device = device;
         if (!this.equipoCorrecto()) {
           this.notiService.sweet.alerta(
@@ -46,16 +48,14 @@ export class LecturasComponent implements OnInit {
             "info"
           );
         }
-
-      } )
-
+      });
     }
   }
 
   equipoCorrecto() {
     let usuario = this.usuarioService.obtenerUsuario();
     if (usuario.esIphone) return true;
-    
+
     let equipo = usuario.dispositivo;
     return this.zebraService.selected_device?.uid === equipo;
   }
@@ -68,8 +68,18 @@ export class LecturasComponent implements OnInit {
       )
       .subscribe(
         (termino) => {
-          this.contratos = this.contratoService.buscarPorTermino(termino);
-          this.cargando = false;
+          if (this.tienePermiso.transform("administrador")) {
+            this.contratoService.findByTerm(termino.trim()).subscribe(
+              (contratos) => {
+                this.contratos = contratos;
+                this.cargando = false;
+              },
+              (_) => (this.cargando = false)
+            );
+          } else {
+            this.contratos = this.contratoService.buscarPorTermino(termino);
+            this.cargando = false;
+          }
         },
         (_) => (this.cargando = false)
       );

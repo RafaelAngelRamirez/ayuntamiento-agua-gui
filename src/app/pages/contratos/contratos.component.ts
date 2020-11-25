@@ -35,6 +35,8 @@ export class ContratosComponent implements OnInit {
 
   buscador = new FormControl();
 
+  contratosOffline = false;
+
   ngOnInit(): void {
     this.registrarBuscador();
     this.cargarRutaParaSincronizarContratos();
