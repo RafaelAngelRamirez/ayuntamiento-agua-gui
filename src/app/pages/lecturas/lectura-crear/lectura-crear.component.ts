@@ -572,7 +572,7 @@ export class LecturaCrearComponent implements OnInit {
       } else {
         if (consumoActualPorMes >= t.ConsumoMinimo) {
           //AQUI LA HAN CAGAO con el -1
-          desglose.metrosCalculados = consumoActualPorMes - t.ConsumoMinimo;
+          desglose.metrosCalculados = (consumoActualPorMes - t.ConsumoMinimo)+1;
           subImporte =
             desglose.metrosCalculados * t.CostoMt3Excedente + t.CuotaMinima;
         }
