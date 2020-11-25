@@ -24,16 +24,7 @@
   <div class="col-12">
     <div class="card shadow">
       <div class="card-body">
-        <h2>Lectura</h2>
-        <div class="row">
-          <ng-container *ngFor="let kv of contrato?.lectura | keyvalue">
-            <span class="col-12 col-md-4">
-              <h6 class="font-weight-boldF">{{ kv.key | uppercase }}:</h6>
-              {{ kv.value ? kv.value : "SIN DATO" }}
-              <hr />
-            </span>
-          </ng-container>
-        </div>
+        <app-lectura-detalle [lectura]="contrato?.lectura"></app-lectura-detalle>
       </div>
     </div>
   </div>

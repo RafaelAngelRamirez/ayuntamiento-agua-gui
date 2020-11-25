@@ -1,1 +1,14 @@
-<p>lectura-detalle works!</p>
+<h2>Lectura</h2>
+<div *ngIf="lectura; else noHayLectura" class="row">
+  <ng-container *ngFor="let kv of lectura | keyvalue">
+    <span class="col-12 col-md-4">
+      <h6 class="font-weight-boldF">{{ kv.key | uppercase }}:</h6>
+      {{ kv.value ? kv.value : "SIN DATO" }}
+      <hr />
+    </span>
+  </ng-container>
+</div>
+
+<ng-template #noHayLectura>
+  <h2>No hay lectura de este periodo</h2>
+</ng-template>

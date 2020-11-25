@@ -32,6 +32,7 @@ import {
   Impedimento,
 } from "../../../services/impedimento.service";
 import { forkJoin } from "rxjs";
+import { TienePermisoPipe } from "../../../pipes/tiene-permiso.pipe";
 
 @Component({
   selector: "app-lectura-crear",
@@ -60,7 +61,8 @@ export class LecturaCrearComponent implements OnInit {
     private impedimentoService: ImpedimentoService,
     private notiService: NotificacionesService,
     private router: Router,
-    private gpsService: GpsService
+    private gpsService: GpsService,
+    private tienePermiso: TienePermisoPipe
   ) {
     this.cargaContrato();
     this.cargarIncidencias();
@@ -97,16 +99,24 @@ export class LecturaCrearComponent implements OnInit {
       let conPara: string = dato.get("contrato") || "";
       this.cargandoContrato = true;
       console.log(conPara);
-      this.constratoService.offline.findById(conPara).subscribe((contrato) => {
+
+      let resultado = (contrato: Contrato) => {
         this.contrato = contrato as Contrato;
         this.cargandoContrato = false;
         this.crearFormulario(this.contrato);
 
         setTimeout(() => {
-          console.log("entro");
           document.getElementById("lecturaActual")?.focus();
         }, 100);
-      }, error);
+      };
+
+      if (this.tienePermiso.transform("administrador")) {
+        this.constratoService.findContrato(conPara).subscribe(resultado, error);
+      } else {
+        this.constratoService.offline
+          .findById(conPara)
+          .subscribe(resultado, error);
+      }
     }, error);
   }
 
@@ -182,7 +192,6 @@ export class LecturaCrearComponent implements OnInit {
     formulario.get("LecturaActual")?.valueChanges.subscribe((valor) => {
       let impedimentoControl = this.f("IdImpedimento");
       // Lectura actual menor que la lectura anterior HARCODE al id 2
-      console.log(valor);
       if (!valor) {
         //Cuando es null quitamos la validacion
         impedimentoControl.setValue("");
@@ -234,13 +243,12 @@ export class LecturaCrearComponent implements OnInit {
           return;
         }
         //Esto es para idb, no para la api. En la api, cuando se guarde
-        // la lectura se setean de nuevo. Esto por que se ignora alguna 
-        // modificacion hecha al contrato fuera de la lectura tomada. 
+        // la lectura se setean de nuevo. Esto por que se ignora alguna
+        // modificacion hecha al contrato fuera de la lectura tomada.
         this.contrato.tomada = true;
-        // Ponemos este en false para que la funcion de sincronizacion 
+        // Ponemos este en false para que la funcion de sincronizacion
         // encuentre el contrato cuanto se este online
-        this.contrato.sincronizada = false
-
+        this.contrato.sincronizada = false;
 
         this.contrato.lectura = model;
 
@@ -287,10 +295,10 @@ export class LecturaCrearComponent implements OnInit {
         model.latitud = position.coords.latitude;
 
         //El consumo actual
-        let mt3 = model.LecturaActual - this.contrato.LecturaAnterior
+        let mt3 = model.LecturaActual - this.contrato.LecturaAnterior;
         model.ConsumoMts3 = mt3;
 
-        model.Mts3Cobrados =mt3;
+        model.Mts3Cobrados = mt3;
 
         model.importe = this.calcularImporte(
           model,
@@ -385,6 +393,7 @@ export class LecturaCrearComponent implements OnInit {
     // la conexion
 
     this.guardandoLectura = true;
+    // return console.log(this.contrato);
     this.constratoService.offline.update(this.contrato).subscribe(
       () => {
         //  Remplazamos los datos guardados en memoria.
@@ -448,6 +457,34 @@ export class LecturaCrearComponent implements OnInit {
     // ----------------------------------------
   }
 
+  calcularPeriodo(
+    vigenciaActual: string,
+    periodoActual: string,
+    vigenciaAnterior: number,
+    periodoAnterior: string
+  ) {
+    let periodosCalculados = 0;
+
+    let vigeActual = Number(vigenciaActual);
+    let perActual = Number(periodoActual);
+    let vigeAnterior = Number(vigenciaAnterior);
+    let perAnterior = Number(periodoAnterior);
+
+    vigeAnterior = vigeAnterior > 2018 ? vigeAnterior : vigeActual;
+    perAnterior = perAnterior > 0 ? perAnterior : perActual;
+
+    console.log("vigeActual", vigeActual);
+    console.log("perActual", perActual);
+    console.log("vigeAnterior", vigeAnterior);
+    console.log("perAnterior", perAnterior);
+
+    periodosCalculados =
+      (vigeActual - vigeAnterior) * 6 + perActual - perAnterior;
+    console.log(`periodosCalculados`, periodosCalculados);
+
+    return periodosCalculados < 1 ? 1 : periodosCalculados;
+  }
+
   calcularImporte(
     model: Lectura,
     contrato: Contrato,
@@ -463,8 +500,13 @@ export class LecturaCrearComponent implements OnInit {
     console.log(`tarifas`, tarifas);
 
     //La cantidad de periodos que se estan cobrando.
-    let periodosGenerados =
-      Number(contrato.lectura.Periodo) - Number(contrato.PeriodoAnterior);
+    let periodosGenerados = this.calcularPeriodo(
+      contrato.lectura.Vigencia,
+      contrato.lectura.Periodo,
+      contrato.VigenciaAnterior,
+      contrato.PeriodoAnterior
+    );
+
     let mesesGenerados = periodosGenerados * 2;
 
     // El consumo que viene de la diferencia de la lectura anterior y la lectura actual.
