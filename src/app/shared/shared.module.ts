@@ -17,11 +17,11 @@ import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 import { DomicilioPipe } from "../pipes/domicilio.pipe";
 import { TienePermisoPipe } from "../pipes/tiene-permiso.pipe";
 import { ContratosPendientesSincronizarComponent } from "../components/contratos-pendientes-sincronizar/contratos-pendientes-sincronizar.component";
-import { TotalDeContratosComponent } from '../components/metricas/total-de-contratos/total-de-contratos.component'
-import { PromedioDeTiempoEntreLecturasComponent } from '../components/metricas/promedio-de-tiempo-entre-lecturas/promedio-de-tiempo-entre-lecturas.component'
-import { DineroRecaudadoComponent } from '../components/metricas/dinero-recaudado/dinero-recaudado.component'
-import { ContratosPendientesTomarLecturaComponent } from '../components/metricas/contratos-pendientes-tomar-lectura/contratos-pendientes-tomar-lectura.component'
-import { LecturasAnormalesComponent } from '../components/metricas/lecturas-anormales/lecturas-anormales.component'
+import { TotalDeContratosComponent } from "../components/metricas/total-de-contratos/total-de-contratos.component";
+import { PromedioDeTiempoEntreLecturasComponent } from "../components/metricas/promedio-de-tiempo-entre-lecturas/promedio-de-tiempo-entre-lecturas.component";
+import { DineroRecaudadoComponent } from "../components/metricas/dinero-recaudado/dinero-recaudado.component";
+import { ContratosPendientesTomarLecturaComponent } from "../components/metricas/contratos-pendientes-tomar-lectura/contratos-pendientes-tomar-lectura.component";
+import { LecturasAnormalesComponent } from "../components/metricas/lecturas-anormales/lecturas-anormales.component";
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
   wheelSpeed: 2,
@@ -44,10 +44,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
     ContratosPendientesSincronizarComponent,
     TotalDeContratosComponent,
-    PromedioDeTiempoEntreLecturasComponent, 
+    PromedioDeTiempoEntreLecturasComponent,
     DineroRecaudadoComponent,
     ContratosPendientesTomarLecturaComponent,
-    LecturasAnormalesComponent
+    LecturasAnormalesComponent,
   ],
   exports: [
     FullComponent,
@@ -66,10 +66,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     // CurrencyPipe,
     ContratosPendientesSincronizarComponent,
     TotalDeContratosComponent,
-    PromedioDeTiempoEntreLecturasComponent, 
+    PromedioDeTiempoEntreLecturasComponent,
     DineroRecaudadoComponent,
     ContratosPendientesTomarLecturaComponent,
-    LecturasAnormalesComponent
+    LecturasAnormalesComponent,
   ],
 
   imports: [

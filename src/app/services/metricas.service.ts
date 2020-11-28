@@ -23,7 +23,7 @@ export class MetricasService {
 
   promedioDeTiempo(): any {
     return this.http
-      .get(this.base.concat("/promedio-de-tiempo-entre-lecturas"))
+      .get(this.base.concat("/promedio-tiempo-entre-lecturas"))
       .pipe(
         catchError((err) => {
           return throwError(err);

@@ -1,5 +1,7 @@
+import { stringify } from "@angular/compiler/src/util";
 import { Component, OnInit } from "@angular/core";
 import { MetricasService } from "../../../services/metricas.service";
+import { ParametrosService } from "../../../services/parametros.service";
 
 @Component({
   selector: "app-promedio-de-tiempo-entre-lecturas",
@@ -12,6 +14,16 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
 
   constructor(private metricasServices: MetricasService) {}
 
+  chartLabels: string[] = [];
+  chartData: any[] = [];
+  chartOptions = {};
+
+  chartColors: Array<object> = [];
+  chartLegend = true;
+  chartType = "";
+
+  tituloGrafica: string = "...";
+
   ngOnInit(): void {
     this.cargar();
   }
@@ -21,10 +33,184 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
     this.metricasServices.promedioDeTiempo().subscribe(
       (datos: any) => {
         this.datos = datos;
+
+        this.graficaPromedioDeTiempoEntreLecturas(datos);
         this.cargando = false;
-        
       },
-      (_) => (this.cargando = false)
+      (_: any) => (this.cargando = false)
     );
+  }
+
+  graficaPromedioDeTiempoEntreLecturas(datos: any) {
+    this.tituloGrafica = "Promedio de tiempo entre lecturas";
+    this.chartLabels = this.obtenerEtiquetasPromedio(datos);
+    this.chartData = this.obtenerDatosPromedio(datos, this.chartLabels);
+    this.chartType = "line";
+    this.chartOptions = {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+            gridLines: {
+              color: "rgba(120, 130, 140, 0.13)",
+            },
+          },
+        ],
+        xAxes: [
+          {
+            gridLines: {
+              color: "rgba(120, 130, 140, 0.13)",
+            },
+          },
+        ],
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+    };
+
+    this.chartColors = [
+      {
+        // grey
+        backgroundColor: "rgba(6,215,156,0.1)",
+        borderColor: "rgba(6,215,156,1)",
+        pointBackgroundColor: "rgba(6,215,156,1)",
+        pointBorderColor: "#fff",
+
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(6,215,156,0.5)",
+      },
+      {
+        // dark grey
+        backgroundColor: "rgba(57,139,247,0.2)",
+        borderColor: "rgba(57,139,247,1)",
+        pointBackgroundColor: "rgba(57,139,247,1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(57,139,247,0.5)",
+      },
+    ];
+  }
+
+  obtenerDatosPromedio(datos: any, labels: string[]) {
+    let dataSet: { data: number[]; label: string }[] = [];
+    // Obtenemos los lecturistas
+    Object.keys(datos).forEach((x) => {
+      let d = { data: new Array(), label: x };
+
+      labels.forEach((l) => {
+        let incluyeDia = Object.keys(datos[x]).includes(l);
+
+        if (incluyeDia) {
+          // Dos decimales
+          let valor = parseFloat(datos[x][l + "-promedio"] + "").toFixed(2);
+
+          d.data.push(valor);
+        } else {
+          d.data.push(0);
+        }
+      });
+
+      dataSet.push(d);
+    });
+
+    return dataSet;
+  }
+
+  private getDates(startDate: Date, stopDate: Date) {
+    var dateArray: Date[] = new Array();
+    var currentDate = startDate;
+    while (currentDate <= stopDate) {
+      dateArray.push(new Date(currentDate));
+      currentDate = this.addDays(currentDate, 1);
+    }
+    return dateArray;
+  }
+
+  private addDays(currentDate: Date, days: number) {
+    var date = new Date(currentDate);
+    date.setDate(date.getDate() + days);
+    return date;
+  }
+
+  obtenerEtiquetasPromedio(datos: any) {
+    console.log(datos);
+    let dias: string[] = [];
+    Object.keys(datos).forEach((a) => dias.push(...Object.keys(datos[a])));
+    dias = Array.from(new Set(dias)).filter((x) => !x.includes("-promedio"));
+    dias.sort((a, b) => {
+      return new Date(a).getTime() - new Date(b).getTime();
+    });
+
+    let startDate = dias.shift() || new Date();
+    let stopDate = dias.pop() || new Date();
+
+    return this.getDates(new Date(startDate), new Date(stopDate)).map((x) => {
+      let d = x.getDate();
+      let m = x.getMonth() + 1;
+      let y = x.getFullYear();
+      // El orden de la fecha en la etiqueta es importante.
+      return `${y}-${m < 10 ? "0" + m : m}-${d < 10 ? "0" + d : d}`;
+    });
+  }
+
+  graficaContratosPorLecturista(datos: any) {
+    this.tituloGrafica = "Contratos por lecturista";
+    this.chartLabels = this.obtenerEtiquetasContrato(datos);
+    this.chartData = this.obtenerDatosContrato(datos, this.chartLabels);
+    this.chartType = "pie";
+    this.chartOptions = {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+            gridLines: {
+              color: "rgba(120, 130, 140, 0.13)",
+            },
+          },
+        ],
+        xAxes: [
+          {
+            gridLines: {
+              color: "rgba(120, 130, 140, 0.13)",
+            },
+          },
+        ],
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+    };
+
+    this.chartColors = [
+      {
+        // grey
+        backgroundColor: "rgba(6,215,156,0.1)",
+        borderColor: "rgba(6,215,156,1)",
+        pointBackgroundColor: "rgba(6,215,156,1)",
+        pointBorderColor: "#fff",
+
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(6,215,156,0.5)",
+      },
+      {
+        // dark grey
+        backgroundColor: "rgba(57,139,247,0.2)",
+        borderColor: "rgba(57,139,247,1)",
+        pointBackgroundColor: "rgba(57,139,247,1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(57,139,247,0.5)",
+      },
+    ];
+  }
+
+  obtenerEtiquetasContrato(datos: any): string[] {
+    return this.obtenerEtiquetasPromedio(datos);
+  }
+  obtenerDatosContrato(datos: any, labels:string[]): any[] {
+    return[];
   }
 }
