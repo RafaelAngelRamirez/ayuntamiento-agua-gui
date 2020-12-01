@@ -1,1 +1,40 @@
-<p>dinero-recaudado works!</p>
+<div class="d-flex">
+  <div>
+    <h3 class="card-title m-b-5">
+      <span class="lstick"></span>
+      Dinero recaudado
+    </h3>
+  </div>
+</div>
+
+<h1 class="display-3 text-center font-weight-bold">
+  <span *ngIf="!cargando"> ${{ total | number }} </span>
+
+  <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+</h1>
+
+<div class="d-flex">
+  <div>
+    <h3 class="card-title m-b-5">
+      <span class="lstick"></span>
+      Metros cúbicos consumidos
+    </h3>
+  </div>
+</div>
+
+<h1 class="text-center">
+  <span *ngIf="!cargando"> {{ mt3Consumidos | number }} m3 </span>
+  <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+</h1>
+
+<small class="w-100"
+  ><a
+    title="Volver a cargar"
+    (click)="cargar()"
+    class="text-muted text-right"
+    href="javascript:void(0)"
+    role="button"
+    ><i [ngClass]="{ 'fa-spin': cargando }" class="fas fa-sync"></i>
+    Actualizar</a
+  ></small
+>
