@@ -13,13 +13,15 @@
       <a
         (click)="graficaPromedioDeTiempoEntreLecturas(this.datos)"
         href="javascript:void(0)"
-      >Promedio</a>
+        >Promedio</a
+      >
     </li>
     <li class="list-inline-item">
       <a
         (click)="graficaContratosPorLecturista(this.datos)"
         href="javascript:void(0)"
-      >Contratos</a>
+        >Contratos</a
+      >
     </li>
     <li class="list-inline-item">
       <a
@@ -43,8 +45,41 @@
   </canvas>
 </div>
 
+<hr />
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Lecturista</th>
+      <th>Promedio entre lecturas</th>
+      <th>Promedio contratos por dia</th>
+      <th>Total de contratos</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let kv of datos | keyvalue">
+      <td>{{ nombreLecturista(kv.key) }}</td>
+      <td>{{ sumaPromedioTiempoEntreLecturas(kv.value) | number: "0.0-2" }}</td>
+      <td>{{ promedioContratosDia(kv.value) | number: "0.0-2" }}</td>
+      <td>{{ totalContratos(kv.value) | number: "0.0-2" }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<small class="text-muted">{{ notas }}</small>
+<hr />
+<small class="w-100"
+  ><a
+    title="Volver a cargar"
+    (click)="cargar()"
+    class="text-muted text-right"
+    href="javascript:void(0)"
+    role="button"
+    ><i [ngClass]="{ 'fa-spin': cargando }" class="fas fa-sync"></i>
+    Actualizar</a
+  ></small
+>
+
 <ng-template #sync>
   <h1 class="display-1"><i class="fas fa-sync fa-spin"></i></h1>
 </ng-template>
-
-<pre>{{ chartLabels | json }}</pre>

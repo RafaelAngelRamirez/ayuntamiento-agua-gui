@@ -2,6 +2,7 @@ import { stringify } from "@angular/compiler/src/util";
 import { Component, OnInit } from "@angular/core";
 import { MetricasService } from "../../../services/metricas.service";
 import { ParametrosService } from "../../../services/parametros.service";
+import { Lecturista } from "../../../models/usuario.model";
 
 @Component({
   selector: "app-promedio-de-tiempo-entre-lecturas",
@@ -12,7 +13,10 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
   datos: any;
   cargando = false;
 
-  constructor(private metricasServices: MetricasService) {}
+  constructor(
+    private metricasServices: MetricasService,
+    private ParametrosService: ParametrosService
+  ) {}
 
   chartLabels: string[] = [];
   chartData: any[] = [];
@@ -23,8 +27,13 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
   chartType = "";
 
   tituloGrafica: string = "...";
+  notas: string = "";
+  lecturistas: Lecturista[] = [];
 
   ngOnInit(): void {
+    this.ParametrosService.obtenerUsuariosSimapa().subscribe((lecturistas) => {
+      this.lecturistas = lecturistas;
+    });
     this.cargar();
   }
 
@@ -46,18 +55,20 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
     this.chartLabels = this.obtenerEtiquetasPromedio(datos);
     this.chartData = this.obtenerDatosPromedio(datos, this.chartLabels);
     this.chartType = "line";
+    this.notas =
+      "El promedio se obtiene solo de los dias en los que se tomaron lecturas";
     this.chartOptions = {
       scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-            },
-            gridLines: {
-              color: "rgba(120, 130, 140, 0.13)",
-            },
-          },
-        ],
+        // yAxes: [
+        //   {
+        //     ticks: {
+        //       beginAtZero: true,
+        //     },
+        //     // gridLines: {
+        //     //   color: "rgba(120, 130, 140, 0.13)",
+        //     // },
+        //   },
+        // ],
         xAxes: [
           {
             gridLines: {
@@ -135,7 +146,6 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
   }
 
   obtenerEtiquetasPromedio(datos: any) {
-    console.log(datos);
     let dias: string[] = [];
     Object.keys(datos).forEach((a) => dias.push(...Object.keys(datos[a])));
     dias = Array.from(new Set(dias)).filter((x) => !x.includes("-promedio"));
@@ -159,19 +169,19 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
     this.tituloGrafica = "Contratos por lecturista";
     this.chartLabels = this.obtenerEtiquetasContrato(datos);
     this.chartData = this.obtenerDatosContrato(datos, this.chartLabels);
-    this.chartType = "pie";
+    this.chartType = "bar";
     this.chartOptions = {
       scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-            },
-            gridLines: {
-              color: "rgba(120, 130, 140, 0.13)",
-            },
-          },
-        ],
+        // yAxes: [
+        //   {
+        //     ticks: {
+        //       beginAtZero: true,
+        //     },
+        //     gridLines: {
+        //       color: "rgba(120, 130, 140, 0.13)",
+        //     },
+        //   },
+        // ],
         xAxes: [
           {
             gridLines: {
@@ -185,32 +195,89 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
     };
 
     this.chartColors = [
-      {
-        // grey
-        backgroundColor: "rgba(6,215,156,0.1)",
-        borderColor: "rgba(6,215,156,1)",
-        pointBackgroundColor: "rgba(6,215,156,1)",
-        pointBorderColor: "#fff",
-
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(6,215,156,0.5)",
-      },
-      {
-        // dark grey
-        backgroundColor: "rgba(57,139,247,0.2)",
-        borderColor: "rgba(57,139,247,1)",
-        pointBackgroundColor: "rgba(57,139,247,1)",
-        pointBorderColor: "#fff",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(57,139,247,0.5)",
-      },
+      // {
+      //   // grey
+      //   backgroundColor: "rgba(6,215,156,0.1)",
+      //   borderColor: "rgba(6,215,156,1)",
+      //   pointBackgroundColor: "rgba(6,215,156,1)",
+      //   pointBorderColor: "#fff",
+      //   pointHoverBackgroundColor: "#fff",
+      //   pointHoverBorderColor: "rgba(6,215,156,0.5)",
+      // },
+      // {
+      //   // dark grey
+      //   backgroundColor: "rgba(57,139,247,0.2)",
+      //   borderColor: "rgba(57,139,247,1)",
+      //   pointBackgroundColor: "rgba(57,139,247,1)",
+      //   pointBorderColor: "#fff",
+      //   pointHoverBackgroundColor: "#fff",
+      //   pointHoverBorderColor: "rgba(57,139,247,0.5)",
+      // },
     ];
   }
 
   obtenerEtiquetasContrato(datos: any): string[] {
     return this.obtenerEtiquetasPromedio(datos);
   }
-  obtenerDatosContrato(datos: any, labels:string[]): any[] {
-    return[];
+
+  obtenerDatosContrato(datos: any, labels: string[]): any[] {
+    let dataSet: { data: number[]; label: string }[] = [];
+    // Obtenemos los lecturistas
+    Object.keys(datos).forEach((x) => {
+      let d = { data: new Array(), label: this.nombreLecturista(x) };
+
+      labels.forEach((l) => {
+        let incluyeDia = Object.keys(datos[x]).includes(l);
+
+        if (incluyeDia) {
+          // Dos decimales
+          let valor = datos[x][l].length;
+
+          d.data.push(valor);
+        } else {
+          d.data.push(0);
+        }
+      });
+
+      dataSet.push(d);
+    });
+
+    return dataSet;
+  }
+
+  sumaPromedioTiempoEntreLecturas(lecturista: any): number {
+    let sumar: number[] = [];
+    Object.keys(lecturista).forEach((k) => {
+      if (k.includes("-promedio")) {
+        sumar.push(lecturista[k]);
+      }
+    });
+
+    return sumar.reduce((a, b) => a + b, 0) / sumar.length;
+  }
+
+  promedioContratosDia(lecturista: any) {
+    let sumar: number[] = [];
+
+    Object.keys(lecturista).forEach((k) => {
+      // No debe de incluir promedio
+      if (!k.includes("-promedio")) sumar.push(lecturista[k].length);
+    });
+
+    return sumar.reduce((a, b) => a + b, 0) / sumar.length;
+  }
+  totalContratos(lecturista: any) {
+    let sumar = 0;
+    Object.keys(lecturista).forEach((x) => {
+      if (!x.includes("-promedio")) sumar += lecturista[x].length;
+    });
+    return sumar;
+  }
+
+  nombreLecturista(id: string): string {
+    let nombre = this.lecturistas.find((x) => x.IdLecturista === id)
+      ?.NombreLecturista;
+
+    return nombre ? nombre : id;
   }
 }
