@@ -82,25 +82,25 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
     };
 
     this.chartColors = [
-      {
-        // grey
-        backgroundColor: "rgba(6,215,156,0.1)",
-        borderColor: "rgba(6,215,156,1)",
-        pointBackgroundColor: "rgba(6,215,156,1)",
-        pointBorderColor: "#fff",
+      // {
+      //   // grey
+      //   backgroundColor: "rgba(6,215,156,0.1)",
+      //   borderColor: "rgba(6,215,156,1)",
+      //   pointBackgroundColor: "rgba(6,215,156,1)",
+      //   pointBorderColor: "#fff",
 
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(6,215,156,0.5)",
-      },
-      {
-        // dark grey
-        backgroundColor: "rgba(57,139,247,0.2)",
-        borderColor: "rgba(57,139,247,1)",
-        pointBackgroundColor: "rgba(57,139,247,1)",
-        pointBorderColor: "#fff",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(57,139,247,0.5)",
-      },
+      //   pointHoverBackgroundColor: "#fff",
+      //   pointHoverBorderColor: "rgba(6,215,156,0.5)",
+      // },
+      // {
+      //   // dark grey
+      //   backgroundColor: "rgba(57,139,247,0.2)",
+      //   borderColor: "rgba(57,139,247,1)",
+      //   pointBackgroundColor: "rgba(57,139,247,1)",
+      //   pointBorderColor: "#fff",
+      //   pointHoverBackgroundColor: "#fff",
+      //   pointHoverBorderColor: "rgba(57,139,247,0.5)",
+      // },
     ];
   }
 
@@ -108,7 +108,7 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
     let dataSet: { data: number[]; label: string }[] = [];
     // Obtenemos los lecturistas
     Object.keys(datos).forEach((x) => {
-      let d = { data: new Array(), label: x };
+      let d = { data: new Array(), label: this.nombreLecturista(x) };
 
       labels.forEach((l) => {
         let incluyeDia = Object.keys(datos[x]).includes(l);
