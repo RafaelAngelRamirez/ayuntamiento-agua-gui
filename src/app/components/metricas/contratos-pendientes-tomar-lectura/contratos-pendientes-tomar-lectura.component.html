@@ -1,1 +1,86 @@
-<p>contratos-pendientes-tomar-lectura works!</p>
+<div class="d-flex">
+  <div>
+    <h3 class="card-title m-b-5">
+      <span class="lstick"></span>
+      {{ leyenda }}
+    </h3>
+  </div>
+</div>
+
+<div class="div">
+  <ul class="list-inline">
+    <li class="list-inline-item">
+      <a (click)="graficaRutas(this.datos)" href="javascript:void(0)"
+        >Contratos por ruta</a
+      >
+    </li>
+    <li class="list-inline-item">
+      <a
+        (click)="graficaRutasConLecturasPendientes(this.datos)"
+        href="javascript:void(0)"
+        >Lecturas pendientes</a
+      >
+    </li>
+  </ul>
+</div>
+
+<ng-container *ngIf="!cargando; else cargaTemplate">
+  <div class="chart">
+    <canvas
+      style="width: 1000xp !important"
+      baseChart
+      [data]="chartData"
+      [labels]="chartLabels"
+      [chartType]="chartType"
+      [options]="chartOptions"
+      [colors]="chartColors"
+      [legend]="chartLegend"
+      [plugins]="chartPlugins"
+    >
+    </canvas>
+  </div>
+</ng-container>
+
+<hr />
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Total</th>
+      <th>Pendientes</th>
+      <th>% avance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of datos?.rutasEnElSistema">
+      <td>{{ item._id }}</td>
+      <td>{{ item.total | number }}</td>
+      <td>
+        {{ obtenerFaltantesLectura(item._id) }}
+      </td>
+      <td>{{ obtenerFaltantesLectura(item._id) / item.total | percent }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<small class="text-muted">
+  Lecturas pendientes solo de la vigencia y periodo actuales
+</small>
+
+<hr />
+
+<div class="small text-muted">
+  <a (click)="this.cargar()" href="javascript:void(0)">
+    <i [ngClass]="{ 'fa-spin': cargando }" class="fas fa-sync"></i>
+    Recargar
+  </a>
+</div>
+
+<ng-template #cargaTemplate>
+  <h1 class="display-1 text-center w-100">
+    <i class="fas fa-sync fa-spin"></i>
+  </h1>
+</ng-template>

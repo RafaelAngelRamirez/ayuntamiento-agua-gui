@@ -39,7 +39,6 @@ export class MetricasService {
     );
   }
 
-
   contratosPendientesTomarLectura() {
     return this.http
       .get<ContratosPendientesPorTomarLectura>(
@@ -52,7 +51,6 @@ export class MetricasService {
       );
   }
 
-  
   lecturasAnormales() {
     return this.http
       .get<LecturasAnormales[]>(this.base.concat("/lecturas-anormales"))
@@ -67,7 +65,10 @@ export class MetricasService {
 export interface ContratosPendientesPorTomarLectura {
   totalDeContratos: number;
   lecturasTomadas: number;
-  pendientesTomarLectura: number;
+  rutasPedientesPorTomarLectura: {
+    _id: string;
+    contratos: string[];
+  }[];
   rutasEnElSistema: {
     _id: string;
     total: number;

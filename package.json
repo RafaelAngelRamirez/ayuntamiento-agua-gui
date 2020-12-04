@@ -39,6 +39,7 @@
     "bootstrap": "^4.1.1",
     "chart.js": "^2.8.0",
     "chartist": "^0.11.0",
+    "chartjs-plugin-piechart-outlabels": "^0.1.4",
     "core-js": "^2.6.9",
     "express": "^4.17.1",
     "file-saver": "^2.0.2",
