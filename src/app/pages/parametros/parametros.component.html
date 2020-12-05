@@ -276,7 +276,8 @@
           href="javascript:void(0)"
           role="button"
         >
-          <i class="fas fa-archive"></i> Finalizar periodo
+          <i *ngIf="archivandoPeriodo" class="fas fa-sync fa-spin   "></i>
+          <i *ngIf="!archivandoPeriodo" class="fas fa-archive"></i> Finalizar periodo
         </a>
       </div>
     </div>

@@ -452,11 +452,6 @@ export class ParametrosComponent implements OnInit {
     );
   }
 
-  archivarContratos() {
-    // this.parametrosService.archivarContratos().subscribe()
-    this.notiService.toast.warning("No disponible en este momento");
-  }
-
   subiendoLecturasASimapa = false;
   timerSubidaLecturas = new Date();
   subirLecturasASimapa() {
@@ -545,7 +540,13 @@ export class ParametrosComponent implements OnInit {
   }
 
   archivandoPeriodo = false;
+  /**
+   *Lanza la acción de archivado de contratos
+   *
+   * @memberof ParametrosComponent
+   */
   archivarPeriodo() {
+    if (this.archivandoPeriodo) return;
     this.archivandoPeriodo = true;
 
     //Confirmar la accion
@@ -600,13 +601,25 @@ export class ParametrosComponent implements OnInit {
 
   private ejecutarArchivado() {
     this.parametrosService.archivarContratos().subscribe(
-      () => {
-        this.notiService.sweet.alerta(
-          "Se archivaron los contratos de manera correcta",
-          "Archivado completo",
-          "success"
-        );
-        this.archivandoPeriodo = false;
+      (datos: any) => {
+        let restantes = datos.contratosRestantes;
+        console.log(`contratosRestantes`,restantes)
+        if (restantes > 0) {
+          this.notiService.toast.correcto(
+            `${restantes} contratos por sincronizar. No cierres el navegador`
+          );
+
+          this.ejecutarArchivado();
+        } else {
+          this.notiService.sweet.alerta(
+            "Se archivaron los contratos de manera correcta",
+            "Archivado completo",
+            "success"
+          );
+          this.cargarPeriodoVigecina()
+          this.cargarEstadisticas()
+          this.archivandoPeriodo = false;
+        }
       },
       (_) => (this.archivandoPeriodo = false)
     );
