@@ -53,7 +53,7 @@ export class MetricasService {
 
   lecturasAnormales() {
     return this.http
-      .get<LecturasAnormales[]>(this.base.concat("/lecturas-anormales"))
+      .get<LecturasAnormales>(this.base.concat("/lecturas-anormales"))
       .pipe(
         catchError((err) => {
           return throwError(err);
