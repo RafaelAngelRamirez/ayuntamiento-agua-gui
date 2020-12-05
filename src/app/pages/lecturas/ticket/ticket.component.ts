@@ -37,21 +37,9 @@ export class TicketComponent implements OnInit {
   set datosAImprimir(d: any) {
     this._datosAImprimir = d;
 
-    let tieneIncidencias = !!this.datosAImprimir.problemas;
-
-    let zpl = tieneIncidencias
-      ? this.imprimirService.ticket_impedimentos
-      : this.imprimirService.ticket1;
-
-    let p = "@$@";
-    Object.keys(this.datosAImprimir).forEach((key) => {
-      zpl = zpl.replace(`${p}${key}${p}`, this.datosAImprimir[key]);
-    });
-
-    // Sies un usuario iphone tenemos que convertir el codigo zpl en
-    // en base 64 para que mobi print funcione.
-    this.zpl_code = this.usuario.esIphone ? btoa(zpl) : zpl;
+    this.zpl_code = this.imprimirService.remplazarVariablesZPL(d)
     this.listoParaImprimir = true;
+    
   }
 
   get datosAImprimir(): any {
@@ -89,6 +77,10 @@ export class TicketComponent implements OnInit {
       }
     }, error);
   }
+
+
+
+   
 
   imprimir() {
     if (this.cargandoContrato) return;
