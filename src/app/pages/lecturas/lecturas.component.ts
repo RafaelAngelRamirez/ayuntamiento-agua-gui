@@ -55,6 +55,7 @@ export class LecturasComponent implements OnInit {
   equipoCorrecto() {
     let usuario = this.usuarioService.obtenerUsuario();
     if (usuario.esIphone) return true;
+    if(this.tienePermiso.transform("administrador"))return true
 
     let equipo = usuario.dispositivo;
     return this.zebraService.selected_device?.uid === equipo;
