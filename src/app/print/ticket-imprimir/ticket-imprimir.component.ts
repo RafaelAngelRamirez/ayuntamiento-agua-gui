@@ -27,6 +27,7 @@ import {
 })
 export class TicketImprimirComponent implements OnInit {
   _contrato!: Contrato;
+  lecturista!: Lecturista;
   @Input() set contrato(c: Contrato) {
     this._contrato = c;
     this.definirContrato(c);
@@ -91,10 +92,15 @@ export class TicketImprimirComponent implements OnInit {
   }
 
   definirContrato(contrato = this.contrato) {
-    let d = new Date();
-    let fecha = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    let esReimpresion = contrato.reimpresionQuinto;
+
+    // La fecha final
+    let ff = new Date();
     // La fecha formateada
     let fText = `${ff.getDate()}/${ff.getMonth() + 1}/${ff.getFullYear()}`;
+
+    let lecturista = this.usuarioService.obtenerUsuario().nombre;
+
     this.datos["generales"] = {
       Ruta: contrato.IdRuta,
       Fecha: fText,
@@ -108,20 +114,20 @@ export class TicketImprimirComponent implements OnInit {
         Number(contrato.TipoPeriodo)
       ),
       "Consumo Promedio": contrato.Promedio,
-      Lecturista: this.usuarioService.obtenerUsuario().nombre,
+      Lecturista: lecturista,
     };
 
     let periodosGenerados = this.calculosTicketService.calcularPeriodo(
       Number(contrato.lectura.Vigencia),
       Number(contrato.lectura.Periodo),
-        : contrato.VigenciaAnterior,
-        : Number(contrato.PeriodoAnterior)
+      contrato.VigenciaAnterior,
+      Number(contrato.PeriodoAnterior)
+    );
     this.datos["lectura"] = {
       "Periodo anterior": this.pMesesService.obtenerNombre(
         Number(contrato.PeriodoAnterior)
       ),
       "Lectura anterior": contrato.LecturaAnterior,
-      "Periodo actual": this.pMesesService.convertir(
       "Periodo actual": this.pMesesService.obtenerNombre(
         Number(contrato.lectura.Periodo)
       ),
@@ -133,42 +139,49 @@ export class TicketImprimirComponent implements OnInit {
           periodosGenerados
       ),
       "Consumo total": this.hayIncidenciasOImpedimentos(
-        contrato,
-        contrato.lectura.LecturaActual - contrato.LecturaAnterior
-      ),
-      "Importe por periodo": this.hayIncidenciasOImpedimentos(
-        contrato,
-        this.currencyPipe.transform(
-          contrato.lectura.importe / periodosGenerados
-        )
-      ),
+            contrato,
+            contrato.lectura.LecturaActual - contrato.LecturaAnterior
+          ),
+      "Importe por periodo":this.hayIncidenciasOImpedimentos(
+            contrato,
+            this.currencyPipe.transform(
+              contrato.lectura.importe / periodosGenerados
+            )
+          ),
       "Importe total": this.hayIncidenciasOImpedimentos(
-        contrato,
-        this.currencyPipe.transform(contrato.lectura.importe)
-      ),
+            contrato,
+            this.currencyPipe.transform(contrato.lectura.importe)
+          ),
     };
 
-    let saldos = () => {
-      let saldo = contrato.Saldo - contrato.Adeudo - contrato.lectura.importe;
-      return saldo > 0 ? saldo : 0;
+    let saldoAFavor = () => {
+      let saldo =  contrato.Saldo;
+
+      let adeudo = contrato.Adeudo;
+
+      let importe = contrato.lectura.importe;
+
+      let r = saldo - adeudo - importe;
+      return r > 0 ? r : 0;
     };
 
-    let totalAPagar =
-      contrato.Adeudo + contrato.lectura.importe - contrato.Saldo;
+    let totalAPagar = 
+          contrato.Adeudo + contrato.lectura.importe - contrato.Saldo;
     this.datos["cuenta"] = {
       Importe: this.hayIncidenciasOImpedimentos(
         contrato,
         this.currencyPipe.transform(contrato.lectura.importe)
       ),
       "Adeudo anterior": this.currencyPipe.transform(contrato.Adeudo),
+
       "Total a pagar": this.hayIncidenciasOImpedimentos(
         contrato,
         this.currencyPipe.transform(totalAPagar < 0 ? 0 : totalAPagar)
       ),
       "Saldo a favor": this.hayIncidenciasOImpedimentos(
-        contrato,
-        this.currencyPipe.transform(contrato.Saldo)
-      ),
+            contrato,
+            this.currencyPipe.transform(contrato.Saldo)
+          ),
       "Nuevo saldo a favor": this.hayIncidenciasOImpedimentos(
         contrato,
         this.currencyPipe.transform(saldoAFavor())
