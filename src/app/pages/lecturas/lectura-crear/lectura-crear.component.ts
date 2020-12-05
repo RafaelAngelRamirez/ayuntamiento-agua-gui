@@ -33,6 +33,7 @@ import {
 } from "../../../services/impedimento.service";
 import { forkJoin } from "rxjs";
 import { TienePermisoPipe } from "../../../pipes/tiene-permiso.pipe";
+import { CalculosTicketService } from "../../../services/calculos-ticket.service";
 
 @Component({
   selector: "app-lectura-crear",
@@ -47,10 +48,11 @@ export class LecturaCrearComponent implements OnInit {
   incidencias: Incidencia[] = [];
   impedimentos: Impedimento[] = [];
   parametrosGenerales!: Lecturista;
-  vigencia: number | undefined = undefined;
-  periodo: number | undefined = undefined;
+  vigencia: number = 0;
+  periodo: number = 0;
 
   constructor(
+    private calculosTicketService: CalculosTicketService,
     private idbService: IndexedDBService,
     private constratoService: ContratoService,
     private parametrosService: ParametrosService,
@@ -300,10 +302,14 @@ export class LecturaCrearComponent implements OnInit {
 
         model.Mts3Cobrados = mt3;
 
-        model.importe = this.calcularImporte(
+        model.importe = this.calculosTicketService.calcularImporte(
           model,
-          this.contrato,
-          this.parametrosGenerales
+          this.parametrosGenerales.parametros,
+          this.contrato.IdTarifa,
+          this.vigencia,
+          this.periodo,
+          this.contrato.VigenciaAnterior,
+          Number(this.contrato.PeriodoAnterior)
         );
 
         console.log("importe: ", model.importe);
@@ -455,161 +461,5 @@ export class LecturaCrearComponent implements OnInit {
     //     });
     //   });
     // ----------------------------------------
-  }
-
-  calcularPeriodo(
-    vigenciaActual: string,
-    periodoActual: string,
-    vigenciaAnterior: number,
-    periodoAnterior: string
-  ) {
-    let periodosCalculados = 0;
-
-    let vigeActual = Number(vigenciaActual);
-    let perActual = Number(periodoActual);
-    let vigeAnterior = Number(vigenciaAnterior);
-    let perAnterior = Number(periodoAnterior);
-
-    vigeAnterior = vigeAnterior > 2018 ? vigeAnterior : vigeActual;
-    perAnterior = perAnterior > 0 ? perAnterior : perActual;
-
-    console.log("vigeActual", vigeActual);
-    console.log("perActual", perActual);
-    console.log("vigeAnterior", vigeAnterior);
-    console.log("perAnterior", perAnterior);
-
-    periodosCalculados =
-      (vigeActual - vigeAnterior) * 6 + perActual - perAnterior;
-    console.log(`periodosCalculados`, periodosCalculados);
-
-    return periodosCalculados < 1 ? 1 : periodosCalculados;
-  }
-
-  calcularImporte(
-    model: Lectura,
-    contrato: Contrato,
-    parametrosGenerales: Lecturista
-  ): number {
-    let parametros = parametrosGenerales.parametros;
-
-    //Obtenemos las tarifas(Parece que hay un problema con el nombre del tipo de tarifa y tiene un espacio al final. Usamos trim para evitar purrunes. )
-    let tarifas = parametros.tarifas.filter((x) => {
-      return x.IdTarifa.trim() === contrato.IdTarifa.trim();
-    });
-
-    console.log(`tarifas`, tarifas);
-
-    //La cantidad de periodos que se estan cobrando.
-    let periodosGenerados = this.calcularPeriodo(
-      contrato.lectura.Vigencia,
-      contrato.lectura.Periodo,
-      contrato.VigenciaAnterior,
-      contrato.PeriodoAnterior
-    );
-
-    let mesesGenerados = periodosGenerados * 2;
-
-    // El consumo que viene de la diferencia de la lectura anterior y la lectura actual.
-    let consumoActualPorMes = model.ConsumoMts3 / mesesGenerados;
-
-    console.log(`consumoActual`, consumoActualPorMes);
-
-    // let servicios = [];
-    // Obtenemos aguasResiduales
-    let aguasResiduales = parametros.aguasResiduales[0]
-      ? parametros.aguasResiduales[0].Porcentaje
-      : null;
-    //Obtenemos drenaje
-    let drenaje = parametros.drenaje[0]
-      ? parametros.drenaje[0].Porcentaje
-      : null;
-    // Obtenemos infrastructura
-    let infrastructura = parametros.infrastructura[0]
-      ? parametros.infrastructura[0].Porcentaje
-      : null;
-
-    console.log(`aguasResiduales`, aguasResiduales);
-    console.log(`drenaje`, drenaje);
-    console.log(`infrastructura`, infrastructura);
-
-    // //Recorremos las tarifas
-    let importeTotal = 0;
-
-    let desgloses: {
-      tarifa: Tarifas;
-      min: number;
-      max: number;
-      consumoActualMt3: number;
-      costoM3: number;
-      cuotaMinima: number;
-      importeRango: number;
-
-      metrosCalculados: number;
-    }[] = [];
-
-    for (const t of tarifas) {
-      //Si no esta igual comprobamos hasta donde haq que cobrar
-
-      let desglose = {
-        importeRango: 0,
-        metrosCalculados: 0,
-        tarifa: t,
-        min: t.ConsumoMinimo,
-        max: t.ConsmuoMaximo,
-        // El consumo actual tiene que ser divido entre la cantidad de periodos
-        // generados y el total  de periodos.
-        consumoActualMt3: consumoActualPorMes,
-        costoM3: t.CostoMt3Excedente,
-        cuotaMinima: t.CuotaMinima,
-      };
-      let subImporte = 0;
-      if (consumoActualPorMes >= t.ConsmuoMaximo) {
-        //El costo del rango
-        desglose.metrosCalculados = t.ConsmuoMaximo - t.ConsumoMinimo + 1;
-
-        subImporte =
-          desglose.metrosCalculados * t.CostoMt3Excedente + t.CuotaMinima;
-      } else {
-        if (consumoActualPorMes >= t.ConsumoMinimo) {
-          //AQUI LA HAN CAGAO con el -1
-          desglose.metrosCalculados = (consumoActualPorMes - t.ConsumoMinimo)+1;
-          subImporte =
-            desglose.metrosCalculados * t.CostoMt3Excedente + t.CuotaMinima;
-        }
-      }
-      //Sumamos al importe global.
-      importeTotal += subImporte;
-
-      //Registramos el importe del rango en el desglose.
-      desglose.importeRango = subImporte;
-      desgloses.push(desglose);
-    }
-    console.log("desglose", desgloses);
-
-    // Sumamos los porcentajes de servicios
-
-    let importeAguasResiduales = aguasResiduales
-      ? importeTotal * (aguasResiduales / 100)
-      : 0;
-
-    console.log(`importeAguasResiduales`, importeAguasResiduales);
-
-    let importeInfrastructura = infrastructura
-      ? importeTotal * (infrastructura / 100)
-      : 0;
-
-    console.log(`importeInfrastructura`, importeInfrastructura);
-
-    let importeDrenaje = drenaje ? importeTotal * (drenaje / 100) : 0;
-
-    console.log(`importeDrenaje`, importeDrenaje);
-
-    let granTotal =
-      (importeTotal +
-        importeDrenaje +
-        importeInfrastructura +
-        importeAguasResiduales) *
-      mesesGenerados;
-    return granTotal;
   }
 }
