@@ -82,7 +82,10 @@ export class ZebraService {
   writeToSelectedPrinter(dataToWrite: string) {
     let dispositivo = this.usuarioService.obtenerUsuario().dispositivo;
     let uid = this.selected_device?.uid;
-    if (uid !== dispositivo) {
+
+    let esAdmin = this.usuarioService.obtenerUsuario().permissions.includes("administrador")
+
+    if (uid !== dispositivo && !esAdmin) {
       this.notiService.toast.error(
         this.titulo.concat(" Imposible imprimir"),
         "No se reconoce el dispositivo. Reportalo al administrador".concat(
