@@ -33,7 +33,7 @@ export class ParametrosComponent implements OnInit {
     private incidenciasSerivice: IncidenciaService,
     private impedimentosService: ImpedimentoService,
     private tienePermisoPipe: TienePermisoPipe,
-    public zebraService: ZebraService
+    public zebraService: ZebraService,
   ) {}
   contratosPendientesSincronizarComponent!: ContratosPendientesSincronizarComponent;
 
@@ -50,6 +50,14 @@ export class ParametrosComponent implements OnInit {
   rutaSeleccionada: Rutas | undefined = undefined;
   rutasDisponibles: Rutas[] = [];
 
+
+
+  modoCalculadora = false
+  setModoCalculadora(v:boolean){
+    this.modoCalculadora = v
+    this.parametrosService.modoCalculadora(v)
+  }
+
   ngOnInit(): void {
     let esAdministrador = this.usuarioService
       .obtenerUsuario()
@@ -64,6 +72,8 @@ export class ParametrosComponent implements OnInit {
 
     this.cargarRutas();
     this.obtenerRutaSeleccionada();
+
+    this.modoCalculadora = this.parametrosService.esModoCalculadora()
   }
 
   cargandoRutas = false;
@@ -452,11 +462,6 @@ export class ParametrosComponent implements OnInit {
     );
   }
 
-  archivarContratos() {
-    // this.parametrosService.archivarContratos().subscribe()
-    this.notiService.toast.warning("No disponible en este momento");
-  }
-
   subiendoLecturasASimapa = false;
   timerSubidaLecturas = new Date();
   subirLecturasASimapa() {
@@ -545,7 +550,13 @@ export class ParametrosComponent implements OnInit {
   }
 
   archivandoPeriodo = false;
+  /**
+   *Lanza la acción de archivado de contratos
+   *
+   * @memberof ParametrosComponent
+   */
   archivarPeriodo() {
+    if (this.archivandoPeriodo) return;
     this.archivandoPeriodo = true;
 
     //Confirmar la accion
@@ -600,17 +611,32 @@ export class ParametrosComponent implements OnInit {
 
   private ejecutarArchivado() {
     this.parametrosService.archivarContratos().subscribe(
-      () => {
-        this.notiService.sweet.alerta(
-          "Se archivaron los contratos de manera correcta",
-          "Archivado completo",
-          "success"
-        );
-        this.archivandoPeriodo = false;
+      (datos: any) => {
+        let restantes = datos.contratosRestantes;
+        console.log(`contratosRestantes`,restantes)
+        if (restantes > 0) {
+          this.notiService.toast.correcto(
+            `${restantes} contratos por sincronizar. No cierres el navegador`
+          );
+
+          this.ejecutarArchivado();
+        } else {
+          this.notiService.sweet.alerta(
+            "Se archivaron los contratos de manera correcta",
+            "Archivado completo",
+            "success"
+          );
+          this.cargarPeriodoVigecina()
+          this.cargarEstadisticas()
+          this.archivandoPeriodo = false;
+        }
       },
       (_) => (this.archivandoPeriodo = false)
     );
   }
+
+
+
 }
 
 class SincronizacionLecturista<T> {

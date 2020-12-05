@@ -15,7 +15,25 @@ export class PeriodoAMesesService {
 
   constructor() {}
 
-  convertir(periodo: number): string {
+  /**
+   *Convierte el periodo a un texto dupla tipo enero-febrero
+   *
+   * @param {number} periodo
+   * @returns {string}
+   * @memberof PeriodoAMesesService
+   */
+  obtenerNombre(periodo: number): string {
     return this.equivalencia[periodo - 1];
+  }
+
+  obtenerTipoDePeriodo(n: number): string {
+    return [
+      "Mensual",
+      "Bimestral",
+      "Trimestral",
+      "Cuatrimestre",
+      "Quinquemestre",
+      "Semestre",
+    ][n];
   }
 }

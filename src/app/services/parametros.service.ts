@@ -10,6 +10,7 @@ import {
   IDBOpcionesObjectStore,
 } from "@codice-progressio/indexed-db";
 import { catchError, map } from "rxjs/operators";
+import { LocalStorageService } from './local-storage.service'
 @Injectable({
   providedIn: "root",
 })
@@ -19,8 +20,25 @@ export class ParametrosService {
   constructor(
     private http: HttpClient,
     private idbService: IndexedDbService,
-    private codiceIdbService: CodiIDBService
+    private codiceIdbService: CodiIDBService,
+      private localStorage: LocalStorageService
   ) {}
+
+
+  /**
+   *Permite hacer calculos de ticket en base a los parametros sincronizados del
+   * lecturista sin guardar el ticket. 
+   *
+   * @param {boolean} v
+   * @memberof ParametrosService
+   */
+  modoCalculadora(v:boolean){
+    this.localStorage.guardar("modo_calculadora", v+"")
+  }
+
+  esModoCalculadora():boolean{
+    return this.localStorage.leer("modo_calculadora") === "true"
+  }
 
   actualizarPermisosSuperUsuario() {
     return this.http.put(this.base.concat("/actualizar-permisos"), null);

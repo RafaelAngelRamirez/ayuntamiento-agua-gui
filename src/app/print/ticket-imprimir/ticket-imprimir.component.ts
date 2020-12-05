@@ -6,7 +6,11 @@ import { DomicilioPipe } from "../../pipes/domicilio.pipe";
 import { UsuarioService } from "../../services/usuario.service";
 import { ParametrosService } from "../../services/parametros.service";
 import { PeriodoAMesesService } from "../../services/periodo-ameses.service";
-import { DecimalPipe, CurrencyPipe } from "@angular/common";
+import { DecimalPipe, CurrencyPipe, Location } from "@angular/common";
+import { Lectura } from "../../services/contrato.service";
+import { CalculosTicketService } from "../../services/calculos-ticket.service";
+import { Lecturista } from "../../models/usuario.model";
+import { NotificacionesService } from "../../services/notificaciones.service";
 import {
   IncidenciaService,
   Incidencia,
@@ -23,6 +27,7 @@ import {
 })
 export class TicketImprimirComponent implements OnInit {
   _contrato!: Contrato;
+  lecturista!: Lecturista;
   @Input() set contrato(c: Contrato) {
     this._contrato = c;
     this.definirContrato(c);
@@ -40,6 +45,9 @@ export class TicketImprimirComponent implements OnInit {
   datos: any = {};
 
   constructor(
+    private location: Location,
+    private notiService: NotificacionesService,
+    private calculosTicketService: CalculosTicketService,
     private parametrosSerivce: ParametrosService,
     private usuarioService: UsuarioService,
     private domicilioPipe: DomicilioPipe,
@@ -57,12 +65,14 @@ export class TicketImprimirComponent implements OnInit {
       if (contrato) this.definirContrato(contrato);
     });
 
+    // Se cargan las incidencias.
     this.incidenciaService.offline
       .findAll()
       .subscribe(
         (incidencias: Incidencia[]) => (this.incidencias = incidencias)
       );
 
+    //Se cargan los impedimentos offline.
     this.impedimentoService.offline
       .findAll()
       .subscribe(
@@ -82,31 +92,41 @@ export class TicketImprimirComponent implements OnInit {
   }
 
   definirContrato(contrato = this.contrato) {
-    let d = new Date();
-    let fecha = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    // La fecha final
+    let ff = new Date();
+    // La fecha formateada
+    let fText = `${ff.getDate()}/${ff.getMonth() + 1}/${ff.getFullYear()}`;
+
+    let lecturista = this.usuarioService.obtenerUsuario().nombre;
+
     this.datos["generales"] = {
       Ruta: contrato.IdRuta,
-      Fecha: fecha,
+      Fecha: fText,
       Contrato: contrato.Contrato,
       Contribuyente: contrato.Contribuyente,
       Direccion: this.domicilioPipe.transform(contrato),
       Colonia: contrato.Colonia,
       Poblacion: contrato.Poblacion,
       "No. serie del medidor": contrato.SerieMedidor,
-      "Tipo de periodo": contrato.TipoPeriodo,
+      "Tipo de periodo": this.pMesesService.obtenerTipoDePeriodo(
+        Number(contrato.TipoPeriodo)
+      ),
       "Consumo Promedio": contrato.Promedio,
-      Lecturista: this.usuarioService.obtenerUsuario().nombre,
+      Lecturista: lecturista,
     };
 
-    let periodosGenerados =
-      Number(contrato.lectura.Periodo) - Number(contrato.PeriodoAnterior);
-
+    let periodosGenerados = this.calculosTicketService.calcularPeriodo(
+      Number(contrato.lectura.Vigencia),
+      Number(contrato.lectura.Periodo),
+      contrato.VigenciaAnterior,
+      Number(contrato.PeriodoAnterior)
+    );
     this.datos["lectura"] = {
-      "Periodo anterior": this.pMesesService.convertir(
+      "Periodo anterior": this.pMesesService.obtenerNombre(
         Number(contrato.PeriodoAnterior)
       ),
       "Lectura anterior": contrato.LecturaAnterior,
-      "Periodo actual": this.pMesesService.convertir(
+      "Periodo actual": this.pMesesService.obtenerNombre(
         Number(contrato.lectura.Periodo)
       ),
       "Lectura actual": contrato.lectura.LecturaActual,
@@ -117,61 +137,74 @@ export class TicketImprimirComponent implements OnInit {
           periodosGenerados
       ),
       "Consumo total": this.hayIncidenciasOImpedimentos(
-        contrato,
-        contrato.lectura.LecturaActual - contrato.LecturaAnterior
-      ),
-      "Importe por periodo": this.hayIncidenciasOImpedimentos(
-        contrato,
-        this.currencyPipe.transform(
-          contrato.lectura.importe / periodosGenerados
-        )
-      ),
+            contrato,
+            contrato.lectura.LecturaActual - contrato.LecturaAnterior
+          ),
+      "Importe por periodo":this.hayIncidenciasOImpedimentos(
+            contrato,
+            this.currencyPipe.transform(
+              contrato.lectura.importe / periodosGenerados
+            )
+          ),
       "Importe total": this.hayIncidenciasOImpedimentos(
-        contrato,
-        this.currencyPipe.transform(contrato.lectura.importe)
-      ),
+            contrato,
+            this.currencyPipe.transform(contrato.lectura.importe)
+          ),
     };
 
-    let saldos = () => {
-      let saldo = contrato.Saldo - contrato.Adeudo - contrato.lectura.importe;
-      return saldo > 0 ? saldo : 0;
+    let saldoAFavor = () => {
+      let saldo =  contrato.Saldo;
+
+      let adeudo = contrato.Adeudo;
+
+      let importe = contrato.lectura.importe;
+
+      let r = saldo - adeudo - importe;
+      return r > 0 ? r : 0;
     };
 
-    let totalAPagar =
-      contrato.Adeudo + contrato.lectura.importe - contrato.Saldo;
+    let totalAPagar = 
+          contrato.Adeudo + contrato.lectura.importe - contrato.Saldo;
     this.datos["cuenta"] = {
       Importe: this.hayIncidenciasOImpedimentos(
         contrato,
         this.currencyPipe.transform(contrato.lectura.importe)
       ),
       "Adeudo anterior": this.currencyPipe.transform(contrato.Adeudo),
+
       "Total a pagar": this.hayIncidenciasOImpedimentos(
         contrato,
         this.currencyPipe.transform(totalAPagar < 0 ? 0 : totalAPagar)
       ),
       "Saldo a favor": this.hayIncidenciasOImpedimentos(
-        contrato,
-        this.currencyPipe.transform(contrato.Saldo)
-      ),
+            contrato,
+            this.currencyPipe.transform(contrato.Saldo)
+          ),
       "Nuevo saldo a favor": this.hayIncidenciasOImpedimentos(
         contrato,
-        this.currencyPipe.transform(saldos())
+        this.currencyPipe.transform(saldoAFavor())
       ),
     };
 
-    let paraTicket = {
-      ...this.datos.lectura,
-      ...this.datos.cuenta,
-      ...this.datos.generales,
-      problemas: contrato.lectura.problemas
-        ? contrato.lectura.problemas
-            .concat(" [Observaciones]: ")
-            .concat(contrato.lectura.Observaciones?.trim())
-        : "",
-    };
+    this.generarParaImpresion(this.datos, contrato);
+  }
 
-    console.log(`paraTicket`, paraTicket);
-    this.paraTicket.emit(paraTicket);
+  generarParaImpresion(dato: any, contrato: Contrato) {
+    setTimeout(() => {
+      let paraTicket = {
+        ...this.datos.lectura,
+        ...this.datos.cuenta,
+        ...this.datos.generales,
+        problemas: contrato.lectura.problemas
+          ? contrato.lectura.problemas
+              .concat(" [Observaciones]: ")
+              .concat(contrato.lectura.Observaciones?.trim())
+          : "",
+      };
+
+      console.log(`paraTicket`, paraTicket);
+      this.paraTicket.emit(paraTicket);
+    }, 100);
   }
 
   retornar() {

@@ -190,6 +190,15 @@ export interface Lectura {
   idUsuario: string;
 
   Contrato: string;
+
+
+  vigenciaAnterior: number;
+  periodoAnterior: number;
+  lecturaAnterior: number;
+  saldoAnterior:number,
+  adeudoAnterior:number
+
+
   Vigencia: string;
   Periodo: string;
   IdLecturista: string;
