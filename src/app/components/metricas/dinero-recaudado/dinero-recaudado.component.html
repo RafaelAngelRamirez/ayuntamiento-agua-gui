@@ -8,7 +8,7 @@
 </div>
 
 <h1 class="display-3 text-center font-weight-bold">
-  <span *ngIf="!cargando"> ${{ total | number: '0.0-2' }} </span>
+  <span *ngIf="!cargando"> ${{ total | number: "0.0-2" }} </span>
 
   <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
 </h1>
@@ -27,6 +27,14 @@
   <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
 </h1>
 
+<hr />
+<small class="text-muted"
+  >[ NOTA ] Los consumos con valores negativos son omitidos por el filtro de
+  manera automatica. Todos los datos aqui presentados pueden variar contra el
+  SIMAPA.</small
+>
+<hr />
+
 <small class="w-100"
   ><a
     title="Volver a cargar"
@@ -38,3 +46,12 @@
     Actualizar</a
   ></small
 >
+
+<a
+  (click)="exportarExcel(datos)"
+  class="btn btn-success btn-xs ml-5"
+  href="javascript:void(0)"
+  role="button"
+>
+  <i class="fas fa-file-excel"></i
+></a>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { MetricasService } from "../../../services/metricas.service";
+import { ExcelService } from "../../../service/excel.service";
 
 @Component({
   selector: "app-dinero-recaudado",
@@ -11,7 +12,10 @@ export class DineroRecaudadoComponent implements OnInit {
   total: number = 0;
   datos: any;
   mt3Consumidos: any;
-  constructor(private metricasService: MetricasService) {}
+  constructor(
+    private metricasService: MetricasService,
+    private excelService: ExcelService
+  ) {}
 
   ngOnInit(): void {
     this.cargar();
@@ -23,7 +27,7 @@ export class DineroRecaudadoComponent implements OnInit {
       (datos: any) => {
         this.datos = datos;
         this.total = datos.recaudacion;
-        this.mt3Consumidos = this.obtenerMt3(datos);
+        this.mt3Consumidos = datos.consumoMt3
         this.cargando = false;
       },
       () => {
@@ -32,7 +36,9 @@ export class DineroRecaudadoComponent implements OnInit {
     );
   }
 
-  obtenerMt3(datos: any) {
-    return datos.detalles.reduce((a: number, b: any) => a + b.ConsumoMts3, 0);
+
+  exportarExcel(datos: any) {
+    this.excelService.exportAsExcelFile(datos.detalles, "RECAUDACION");
   }
+
 }
