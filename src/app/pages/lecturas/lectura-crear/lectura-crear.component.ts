@@ -51,6 +51,8 @@ export class LecturaCrearComponent implements OnInit {
   vigencia: number = 0;
   periodo: number = 0;
 
+  modoCalculadora = false;
+
   constructor(
     private calculosTicketService: CalculosTicketService,
     private idbService: IndexedDBService,
@@ -71,6 +73,7 @@ export class LecturaCrearComponent implements OnInit {
     this.cargarImpedimentos();
     this.cargarParametrosTicket();
     this.cargarVigenciaYPeriodo();
+    this.modoCalculadora = this.parametrosService.esModoCalculadora();
   }
 
   cargarVigenciaYPeriodo() {
@@ -313,6 +316,13 @@ export class LecturaCrearComponent implements OnInit {
         );
 
         console.log("importe: ", model.importe);
+        if (this.modoCalculadora) {
+          this.notiService.toast.info(
+            `[ MODO CALCULADORA ] | IMPORTE:$${model.importe}`
+          );
+
+          return;
+        }
 
         let hayImpedimentos = this.hayAlgunImpedimento();
         if (hayImpedimentos) {

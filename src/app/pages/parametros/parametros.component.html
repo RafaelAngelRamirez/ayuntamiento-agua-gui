@@ -1,4 +1,25 @@
 <div class="row">
+  <div class="col-4">
+    <div class="card shadow">
+      <div class="card-body">
+        <h3>Modo calculadora</h3>
+        <a
+          (click)="setModoCalculadora(!modoCalculadora)"
+          class="btn btn-primary"
+          href="javascript:void(0)"
+          role="button"
+        >
+          <i *ngIf="!modoCalculadora" class="fas fa-circle"></i>
+          <i *ngIf="modoCalculadora" class="fas fa-check-circle"></i>
+
+          Activar
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
   <div *ngIf="'super_admin' | tienePermiso" class="col-12 col-md-3">
     <div class="card shadow">
       <div class="card-body">
@@ -276,8 +297,9 @@
           href="javascript:void(0)"
           role="button"
         >
-          <i *ngIf="archivandoPeriodo" class="fas fa-sync fa-spin   "></i>
-          <i *ngIf="!archivandoPeriodo" class="fas fa-archive"></i> Finalizar periodo
+          <i *ngIf="archivandoPeriodo" class="fas fa-sync fa-spin"></i>
+          <i *ngIf="!archivandoPeriodo" class="fas fa-archive"></i> Finalizar
+          periodo
         </a>
       </div>
     </div>

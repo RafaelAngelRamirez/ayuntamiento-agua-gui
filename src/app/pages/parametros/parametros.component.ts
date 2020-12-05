@@ -33,7 +33,7 @@ export class ParametrosComponent implements OnInit {
     private incidenciasSerivice: IncidenciaService,
     private impedimentosService: ImpedimentoService,
     private tienePermisoPipe: TienePermisoPipe,
-    public zebraService: ZebraService
+    public zebraService: ZebraService,
   ) {}
   contratosPendientesSincronizarComponent!: ContratosPendientesSincronizarComponent;
 
@@ -50,6 +50,14 @@ export class ParametrosComponent implements OnInit {
   rutaSeleccionada: Rutas | undefined = undefined;
   rutasDisponibles: Rutas[] = [];
 
+
+
+  modoCalculadora = false
+  setModoCalculadora(v:boolean){
+    this.modoCalculadora = v
+    this.parametrosService.modoCalculadora(v)
+  }
+
   ngOnInit(): void {
     let esAdministrador = this.usuarioService
       .obtenerUsuario()
@@ -64,6 +72,8 @@ export class ParametrosComponent implements OnInit {
 
     this.cargarRutas();
     this.obtenerRutaSeleccionada();
+
+    this.modoCalculadora = this.parametrosService.esModoCalculadora()
   }
 
   cargandoRutas = false;
@@ -624,6 +634,9 @@ export class ParametrosComponent implements OnInit {
       (_) => (this.archivandoPeriodo = false)
     );
   }
+
+
+
 }
 
 class SincronizacionLecturista<T> {
