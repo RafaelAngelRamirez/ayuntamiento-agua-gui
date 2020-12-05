@@ -92,8 +92,6 @@ export class TicketImprimirComponent implements OnInit {
   }
 
   definirContrato(contrato = this.contrato) {
-    let esReimpresion = contrato.reimpresionQuinto;
-
     // La fecha final
     let ff = new Date();
     // La fecha formateada
