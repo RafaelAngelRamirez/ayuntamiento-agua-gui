@@ -12,6 +12,12 @@ import { NotificacionesService } from "./notificaciones.service";
 export class ImprimirService {
   private _imprimiendo = false;
 
+  /**
+   *Despues de hacer el calculo en tickect-imprimir se usa esta propiead
+   * para notificar que se realizo el calculo. 
+   *
+   * @memberof ImprimirService
+   */
   actualizar = new BehaviorSubject<Contrato | undefined>(undefined);
 
   get imprimiendo() {
@@ -29,6 +35,25 @@ export class ImprimirService {
     
     this._imprimiendo = true;
     this.zebraService.writeToSelectedPrinter(zpl);
+  }
+
+
+  remplazarVariablesZPL (datosAImprimir:any ):string{
+    let tieneIncidencias = !!datosAImprimir.problemas;
+
+    let zpl = tieneIncidencias
+      ? this.ticket_impedimentos
+      : this.ticket1;
+
+    let p = "@$@";
+    Object.keys(datosAImprimir).forEach((key) => {
+      zpl = zpl.replace(`${p}${key}${p}`, datosAImprimir[key]);
+    });
+
+    // Sies un usuario iphone tenemos que convertir el codigo zpl en
+    // en base 64 para que mobi print funcione.
+    // return this.usuario.esIphone ? btoa(zpl) : zpl;
+    return zpl
   }
 
   ticket1 = `
