@@ -35,7 +35,7 @@ export class ContratosComponent implements OnInit {
 
   buscador = new FormControl();
 
-  contratosOffline = false;
+  contratosOffline = true;
 
   ngOnInit(): void {
     this.registrarBuscador();
