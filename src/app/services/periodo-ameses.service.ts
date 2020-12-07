@@ -34,6 +34,6 @@ export class PeriodoAMesesService {
       "Cuatrimestre",
       "Quinquemestre",
       "Semestre",
-    ][n];
+    ][n-1];
   }
 }
