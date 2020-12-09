@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { MetricasService } from "../../../services/metricas.service";
 import { ParametrosService } from "../../../services/parametros.service";
 import { Lecturista } from "../../../models/usuario.model";
+import { ExcelService } from "../../../service/excel.service";
 
 @Component({
   selector: "app-promedio-de-tiempo-entre-lecturas",
@@ -14,6 +15,7 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
   cargando = false;
 
   constructor(
+    private excelSerivce: ExcelService,
     private metricasServices: MetricasService,
     private ParametrosService: ParametrosService
   ) {}
@@ -88,7 +90,6 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
       //   borderColor: "rgba(6,215,156,1)",
       //   pointBackgroundColor: "rgba(6,215,156,1)",
       //   pointBorderColor: "#fff",
-
       //   pointHoverBackgroundColor: "#fff",
       //   pointHoverBorderColor: "rgba(6,215,156,0.5)",
       // },
@@ -279,5 +280,10 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
       ?.NombreLecturista;
 
     return nombre ? nombre : id;
+  }
+
+  exportarExcel(datos: any) {
+    console.log("entro")
+    this.excelSerivce.exportAsExcelFile(datos, "ESTADISTICAS_LECTURISTAS");
   }
 }
