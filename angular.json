@@ -16,7 +16,11 @@
               "rxjs-compat",
               "rxjs",
               "ng2-charts",
-              "chart.js"
+              "chart.js",
+              "chartjs-plugin-piechart-outlabels",
+              "qrcode",
+              "file-saver",
+              "xlsx"
             ],
             "outputPath": "dist",
             "index": "src/index.html",
