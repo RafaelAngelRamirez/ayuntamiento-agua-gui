@@ -98,7 +98,8 @@ export class LecturasAnormalesComponent implements OnInit {
     return i ? i.NombreImpedimento : "";
   }
 
-  graficaIncidencias(datos: LecturasAnormales) {
+  graficaIncidencias(datos: LecturasAnormales | undefined) {
+    if (!datos) return;
     this.leyenda = "Lecturas anormales [ Incindencias ]";
     this.advertencias = "Lecturas con incidencias registradas";
     this.chartLabels = datos.incidencias.map((x) =>
@@ -107,7 +108,8 @@ export class LecturasAnormalesComponent implements OnInit {
     this.chartData = datos.incidencias.map((x) => x.total);
   }
 
-  graficaImpedimentos(datos: LecturasAnormales) {
+  graficaImpedimentos(datos: LecturasAnormales | undefined) {
+    if (!datos) return;
     this.leyenda = "Lecturas anormales [ Impedimentos ]";
     this.advertencias = "Lecturas con impedimentos registrados";
     this.chartLabels = datos.impedimentos.map((x) =>
@@ -115,7 +117,8 @@ export class LecturasAnormalesComponent implements OnInit {
     );
     this.chartData = datos.impedimentos.map((x) => x.total);
   }
-  graficaFueraDePromedio(datos: LecturasAnormales) {
+  graficaFueraDePromedio(datos: LecturasAnormales | undefined) {
+    if (!datos) return;
     this.leyenda = "Lecturas anormales [ Fuera de promedio ]";
     this.advertencias =
       "Lecturas que se generaron por arriba del promedio definido en el contrato";
