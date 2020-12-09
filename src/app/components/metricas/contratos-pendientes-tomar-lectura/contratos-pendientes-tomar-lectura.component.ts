@@ -1,11 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { ChartOptions, ChartType } from "chart.js";
 import { Label } from "ng2-charts";
+import { ChartPluginsService } from "../../../services/chart-plugins.service";
 import {
   MetricasService,
   ContratosPendientesPorTomarLectura,
 } from "../../../services/metricas.service";
-import * as outLabels from "chartjs-plugin-piechart-outlabels";
 @Component({
   selector: "app-contratos-pendientes-tomar-lectura",
   templateUrl: "./contratos-pendientes-tomar-lectura.component.html",
@@ -15,7 +15,10 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
   cargando = false;
   datos!: ContratosPendientesPorTomarLectura;
   leyenda = "";
-  constructor(private metricasService: MetricasService) {}
+  constructor(
+    private chartPluginsServic: ChartPluginsService,
+    private metricasService: MetricasService
+  ) {}
 
   chartOptions: ChartOptions = {
     responsive: true,
@@ -35,7 +38,7 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
   chartType: ChartType = "pie";
   chartLegend = true;
   chartColors = [];
-  chartPlugins = [outLabels];
+  chartPlugins = [this.chartPluginsServic.outLabels];
 
   ngOnInit(): void {
     this.cargar();

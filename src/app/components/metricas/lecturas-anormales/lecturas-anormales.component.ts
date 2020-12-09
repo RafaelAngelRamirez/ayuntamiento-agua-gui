@@ -5,8 +5,8 @@ import {
   MetricasService,
 } from "../../../services/metricas.service";
 
-import * as outLabels from "chartjs-plugin-piechart-outlabels";
 import { ParametrosService } from "../../../services/parametros.service";
+import { ChartPluginsService } from "../../../services/chart-plugins.service";
 import {
   IncidenciaService,
   Incidencia,
@@ -48,9 +48,10 @@ export class LecturasAnormalesComponent implements OnInit {
   chartType: ChartType = "pie";
   chartLegend = true;
   chartColors = [];
-  chartPlugins = [outLabels];
+  chartPlugins = [this.chartPluginsService.outLabels];
 
   constructor(
+    private chartPluginsService: ChartPluginsService,
     private parametroService: ParametrosService,
     private incidenciasService: IncidenciaService,
     private impedimentoService: ImpedimentoService,
