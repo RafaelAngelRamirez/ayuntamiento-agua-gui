@@ -50,16 +50,16 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
       (datos) => {
         this.datos = datos;
         this.cargando = false;
-        this.graficaRutas();
+        this.graficaRutas(datos);
       },
       (_) => (this.cargando = false)
     );
   }
 
-  graficaRutas() {
+  graficaRutas(datos:ContratosPendientesPorTomarLectura) {
     this.leyenda = "Contratos por ruta";
 
-    this.chartLabels = this.obtenerEtiquetasRutas(this.datos);
+    this.chartLabels = this.obtenerEtiquetasRutas(datos);
 
     this.chartData = this.datos.rutasEnElSistema.map((x) => x.total);
     this.chartType = "pie";
@@ -70,14 +70,14 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
     return datos.rutasEnElSistema.map((x) => x._id);
   }
 
-  graficaRutasConLecturasPendientes() {
+  graficaRutasConLecturasPendientes(datos: ContratosPendientesPorTomarLectura) {
     this.leyenda = "Rutas con contratos sin tomar lectura";
 
-    this.chartLabels = this.datos.rutasPedientesPorTomarLectura.map(
+    this.chartLabels = datos.rutasPedientesPorTomarLectura.map(
       (x) => x._id
     );
 
-    this.chartData = this.datos.rutasPedientesPorTomarLectura.map(
+    this.chartData = datos.rutasPedientesPorTomarLectura.map(
       (x) => x.contratos.length
     );
     this.chartType = "doughnut";
