@@ -32,7 +32,11 @@
   </ul>
 </div>
 
-<div *ngIf="!cargando; else sync" style="height: 350px" class="mt-4 pt-4">
+<div
+  *ngIf="!cargando; else cargarTemplate"
+  style="height: 350px"
+  class="mt-4 pt-4"
+>
   <canvas
     baseChart
     [datasets]="chartData"
@@ -49,7 +53,7 @@
 
 <table class="table">
   <thead>
-    <tr>PO
+    <tr>
       <th>Lecturista</th>
       <th>Promedio entre lecturas</th>
       <th>Promedio contratos por dia</th>
@@ -80,9 +84,14 @@
   ></small
 >
 
+<a
+  (click)="exportarExcel(datos)"
+  class="btn btn-primary btn-xs ml-3"
+  href="javascript:void(0)"
+  role="button"
+  ><i class="fas fa-save"></i
+></a>
 
-<a (click)="exportarExcel(datos)" class="btn btn-primary btn-xs ml-3" href="javascript:void(0)" role="button"><i class="fas fa-save    "></i></a>
-
-<ng-template #sync>
+<ng-template #cargarTemplate>
   <h1 class="display-1"><i class="fas fa-sync fa-spin"></i></h1>
 </ng-template>
