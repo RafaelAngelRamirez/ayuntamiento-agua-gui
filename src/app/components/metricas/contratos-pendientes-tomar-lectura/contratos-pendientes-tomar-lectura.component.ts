@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ChartOptions, ChartType } from "chart.js";
 import { Label } from "ng2-charts";
 import { ChartPluginsService } from "../../../services/chart-plugins.service";
+import { ExcelService } from "../../../service/excel.service";
 import {
   MetricasService,
   ContratosPendientesPorTomarLectura,
@@ -16,6 +17,7 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
   datos!: ContratosPendientesPorTomarLectura;
   leyenda = "";
   constructor(
+    private excelService: ExcelService,
     private chartPluginsServic: ChartPluginsService,
     private metricasService: MetricasService
   ) {}
@@ -98,5 +100,36 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
     let d = datos.rutasPedientesPorTomarLectura.find((x) => x._id === id);
     if (d) return true;
     return false;
+  }
+
+  excelRutasEnElSistema(datos: ContratosPendientesPorTomarLectura) {
+    this.excelService.exportAsExcelFile(
+      datos.rutasEnElSistema,
+      "RUTAS_EN_EL_SISTEMA"
+    );
+  }
+
+  excelRutasPendientesPorTomarLectura(
+    datos: ContratosPendientesPorTomarLectura
+  ) {
+    let datosOrdenados = datos.rutasPedientesPorTomarLectura.reduce(
+      (previus, current) => {
+        let id = current._id;
+        let nuevos: any = current.contratos.map((x) => {
+          return {
+            contrato: x,
+            ruta: id,
+          };
+        });
+
+        return previus.concat(nuevos);
+      },
+      []
+    );
+
+    this.excelService.exportAsExcelFile(
+      datosOrdenados,
+      "RUTAS_PENDIENTES_TOMAR_LECTURA"
+    );
   }
 }

@@ -82,12 +82,30 @@
 
 <hr />
 
-<div class="small text-muted">
-  <a (click)="this.cargar()" href="javascript:void(0)">
+<div class="small">
+  <a (click)="this.cargar()" href="javascript:void(0)" class="text-muted ml-3">
     <i [ngClass]="{ 'fa-spin': cargando }" class="fas fa-sync"></i>
     Recargar
   </a>
 </div>
+
+<a
+  (click)="excelRutasEnElSistema(datos)"
+  class="btn btn-success btn-xs ml-3"
+  href="javascript:void(0)"
+  role="button"
+>
+  <i class="fas fa-file-excel"></i> Rutas en el sistema
+</a>
+
+<a
+  (click)="excelRutasPendientesPorTomarLectura(datos)"
+  class="btn btn-success btn-xs ml-3"
+  href="javascript:void(0)"
+  role="button"
+>
+  <i class="fas fa-file-excel"></i> Rutas pendientes por tomar lectura
+</a>
 
 <ng-template #cargaTemplate>
   <h1 class="display-1 text-center w-100">
