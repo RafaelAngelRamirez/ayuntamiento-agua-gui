@@ -4,6 +4,7 @@ import { MetricasService } from "../../../services/metricas.service";
 import { ParametrosService } from "../../../services/parametros.service";
 import { Lecturista } from "../../../models/usuario.model";
 import { ExcelService } from "../../../service/excel.service";
+import { FechaService, FechaDesglosada } from "../../../services/fecha.service";
 
 @Component({
   selector: "app-promedio-de-tiempo-entre-lecturas",
@@ -15,6 +16,7 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
   cargando = false;
 
   constructor(
+    private fechaService: FechaService,
     private excelSerivce: ExcelService,
     private metricasServices: MetricasService,
     private ParametrosService: ParametrosService
@@ -283,7 +285,37 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
   }
 
   exportarExcel(datos: any) {
-    console.log("entro")
-    this.excelSerivce.exportAsExcelFile(datos, "ESTADISTICAS_LECTURISTAS");
+    let datosTransformados: any[] = [];
+
+    Object.keys(datos).forEach((id) => {
+      let lecturista = datos[id];
+      Object.keys(lecturista).forEach((dia) => {
+        datosTransformados = datosTransformados.concat(lecturista[dia]);
+      });
+    });
+
+    datosTransformados = datosTransformados.map((x) => {
+      let datos: any = {
+        fechaLectura: this.fechaService.desgloseDeFecha(x.FechaLectura),
+        fechaAnterior: this.fechaService.desgloseDeFecha(x.anterior),
+        fechaActual: this.fechaService.desgloseDeFecha(x.actual),
+      };
+
+      Object.keys(datos).forEach((x) => {
+        datos[x] = this.fechaService.fechaConPrefijo(datos[x], x);
+      });
+
+      return {
+        ...x,
+        ...datos.fechaLectura,
+        ...datos.fechaAnterior,
+        ...datos.fechaActual,
+      };
+    });
+
+    this.excelSerivce.exportAsExcelFile(
+      datosTransformados,
+      "ESTADISTICAS_LECTURISTAS"
+    );
   }
 }
