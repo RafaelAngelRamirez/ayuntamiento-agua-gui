@@ -90,4 +90,13 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
 
     return d ? d.contratos.length : 0;
   }
+
+  rutaRecibeLectura(
+    id: string,
+    datos: ContratosPendientesPorTomarLectura
+  ): boolean {
+    let d = datos.rutasPedientesPorTomarLectura.find((x) => x._id === id);
+    if (d) return true;
+    return false;
+  }
 }

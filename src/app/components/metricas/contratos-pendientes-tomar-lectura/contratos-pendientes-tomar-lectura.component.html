@@ -43,37 +43,42 @@
 
 <hr />
 
+<small class="text-muted">
+  <i class="fas fa-asterisk"></i> Lecturas pendientes solo de la vigencia y
+  periodo actuales
+</small>
+
+<hr />
+
 <table *ngIf="datos" class="table">
   <thead>
     <tr>
       <th>Ruta</th>
+      <th>Recibe lectura</th>
       <th>Total</th>
       <th>Pendientes</th>
-      <th>% avance</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let item of datos?.rutasEnElSistema">
       <td>{{ item._id }}</td>
+      <td>
+        <i
+          *ngIf="rutaRecibeLectura(item._id, datos)"
+          class="fas fa-check-circle text-success"
+        ></i>
+
+        <ng-template #check>
+          <i class="fas fa-circle text-muted"></i>
+        </ng-template>
+      </td>
       <td>{{ item.total | number }}</td>
       <td>
-        {{ item.total - obtenerFaltantesLectura(item._id, datos) }}
-      </td>
-      <td>
-        {{
-          obtenerFaltantesLectura(item._id, datos) / item.total
-            | percent: "0.0-2"
-        }}
+        {{ obtenerFaltantesLectura(item._id, datos) }}
       </td>
     </tr>
   </tbody>
 </table>
-
-<hr />
-
-<small class="text-muted">
-  Lecturas pendientes solo de la vigencia y periodo actuales
-</small>
 
 <hr />
 
