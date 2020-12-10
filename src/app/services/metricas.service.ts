@@ -65,18 +65,13 @@ export class MetricasService {
 export interface ContratosPendientesPorTomarLectura {
   totalDeContratos: number;
   lecturasTomadas: number;
+  pendientesTomarLectura: number;
   rutasPedientesPorTomarLectura: {
     _id: string;
     contratos: string[];
   }[];
   rutasEnElSistema: {
     _id: string;
-    total: number;
-  }[];
-
-  rutasPendientesPorTomarContrato: {
-    _id: string;
-    contratos: string[];
     total: number;
   }[];
 }
