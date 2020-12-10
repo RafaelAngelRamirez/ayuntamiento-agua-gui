@@ -18,7 +18,7 @@
       <a
         (click)="graficaRutasConLecturasPendientes(this.datos)"
         href="javascript:void(0)"
-        >Lecturas pendientes</a
+        >Lecturas pendientes [ {{ datos?.pendientesTomarLectura | number }} ]</a
       >
     </li>
   </ul>
@@ -43,7 +43,7 @@
 
 <hr />
 
-<table class="table">
+<table *ngIf="datos" class="table">
   <thead>
     <tr>
       <th>Ruta</th>
@@ -57,9 +57,14 @@
       <td>{{ item._id }}</td>
       <td>{{ item.total | number }}</td>
       <td>
-        {{ obtenerFaltantesLectura(item._id) }}
+        {{ item.total - obtenerFaltantesLectura(item._id, datos) }}
       </td>
-      <td>{{ obtenerFaltantesLectura(item._id) / item.total | percent }}</td>
+      <td>
+        {{
+          obtenerFaltantesLectura(item._id, datos) / item.total
+            | percent: "0.0-2"
+        }}
+      </td>
     </tr>
   </tbody>
 </table>
