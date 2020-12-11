@@ -7,6 +7,8 @@ import {
 
 import { ParametrosService } from "../../../services/parametros.service";
 import { ChartPluginsService } from "../../../services/chart-plugins.service";
+import { ExcelService } from "../../../service/excel.service";
+import { FechaService } from "../../../services/fecha.service";
 import {
   IncidenciaService,
   Incidencia,
@@ -33,7 +35,7 @@ export class LecturasAnormalesComponent implements OnInit {
   chartOptions: ChartOptions = {
     responsive: true,
     layout: {
-      padding: 50,
+      padding: 130,
     },
     legend: {
       position: "right",
@@ -51,6 +53,8 @@ export class LecturasAnormalesComponent implements OnInit {
   chartPlugins = [this.chartPluginsService.outLabels];
 
   constructor(
+    private fechaService: FechaService,
+    private excelService: ExcelService,
     private chartPluginsService: ChartPluginsService,
     private parametroService: ParametrosService,
     private incidenciasService: IncidenciaService,
@@ -124,5 +128,50 @@ export class LecturasAnormalesComponent implements OnInit {
       "Lecturas que se generaron por arriba del promedio definido en el contrato";
     this.chartLabels = datos.fueraDePromedio.map((x) => x._id);
     this.chartData = datos.fueraDePromedio.map((x) => x.total);
+  }
+
+  convertirFechas = (x: any) => {
+    return {
+      ...x,
+      ...this.fechaService.fechaConPrefijo(
+        this.fechaService.desgloseDeFecha(x.FechaLectura),
+        "FechaLectura"
+      ),
+    };
+  };
+
+  excelIncidencias(datos: LecturasAnormales) {
+    let incidencias = datos.incidencias
+      .reduce((previus, current) => {
+        return previus.concat(current.detalles);
+      }, new Array())
+      .map((x) => x.lectura)
+      .map((x) => this.convertirFechas(x));
+
+    this.excelService.exportAsExcelFile(incidencias, "INCIDENCIAS");
+  }
+
+  excelImpedimentos(datos: LecturasAnormales) {
+    let impedimentos = datos.impedimentos
+      .reduce((previus, current) => {
+        return previus.concat(current.detalles);
+      }, new Array())
+      .map((x) => x.lectura)
+      .map((x) => this.convertirFechas(x));
+    this.excelService.exportAsExcelFile(impedimentos, "IMPEDIMENTOS");
+  }
+
+  excelFueraDePromedio(datos: LecturasAnormales) {
+    let d: any[] = datos.fueraDePromedio.reduce((previus, current) => {
+      return previus.concat(
+        current.detalles.map((x: any) => {
+          x["ruta"] = current._id;
+          return x
+        })
+      );
+    }, new Array())
+    .map((x) => this.convertirFechas(x));
+
+    this.excelService.exportAsExcelFile(d, "FUERA_DE_PROMEDIO");
   }
 }
