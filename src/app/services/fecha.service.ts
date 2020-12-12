@@ -1,10 +1,14 @@
+import { DatePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
 
 @Injectable({
   providedIn: "root",
 })
 export class FechaService {
-  constructor() {}
+  constructor(
+    // Lo dejamos publico para tener todas las fechas disponibles
+    // en este servicio
+    public datePipe: DatePipe) {}
 
   /**
    *Retorna la feha desglosada en dia, mes, anio, hora, minutos, y segundos
@@ -36,7 +40,7 @@ export class FechaService {
   }
 
   /**
-   *Agrega un prefijo a la estructura de FechaDesglosada para 
+   *Agrega un prefijo a la estructura de FechaDesglosada para
    * presentar los datos con mayor comodidad
    *
    * @param {FechaDesglosada} fechaDesglosada
@@ -51,6 +55,18 @@ export class FechaService {
       a[`${prefijo}_${b}`] = fecha[b];
       return a;
     }, {});
+  }
+
+  /**
+   * Convertirmos al formato 2020-20-02
+   * @param {string} fecha
+   * @returns {string}
+   * @memberof FechaService
+   */
+  fechaParaFiltros(fecha: string): string {
+    let f = this.datePipe.transform(fecha, "yyyy-MM-dd");
+    if (!f) return "";
+    return f;
   }
 }
 
