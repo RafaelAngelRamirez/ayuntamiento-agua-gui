@@ -23,6 +23,9 @@ import { DineroRecaudadoComponent } from "../components/metricas/dinero-recaudad
 import { ContratosPendientesTomarLecturaComponent } from "../components/metricas/contratos-pendientes-tomar-lectura/contratos-pendientes-tomar-lectura.component";
 import { LecturasAnormalesComponent } from "../components/metricas/lecturas-anormales/lecturas-anormales.component";
 import "chartjs-plugin-piechart-outlabels";
+import { FiltrosMetricasComponent } from '../components/metricas/filtros-metricas/filtros-metricas.component'
+
+
 
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
@@ -51,6 +54,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DineroRecaudadoComponent,
     ContratosPendientesTomarLecturaComponent,
     LecturasAnormalesComponent,
+    FiltrosMetricasComponent
   ],
   exports: [
     FullComponent,
@@ -73,6 +77,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DineroRecaudadoComponent,
     ContratosPendientesTomarLecturaComponent,
     LecturasAnormalesComponent,
+    FiltrosMetricasComponent
   ],
 
   imports: [
