@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from "@angular/core";
-import { CommonModule, CurrencyPipe, DecimalPipe } from "@angular/common";
+import { CommonModule, CurrencyPipe, DatePipe, DecimalPipe } from "@angular/common";
 import { SpinnerComponent } from "./spinner.component";
 import { FullComponent } from "app/layouts/full/full.component";
 import { NavigationComponent } from "./header-navigation/navigation.component";
@@ -97,6 +97,7 @@ export class SharedModule {
         TienePermisoPipe,
         DecimalPipe,
         CurrencyPipe,
+        DatePipe
       ],
     };
   }
