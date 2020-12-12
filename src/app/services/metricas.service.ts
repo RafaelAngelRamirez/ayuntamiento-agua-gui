@@ -21,9 +21,9 @@ export class MetricasService {
     );
   }
 
-  promedioDeTiempo(): any {
+  promedioDeTiempo(filtros: string = ""): any {
     return this.http
-      .get(this.base.concat("/promedio-tiempo-entre-lecturas"))
+      .get(this.base.concat("/promedio-tiempo-entre-lecturas").concat(filtros))
       .pipe(
         catchError((err) => {
           return throwError(err);
@@ -31,18 +31,22 @@ export class MetricasService {
       );
   }
 
-  dineroRecaudado(): any {
-    return this.http.get(this.base.concat("/dinero-recaudado")).pipe(
-      catchError((err) => {
-        return throwError(err);
-      })
-    );
+  dineroRecaudado(filtros: string = ""): any {
+    return this.http
+      .get(this.base.concat("/dinero-recaudado").concat(filtros))
+      .pipe(
+        catchError((err) => {
+          return throwError(err);
+        })
+      );
   }
 
-  contratosPendientesTomarLectura() {
+  contratosPendientesTomarLectura(filtros: string = "") {
     return this.http
       .get<ContratosPendientesPorTomarLectura>(
-        this.base.concat("/contratos-pendientes-por-tomar-lectura")
+        this.base
+          .concat("/contratos-pendientes-por-tomar-lectura")
+          .concat(filtros)
       )
       .pipe(
         catchError((err) => {
@@ -51,9 +55,11 @@ export class MetricasService {
       );
   }
 
-  lecturasAnormales() {
+  lecturasAnormales(filtros: string = "") {
     return this.http
-      .get<LecturasAnormales>(this.base.concat("/lecturas-anormales"))
+      .get<LecturasAnormales>(
+        this.base.concat("/lecturas-anormales").concat(filtros)
+      )
       .pipe(
         catchError((err) => {
           return throwError(err);
