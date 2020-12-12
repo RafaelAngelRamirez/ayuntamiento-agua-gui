@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 export class PeriodoAMesesService {
-  private equivalencia = [
+  public readonly equivalencia = [
     "Enero-Febrero",
     "Marzo-Abril",
     "Mayo-Junio",
