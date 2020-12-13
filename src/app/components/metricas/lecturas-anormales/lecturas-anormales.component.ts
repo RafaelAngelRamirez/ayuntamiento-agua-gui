@@ -140,7 +140,8 @@ export class LecturasAnormalesComponent implements OnInit {
     };
   };
 
-  excelIncidencias(datos: LecturasAnormales) {
+  excelIncidencias(datos: LecturasAnormales | undefined) {
+    if(!datos) return
     let incidencias = datos.incidencias
       .reduce((previus, current) => {
         return previus.concat(current.detalles);
@@ -151,7 +152,8 @@ export class LecturasAnormalesComponent implements OnInit {
     this.excelService.exportAsExcelFile(incidencias, "INCIDENCIAS");
   }
 
-  excelImpedimentos(datos: LecturasAnormales) {
+  excelImpedimentos(datos: LecturasAnormales | undefined) {
+    if(!datos) return
     let impedimentos = datos.impedimentos
       .reduce((previus, current) => {
         return previus.concat(current.detalles);
@@ -161,7 +163,8 @@ export class LecturasAnormalesComponent implements OnInit {
     this.excelService.exportAsExcelFile(impedimentos, "IMPEDIMENTOS");
   }
 
-  excelFueraDePromedio(datos: LecturasAnormales) {
+  excelFueraDePromedio(datos: LecturasAnormales | undefined) {
+    if(!datos) return
     let d: any[] = datos.fueraDePromedio.reduce((previus, current) => {
       return previus.concat(
         current.detalles.map((x: any) => {
