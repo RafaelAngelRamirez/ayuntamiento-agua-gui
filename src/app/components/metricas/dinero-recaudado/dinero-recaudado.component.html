@@ -7,6 +7,13 @@
   </div>
 </div>
 
+
+<app-filtros-metricas 
+(cadena)="cadenaBusqueda=$event"
+>
+  
+</app-filtros-metricas>
+
 <h1 class="display-3 text-center font-weight-bold">
   <span *ngIf="!cargando"> ${{ total | number: "0.0-2" }} </span>
 

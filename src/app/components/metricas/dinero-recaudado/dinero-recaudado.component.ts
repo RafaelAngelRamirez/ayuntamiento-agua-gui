@@ -12,6 +12,9 @@ export class DineroRecaudadoComponent implements OnInit {
   total: number = 0;
   datos: any;
   mt3Consumidos: any;
+
+  cadenaBusqueda: string = "";
+
   constructor(
     private metricasService: MetricasService,
     private excelService: ExcelService
@@ -23,11 +26,11 @@ export class DineroRecaudadoComponent implements OnInit {
 
   cargar() {
     this.cargando = true;
-    this.metricasService.dineroRecaudado().subscribe(
+    this.metricasService.dineroRecaudado(this.cadenaBusqueda).subscribe(
       (datos: any) => {
         this.datos = datos;
         this.total = datos.recaudacion;
-        this.mt3Consumidos = datos.consumoMt3
+        this.mt3Consumidos = datos.consumoMt3;
         this.cargando = false;
       },
       () => {
@@ -36,9 +39,7 @@ export class DineroRecaudadoComponent implements OnInit {
     );
   }
 
-
   exportarExcel(datos: any) {
     this.excelService.exportAsExcelFile(datos.detalles, "RECAUDACION");
   }
-
 }
