@@ -64,6 +64,7 @@ export class FechaService {
    * @memberof FechaService
    */
   fechaParaFiltros(fecha: string): string {
+    if (fecha==="") return "";
     let f = this.datePipe.transform(fecha, "yyyy-MM-dd");
     if (!f) return "";
     return f;
