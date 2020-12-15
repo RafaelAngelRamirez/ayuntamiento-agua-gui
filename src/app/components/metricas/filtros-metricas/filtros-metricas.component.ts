@@ -5,6 +5,8 @@ import { PeriodoAMesesService } from "../../../services/periodo-ameses.service";
 import { Lecturista } from "../../../models/usuario.model";
 import { ParametrosService } from "../../../services/parametros.service";
 import { FechaService } from "../../../services/fecha.service";
+import { NotificacionesService } from "../../../services/notificaciones.service";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
 @Component({
   selector: "app-filtros-metricas",
@@ -14,10 +16,18 @@ import { FechaService } from "../../../services/fecha.service";
 export class FiltrosMetricasComponent implements OnInit {
   @Output() cadena = new EventEmitter<string>();
 
+  carga = new BehaviorSubject<boolean>(false);
+
   lecturistas: Lecturista[] = [];
   periodos: { periodo: string; valor: number }[] = [];
 
+  vigenciaPeriodo: { vigencia: number; periodo: number } = {
+    vigencia: 0,
+    periodo: 0,
+  };
+
   constructor(
+    private notiService: NotificacionesService,
     private fechaService: FechaService,
     private parametrosService: ParametrosService,
     private periodoAMesesService: PeriodoAMesesService
@@ -25,7 +35,7 @@ export class FiltrosMetricasComponent implements OnInit {
   form = new FormGroup({
     fechaLimiteInferior: new FormControl(""),
     fechaLimiteSuperior: new FormControl(""),
-    vigencia: new FormControl(new Date().getFullYear()),
+    vigencia: new FormControl(""),
     periodo: new FormControl(""),
     lecturista: new FormControl(""),
     calle: new FormControl(""),
@@ -34,32 +44,70 @@ export class FiltrosMetricasComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.obtenerUsuariosSimapa();
+    this.obtenerPeriodosAMeses();
+    this.cambiosDeFormulario();
+    this.cargarPeriodoYVigencia();
+    this.escucharCargaExterna();
+  }
+
+  obtenerUsuariosSimapa() {
     this.parametrosService.obtenerUsuariosSimapa().subscribe((usa) => {
       this.lecturistas = usa;
     });
+  }
 
+  /**
+   *Creamos un BehaviorSubject para escuchar cuando un componente
+   * externo esta cargando. Lo obtenemos en el output de cadena.
+   *
+   * @memberof FiltrosMetricasComponent
+   */
+  escucharCargaExterna() {
+    this.carga.subscribe((cargando) => {
+      cargando ? this.form.disable() : this.form.enable();
+    });
+  }
+
+  cargarPeriodoYVigencia() {
+    this.parametrosService.cargarPeriodoVigencia().subscribe((datos) => {
+      this.vigenciaPeriodo = datos;
+      this.setVigenciaPeriodo(
+        this.vigenciaPeriodo.vigencia,
+        this.vigenciaPeriodo.periodo
+      );
+    });
+  }
+  cambiosDeFormulario() {
+    // Emitimos los eventos cuando haya un cambio en el formulario.
+    this.form.valueChanges.subscribe((values) => {
+      this.submit(values);
+    });
+  }
+
+  obtenerPeriodosAMeses() {
     let contador = 0;
     this.periodos = this.periodoAMesesService.equivalencia.map((x) => {
-      contador++
+      contador++;
       return {
         periodo: x,
         // Los periodos empiezan desde 1
         valor: contador,
       };
     });
+  }
 
-    // Emitimos los eventos cuando haya un cambio en el formulario.
-    this.form.valueChanges.subscribe((values) => {
-      this.submit(values);
-    });
-
-    this.parametrosService.cargarPeriodoVigencia().subscribe((datos)=>{
-      
-      this.form.get("vigencia")?.setValue(datos.vigencia)
-      this.form.get("periodo")?.setValue(datos.periodo)
-
-    } )
-
+  setVigenciaPeriodo(vigencia: number, periodo: number) {
+    // Por defecto dejamos la vigencia y periodos actuales
+    // cada vez que reiniciamos. Evitamos problemillas de rendimiento
+    this.form.patchValue(
+      {
+        vigencia,
+        periodo,
+      },
+      { emitEvent: false }
+    );
+    this.form.updateValueAndValidity();
   }
 
   submit(modelo: any) {
@@ -78,8 +126,7 @@ export class FiltrosMetricasComponent implements OnInit {
       .filter((x) => x)
       .join("&");
 
-    cadena = encodeURI("?" + cadena);
-    console.log(cadena);
+    cadena = cadena.length ? encodeURI("?" + cadena) : "";
     this.cadena.emit(cadena);
   }
 
@@ -89,5 +136,13 @@ export class FiltrosMetricasComponent implements OnInit {
 
   limpiar() {
     this.form.reset();
+    //Para evitar problemas de rendimiento siempre reiniciamos en el periodo
+    // y vigencias actuales.
+    this.setVigenciaPeriodo(
+      this.vigenciaPeriodo.vigencia,
+      this.vigenciaPeriodo.periodo
+    );
+
+    this.notiService.toast.info("Se reiniciaron los datos del filtro. ");
   }
 }
