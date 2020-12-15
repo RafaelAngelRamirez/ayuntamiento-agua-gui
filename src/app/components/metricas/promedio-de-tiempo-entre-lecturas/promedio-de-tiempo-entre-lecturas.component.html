@@ -32,6 +32,7 @@
   </ul>
 </div>
 
+<app-filtros-metricas (cadena)="cadenaBusqueda = $event"></app-filtros-metricas>
 <div
   *ngIf="!cargando; else cargarTemplate"
   style="height: 350px"
@@ -75,7 +76,7 @@
 <small
   ><a
     title="Volver a cargar"
-    (click)="cargar()"
+    (click)="cargar(cadenaBusqueda)"
     class="text-muted"
     href="javascript:void(0)"
     role="button"

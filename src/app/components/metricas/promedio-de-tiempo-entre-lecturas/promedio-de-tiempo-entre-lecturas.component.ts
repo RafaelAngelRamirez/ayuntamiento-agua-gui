@@ -28,25 +28,36 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
 
   chartColors: Array<object> = [];
   chartLegend = true;
-  chartType = "";
+  chartType = "bar";
 
   tituloGrafica: string = "...";
   notas: string = "";
   lecturistas: Lecturista[] = [];
 
+  cadenaBusqueda: string = "";
   ngOnInit(): void {
+    this.obtenerUsuariosSimapa();
+
+    let intervalo = setInterval(() => {
+      if (this.cadenaBusqueda !== "") {
+        clearInterval(intervalo);
+        this.cargar(this.cadenaBusqueda);
+      }
+    }, 100);
+  }
+
+  obtenerUsuariosSimapa() {
     this.ParametrosService.obtenerUsuariosSimapa().subscribe((lecturistas) => {
       this.lecturistas = lecturistas;
     });
-    this.cargar();
   }
 
-  cargar() {
+  cargar(cadena: string) {
+    console.log("entro a cargar()")
     this.cargando = true;
-    this.metricasServices.promedioDeTiempo().subscribe(
+    this.metricasServices.promedioDeTiempo(cadena).subscribe(
       (datos: any) => {
         this.datos = datos;
-
         this.graficaPromedioDeTiempoEntreLecturas(datos);
         this.cargando = false;
       },
