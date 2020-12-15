@@ -22,7 +22,7 @@ export class GpsService {
    * @memberof GpsService
    */
   errorFATAL = (err: errorFATAL) => {
-    console.log("el error", err)
+    console.log("ERROR GPS: ", err)
     let error = err.err as PositionError;
     if (error?.PERMISSION_DENIED === 1)
       this.notiService.toast.error(

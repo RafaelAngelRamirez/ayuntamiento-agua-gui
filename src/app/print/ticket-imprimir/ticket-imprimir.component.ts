@@ -202,7 +202,6 @@ export class TicketImprimirComponent implements OnInit {
           : "",
       };
 
-      console.log(`paraTicket`, paraTicket);
       this.paraTicket.emit(paraTicket);
     }, 100);
   }

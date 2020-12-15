@@ -469,7 +469,6 @@ export class ParametrosComponent implements OnInit {
       this.subiendoLecturasASimapa = true;
       this.simapaService.subirLecturasASimapa().subscribe(
         (r: any) => {
-          console.log(r);
           this.subiendoLecturasASimapa = false;
           let rechazos = r.rechazados.length;
           if (rechazos > 0) {
@@ -479,7 +478,6 @@ export class ParametrosComponent implements OnInit {
               } `
             );
 
-            console.log("Contratos rechazados: ", r.rechazados);
           }
           let correctos = r.correctos.length;
           if (correctos > 0) {
@@ -613,7 +611,6 @@ export class ParametrosComponent implements OnInit {
     this.parametrosService.archivarContratos().subscribe(
       (datos: any) => {
         let restantes = datos.contratosRestantes;
-        console.log(`contratosRestantes`,restantes)
         if (restantes > 0) {
           this.notiService.toast.correcto(
             `${restantes} contratos por sincronizar. No cierres el navegador`

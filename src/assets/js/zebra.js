@@ -348,7 +348,6 @@ var BrowserPrint = (function () {
   };
   e.loadFileFromUrl = function (a, c, d) {
     request = b("get", a);
-    console.log("ResponseType: " + request.responseType);
     request.responseType = "blob";
     h(request, c, d);
     request.send();

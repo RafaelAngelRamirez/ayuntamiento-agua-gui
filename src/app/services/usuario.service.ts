@@ -82,7 +82,6 @@ export class UsuarioService {
   }
 
   save(usuario: Usuario) {
-    console.log(usuario);
     return this.http.post<Usuario>(this.base, usuario).pipe(
       catchError((x) => {
         console.log(x);
