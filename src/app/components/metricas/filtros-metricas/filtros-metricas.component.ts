@@ -26,6 +26,8 @@ export class FiltrosMetricasComponent implements OnInit {
     periodo: 0,
   };
 
+  filtrosSeleccionados: (string | null)[] = [];
+
   constructor(
     private notiService: NotificacionesService,
     private fechaService: FechaService,
@@ -114,7 +116,7 @@ export class FiltrosMetricasComponent implements OnInit {
     // Si es correcto generamos una cadena de texto formateada como
     // parametros de url.
 
-    let cadena = Object.keys(modelo)
+    this.filtrosSeleccionados = Object.keys(modelo)
       .map((x) => {
         let esFecha = false;
         if (x === "fechaLimiteInferior" || x === "fechaLimiteSuperior")
@@ -123,8 +125,9 @@ export class FiltrosMetricasComponent implements OnInit {
         if (!modelo[x]) return null;
         return `${x}=${esFecha ? this.convertirFecha(modelo[x]) : modelo[x]}`;
       })
-      .filter((x) => x)
-      .join("&");
+      .filter((x) => x);
+
+    let cadena = this.filtrosSeleccionados.join("&");
 
     cadena = cadena.length ? encodeURI("?" + cadena) : "";
     this.cadena.emit(cadena);
