@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { MetricasService } from "../../../services/metricas.service";
 import { ExcelService } from "../../../service/excel.service";
+import { BehaviorSubject } from "rxjs";
 
 @Component({
   selector: "app-dinero-recaudado",
@@ -9,6 +10,7 @@ import { ExcelService } from "../../../service/excel.service";
 })
 export class DineroRecaudadoComponent implements OnInit {
   cargando = false;
+
   total: number = 0;
   datos: any;
   mt3Consumidos: any;
@@ -21,12 +23,17 @@ export class DineroRecaudadoComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cargar();
+    let intervalon = setInterval(() => {
+      if (this.cadenaBusqueda !== "") {
+        clearInterval(intervalon);
+        this.cargar(this.cadenaBusqueda);
+      }
+    }, 100);
   }
 
-  cargar() {
+  cargar(cadenaBusqueda: string) {
     this.cargando = true;
-    this.metricasService.dineroRecaudado(this.cadenaBusqueda).subscribe(
+    this.metricasService.dineroRecaudado(cadenaBusqueda).subscribe(
       (datos: any) => {
         this.datos = datos;
         this.total = datos.recaudacion;

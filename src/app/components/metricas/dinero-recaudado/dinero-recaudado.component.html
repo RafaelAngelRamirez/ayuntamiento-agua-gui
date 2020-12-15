@@ -7,11 +7,7 @@
   </div>
 </div>
 
-
-<app-filtros-metricas 
-(cadena)="cadenaBusqueda=$event"
->
-  
+<app-filtros-metricas (cadena)="cadenaBusqueda=$event">
 </app-filtros-metricas>
 
 <h1 class="display-3 text-center font-weight-bold">
@@ -45,7 +41,7 @@
 <small class="w-100"
   ><a
     title="Volver a cargar"
-    (click)="cargar()"
+    (click)="cargar(cadenaBusqueda)"
     class="text-muted text-right"
     href="javascript:void(0)"
     role="button"
