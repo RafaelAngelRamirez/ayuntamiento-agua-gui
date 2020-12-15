@@ -2,7 +2,7 @@
   <a
     class="btn btn-outline-secondary btn-xs"
     data-toggle="collapse"
-    href="#filtro"
+    href="#{{id}}"
   >
     Mostrar / Ocultar filtros
   </a>
@@ -28,7 +28,7 @@
   </small>
 </div>
 
-<div class="collapse" id="filtro">
+<div class="collapse" id="{{id}}">
   <form [formGroup]="form">
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4">

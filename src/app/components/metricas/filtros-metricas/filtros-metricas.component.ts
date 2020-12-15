@@ -27,6 +27,7 @@ export class FiltrosMetricasComponent implements OnInit {
   };
 
   filtrosSeleccionados: (string | null)[] = [];
+  id = parseInt((Math.random() * 10)+"");
 
   constructor(
     private notiService: NotificacionesService,
