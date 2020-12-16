@@ -1,0 +1,60 @@
+<div class="d-flex">
+  <div>
+    <h3 class="card-title m-b-5">
+      <span class="lstick"></span>
+      Dinero recaudado
+    </h3>
+  </div>
+</div>
+
+<app-filtros-metricas (cadena)="cadenaBusqueda=$event">
+</app-filtros-metricas>
+
+<h1 class="display-3 text-center font-weight-bold">
+  <span *ngIf="!cargando"> ${{ total | number: "0.0-2" }} </span>
+
+  <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+</h1>
+
+<div class="d-flex">
+  <div>
+    <h3 class="card-title m-b-5">
+      <span class="lstick"></span>
+      Metros cúbicos consumidos
+    </h3>
+  </div>
+</div>
+
+<h1 class="text-center">
+  <span *ngIf="!cargando"> {{ mt3Consumidos | number }} m3 </span>
+  <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+</h1>
+
+<hr />
+<small class="text-muted">
+  <i class="fas fa-asterisk"></i> Los consumos con valores negativos son
+  omitidos por el filtro de manera automatica. Todos los datos aqui presentados
+  pueden variar contra el SIMAPA.</small
+>
+<hr />
+
+<small class="w-100"
+  ><a
+    title="Volver a cargar"
+    (click)="cargar(cadenaBusqueda)"
+    class="text-muted text-right"
+    href="javascript:void(0)"
+    role="button"
+    ><i [ngClass]="{ 'fa-spin': cargando }" class="fas fa-sync"></i>
+    Actualizar</a
+  ></small
+>
+
+<a
+  (click)="exportarExcel(datos)"
+  class="btn btn-success btn-xs ml-5"
+  href="javascript:void(0)"
+  role="button"
+>
+  <i class="fas fa-file-excel"></i
+></a>

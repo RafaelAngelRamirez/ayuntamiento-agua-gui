@@ -103,7 +103,6 @@ export class LecturaCrearComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe((dato) => {
       let conPara: string = dato.get("contrato") || "";
       this.cargandoContrato = true;
-      console.log(conPara);
 
       let resultado = (contrato: Contrato) => {
         this.contrato = contrato as Contrato;
@@ -156,7 +155,6 @@ export class LecturaCrearComponent implements OnInit {
           return;
         }
         this.parametrosGenerales = para.lecturista as Lecturista;
-        console.log(`this.parametrosGenerales`, this.parametrosGenerales);
       });
   }
 
@@ -260,7 +258,6 @@ export class LecturaCrearComponent implements OnInit {
         //Diez dias
 
         model.Contrato = this.contrato.Contrato;
-        console.log(this.parametrosGenerales);
 
         model.Vigencia =
           this.parametrosGenerales.parametros.rutas[0].VigenciaRuta + "";
@@ -293,7 +290,6 @@ export class LecturaCrearComponent implements OnInit {
 
         //Dejamos un espacio en blanco por que
         model.IdDispositivo = idDispositivo ? idDispositivo : " ";
-        console.log(`idDispositivo`, idDispositivo);
 
         // GPS
         model.longitud = position.coords.longitude;
@@ -315,7 +311,6 @@ export class LecturaCrearComponent implements OnInit {
           Number(this.contrato.PeriodoAnterior)
         );
 
-        console.log("importe: ", model.importe);
         if (this.modoCalculadora) {
           this.notiService.toast.info(
             `[ MODO CALCULADORA ] | IMPORTE:$${model.importe}`
@@ -409,7 +404,6 @@ export class LecturaCrearComponent implements OnInit {
     // la conexion
 
     this.guardandoLectura = true;
-    // return console.log(this.contrato);
     this.constratoService.offline.update(this.contrato).subscribe(
       () => {
         //  Remplazamos los datos guardados en memoria.

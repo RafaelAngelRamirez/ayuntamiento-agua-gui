@@ -189,7 +189,6 @@ export class UsuarioCrearModificarComponent implements OnInit {
   }
 
   modificarDispositivoIPhone(event: boolean) {
-    console.log(event);
     this.cargando = true;
     this.usuarioSerivce.updateIPhone(this.usuario._id, event).subscribe(
       (usuario) => {

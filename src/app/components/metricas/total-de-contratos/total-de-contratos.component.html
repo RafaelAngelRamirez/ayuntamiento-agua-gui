@@ -1,0 +1,35 @@
+<div class="d-flex">
+  <div>
+    <h3 class="card-title m-b-5">
+      <span class="lstick"></span>
+      Contratos registrados
+    </h3>
+  </div>
+</div>
+
+<h1 class="display-3 text-center font-weight-bold">
+  <span *ngIf="!cargando">
+    {{ totalContratos | number }}
+  </span>
+
+  <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+</h1>
+
+<hr />
+<div class="small text-muted">
+  <i class="fas fa-asterisk"></i> El total de contratos registrados en la
+  aplicación.
+</div>
+<hr />
+
+<small class="w-100"
+  ><a
+    title="Volver a cargar"
+    (click)="cargar()"
+    class="text-muted text-right"
+    href="javascript:void(0)"
+    role="button"
+    ><i [ngClass]="{ 'fa-spin': cargando }" class="fas fa-sync"></i>
+    Actualizar</a
+  ></small
+>

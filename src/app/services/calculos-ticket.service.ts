@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Lectura, Contrato } from "./contrato.service";
-import { Lecturista, Tarifas, ParametrosSIMAPA } from '../models/usuario.model'
+import { Lecturista, Tarifas, ParametrosSIMAPA } from "../models/usuario.model";
 
 @Injectable({
   providedIn: "root",
@@ -62,8 +62,6 @@ export class CalculosTicketService {
       return x.IdTarifa.trim() === IdTarifa.trim();
     });
 
-    console.log(`tarifas`, tarifas);
-
     //La cantidad de periodos que se estan cobrando.
     let periodosGenerados = this.calcularPeriodo(
       vigenciaActual,
@@ -76,8 +74,6 @@ export class CalculosTicketService {
 
     // El consumo que viene de la diferencia de la lectura anterior y la lectura actual.
     let consumoActualPorMes = lectura.ConsumoMts3 / mesesGenerados;
-
-    console.log(`consumoActual`, consumoActualPorMes);
 
     // let servicios = [];
     // Obtenemos aguasResiduales
@@ -92,10 +88,6 @@ export class CalculosTicketService {
     let infrastructura = parametros.infrastructura[0]
       ? parametros.infrastructura[0].Porcentaje
       : null;
-
-    console.log(`aguasResiduales`, aguasResiduales);
-    console.log(`drenaje`, drenaje);
-    console.log(`infrastructura`, infrastructura);
 
     // //Recorremos las tarifas
     let importeTotal = 0;
@@ -149,25 +141,17 @@ export class CalculosTicketService {
       desglose.importeRango = subImporte;
       desgloses.push(desglose);
     }
-    console.log("desglose", desgloses);
-
     // Sumamos los porcentajes de servicios
 
     let importeAguasResiduales = aguasResiduales
       ? importeTotal * (aguasResiduales / 100)
       : 0;
 
-    console.log(`importeAguasResiduales`, importeAguasResiduales);
-
     let importeInfrastructura = infrastructura
       ? importeTotal * (infrastructura / 100)
       : 0;
 
-    console.log(`importeInfrastructura`, importeInfrastructura);
-
     let importeDrenaje = drenaje ? importeTotal * (drenaje / 100) : 0;
-
-    console.log(`importeDrenaje`, importeDrenaje);
 
     let granTotal =
       (importeTotal +

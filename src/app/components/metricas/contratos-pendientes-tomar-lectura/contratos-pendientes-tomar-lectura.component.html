@@ -1,0 +1,114 @@
+<div class="d-flex">
+  <div>
+    <h3 class="card-title m-b-5">
+      <span class="lstick"></span>
+      {{ leyenda }}
+    </h3>
+  </div>
+</div>
+
+<div class="div">
+  <ul class="list-inline">
+    <li class="list-inline-item">
+      <a (click)="graficaRutas(this.datos)" href="javascript:void(0)"
+        >Contratos por ruta</a
+      >
+    </li>
+    <li class="list-inline-item">
+      <a
+        (click)="graficaRutasConLecturasPendientes(this.datos)"
+        href="javascript:void(0)"
+        >Lecturas pendientes [ {{ datos?.pendientesTomarLectura | number }} ]</a
+      >
+    </li>
+  </ul>
+</div>
+
+<ng-container *ngIf="!cargando; else cargaTemplate">
+  <div class="chart">
+    <canvas
+      style="width: 1000xp !important"
+      baseChart
+      [data]="chartData"
+      [labels]="chartLabels"
+      [chartType]="chartType"
+      [options]="chartOptions"
+      [colors]="chartColors"
+      [legend]="chartLegend"
+      [plugins]="chartPlugins"
+    >
+    </canvas>
+  </div>
+</ng-container>
+
+<hr />
+
+<small class="text-muted">
+  <i class="fas fa-asterisk"></i> Lecturas pendientes solo de la vigencia y
+  periodo actuales
+</small>
+
+<hr />
+
+<table *ngIf="datos" class="table">
+  <thead>
+    <tr>
+      <th>Ruta</th>
+      <th>Recibe lectura</th>
+      <th>Total</th>
+      <th>Pendientes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of datos?.rutasEnElSistema">
+      <td>{{ item._id }}</td>
+      <td>
+        <i
+          *ngIf="rutaRecibeLectura(item._id, datos)"
+          class="fas fa-check-circle text-success"
+        ></i>
+
+        <ng-template #check>
+          <i class="fas fa-circle text-muted"></i>
+        </ng-template>
+      </td>
+      <td>{{ item.total | number }}</td>
+      <td>
+        {{ obtenerFaltantesLectura(item._id, datos) }}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<div class="small">
+  <a (click)="this.cargar()" href="javascript:void(0)" class="text-muted ml-3">
+    <i [ngClass]="{ 'fa-spin': cargando }" class="fas fa-sync"></i>
+    Recargar
+  </a>
+</div>
+
+<a
+  (click)="excelRutasEnElSistema(datos)"
+  class="btn btn-success btn-xs ml-3"
+  href="javascript:void(0)"
+  role="button"
+>
+  <i class="fas fa-file-excel"></i> Rutas en el sistema
+</a>
+
+<a
+  (click)="excelRutasPendientesPorTomarLectura(datos)"
+  class="btn btn-success btn-xs ml-3"
+  href="javascript:void(0)"
+  role="button"
+>
+  <i class="fas fa-file-excel"></i> Rutas pendientes por tomar lectura
+</a>
+
+<ng-template #cargaTemplate>
+  <h1 class="display-1 text-center w-100">
+    <i class="fas fa-sync fa-spin"></i>
+  </h1>
+</ng-template>

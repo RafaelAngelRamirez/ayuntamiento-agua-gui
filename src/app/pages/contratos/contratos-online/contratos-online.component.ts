@@ -34,7 +34,6 @@ export class ContratosOnlineComponent implements OnInit {
           (contratos) => {
             this.contratos = contratos;
             this.buscando = false;
-            console.log(`this.buscando`, this.buscando);
             this.buscador.enable({ emitEvent: false });
           },
           (_) => {

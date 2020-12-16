@@ -1,0 +1,121 @@
+<div class="mb-3">
+  <a
+    class="btn btn-outline-secondary btn-xs"
+    data-toggle="collapse"
+    href="#{{id}}"
+  >
+    Mostrar / Ocultar filtros
+  </a>
+
+  <small
+    *ngIf="filtrosSeleccionados.length > 0"
+    style="font-size: 6pt; height: 30px"
+    class="alert alert-light ml-2 border-secondary"
+    ><b class="font-weight-bolder"> FILTROS ACTIVOS: </b>
+    <span class="mr-1" *ngFor="let i of filtrosSeleccionados">{{ i }}</span>
+  </small>
+
+  <small
+    *ngIf="filtrosSeleccionados.length < 1"
+    style="font-size: 6pt; height: 30px"
+    class="alert alert-danger ml-2 border-danger"
+  >
+    <span class="mr-1">
+      <i class="fas fa-exclamation-triangle"></i>
+      No definir ningún filtro para los datos puede tener problemas de
+      rendimiento.</span
+    >
+  </small>
+</div>
+
+<div class="collapse" id="{{id}}">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="form-group">
+          <input
+            formControlName="fechaLimiteInferior"
+            type="date"
+            class="form-control"
+          />
+          <small class="form-text text-muted">Fecha limite inferior</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="form-group">
+          <input
+            formControlName="fechaLimiteSuperior"
+            type="date"
+            class="form-control"
+          />
+          <small class="form-text text-muted">Fecha limite superior</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="form-group">
+          <input
+            formControlName="vigencia"
+            type="number"
+            class="form-control"
+          />
+          <small class="form-text text-muted">Vigencia</small>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="form-group">
+          <select formControlName="periodo" class="form-control">
+            <option [ngValue]="''"></option>
+            <option *ngFor="let item of periodos" [ngValue]="item.valor">
+              {{ item.periodo }}
+            </option>
+          </select>
+          <small class="form-text text-muted">Periodo</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="form-group">
+          <select formControlName="lecturista" class="form-control">
+            <option
+              *ngFor="let item of lecturistas"
+              [ngValue]="item.IdLecturista"
+            >
+              {{ item.NombreLecturista }}
+            </option>
+          </select>
+
+          <small class="form-text text-muted">Lecturista </small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="form-group">
+          <input formControlName="calle" type="text" class="form-control" />
+          <small class="form-text text-muted">Calle</small>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="form-group">
+          <input formControlName="colonia" type="text" class="form-control" />
+          <small class="form-text text-muted">Colonia</small>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="form-group">
+          <input formControlName="poblacion" type="text" class="form-control" />
+          <small class="form-text text-muted">Población</small>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <small
+    ><a (click)="limpiar()" class="text-mutex" href="javascript:void(0)">
+      <span class="text-danger"><i class="fas fa-trash"></i></span>
+      Limpiar</a
+    ></small
+  >
+</div>

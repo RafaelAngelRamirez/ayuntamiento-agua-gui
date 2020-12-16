@@ -1,8 +1,48 @@
 <div *ngIf="'administrador' | tienePermiso" class="row">
-  <div class="col-auto">
+  <div class="col-md-12">
     <div class="card shadow">
       <div class="card-body">
         <app-contratos-pendientes-sincronizar></app-contratos-pendientes-sincronizar>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-4">
+    <div class="card shadow">
+      <div class="card-body">
+        <app-total-de-contratos></app-total-de-contratos>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-8">
+    <div class="card shadow">
+      <div class="card-body">
+        <app-dinero-recaudado> </app-dinero-recaudado>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <app-promedio-de-tiempo-entre-lecturas></app-promedio-de-tiempo-entre-lecturas>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <app-contratos-pendientes-tomar-lectura></app-contratos-pendientes-tomar-lectura>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card shadow">
+      <div class="card-body">
+        <app-lecturas-anormales></app-lecturas-anormales>
       </div>
     </div>
   </div>
