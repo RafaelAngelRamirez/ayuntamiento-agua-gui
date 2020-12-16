@@ -1,34 +1,37 @@
-<div class="mb-3">
-  <a
-    class="btn btn-outline-secondary btn-xs"
-    data-toggle="collapse"
-    href="#{{id}}"
-  >
-    Mostrar / Ocultar filtros
-  </a>
-
-  <small
-    *ngIf="filtrosSeleccionados.length > 0"
-    style="font-size: 6pt; height: 30px"
-    class="alert alert-light ml-2 border-secondary"
-    ><b class="font-weight-bolder"> FILTROS ACTIVOS: </b>
-    <span class="mr-1" *ngFor="let i of filtrosSeleccionados">{{ i }}</span>
-  </small>
-
-  <small
-    *ngIf="filtrosSeleccionados.length < 1"
-    style="font-size: 6pt; height: 30px"
-    class="alert alert-danger ml-2 border-danger"
-  >
-    <span class="mr-1">
-      <i class="fas fa-exclamation-triangle"></i>
-      No definir ningún filtro para los datos puede tener problemas de
-      rendimiento.</span
+<div class="mb-3 row">
+  <div class="col-12 col-md-4">
+    <a
+      class="btn btn-outline-secondary btn-xs"
+      data-toggle="collapse"
+      href="#{{ id }}"
     >
-  </small>
+      Mostrar / Ocultar filtros
+    </a>
+  </div>
+  <div class="col-12 col-md-8">
+    <small
+      *ngIf="filtrosSeleccionados.length > 0"
+      style="font-size: 6pt; height: 30px"
+      class="border-secondary"
+      ><b class="font-weight-bolder"> FILTROS ACTIVOS: </b>
+      <span class="mr-1" *ngFor="let i of filtrosSeleccionados">{{ i }}</span>
+    </small>
+
+    <small
+      *ngIf="1 > filtrosSeleccionados.length"
+      style="font-size: 6pt; height: 30px"
+      class="alert alert-danger border-danger"
+    >
+      <span class="mr-1">
+        <i class="fas fa-exclamation-triangle"></i>
+        No definir ningún filtro para los datos puede tener problemas de
+        rendimiento.</span
+      >
+    </small>
+  </div>
 </div>
 
-<div class="collapse" id="{{id}}">
+<div class="collapse" id="{{ id }}">
   <form [formGroup]="form">
     <div class="row">
       <div class="col-12 col-md-6 col-lg-4">
