@@ -53,7 +53,6 @@ export class PromedioDeTiempoEntreLecturasComponent implements OnInit {
   }
 
   cargar(cadena: string) {
-    console.log("entro a cargar()")
     this.cargando = true;
     this.metricasServices.promedioDeTiempo(cadena).subscribe(
       (datos: any) => {
