@@ -1,5 +1,5 @@
-<div *ngIf="'administrador' | tienePermiso" class="row">
-  <div class="col-md-12">
+<div class="row">
+  <div *ngIf="'administrador' | tienePermiso" class="col-md-12">
     <div class="card shadow">
       <div class="card-body">
         <app-contratos-pendientes-sincronizar></app-contratos-pendientes-sincronizar>
@@ -7,7 +7,10 @@
     </div>
   </div>
 
-  <div class="col-12 col-lg-4">
+  <div
+    *ngIf="'metricas:total-contratos' | tienePermiso"
+    class="col-12 col-lg-4"
+  >
     <div class="card shadow">
       <div class="card-body">
         <app-total-de-contratos></app-total-de-contratos>
@@ -15,7 +18,10 @@
     </div>
   </div>
 
-  <div class="col-12 col-lg-8">
+  <div
+    *ngIf="'metricas:dinero-recaudado' | tienePermiso"
+    class="col-12 col-lg-8"
+  >
     <div class="card shadow">
       <div class="card-body">
         <app-dinero-recaudado> </app-dinero-recaudado>
@@ -23,7 +29,10 @@
     </div>
   </div>
 
-  <div class="col-12">
+  <div
+    *ngIf="'metricas:promedio-tiempo-entre-lecturas' | tienePermiso"
+    class="col-12"
+  >
     <div class="card shadow">
       <div class="card-body">
         <app-promedio-de-tiempo-entre-lecturas></app-promedio-de-tiempo-entre-lecturas>
