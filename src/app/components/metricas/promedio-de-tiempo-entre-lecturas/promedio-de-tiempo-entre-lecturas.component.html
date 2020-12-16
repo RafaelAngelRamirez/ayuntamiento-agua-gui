@@ -52,24 +52,28 @@
 
 <hr />
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Lecturista</th>
-      <th>Promedio entre lecturas</th>
-      <th>Promedio contratos por dia</th>
-      <th>Total de contratos</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let kv of datos | keyvalue">
-      <td>{{ nombreLecturista(kv.key) }}</td>
-      <td>{{ sumaPromedioTiempoEntreLecturas(kv.value) | number: "0.0-2" }}</td>
-      <td>{{ promedioContratosDia(kv.value) | number: "0.0-2" }}</td>
-      <td>{{ totalContratos(kv.value) | number: "0.0-2" }}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Lecturista</th>
+        <th>Promedio entre lecturas</th>
+        <th>Promedio contratos por dia</th>
+        <th>Total de contratos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let kv of datos | keyvalue">
+        <td>{{ nombreLecturista(kv.key) }}</td>
+        <td>
+          {{ sumaPromedioTiempoEntreLecturas(kv.value) | number: "0.0-2" }}
+        </td>
+        <td>{{ promedioContratosDia(kv.value) | number: "0.0-2" }}</td>
+        <td>{{ totalContratos(kv.value) | number: "0.0-2" }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <small class="text-muted">{{ notas }}</small>
 <hr />
