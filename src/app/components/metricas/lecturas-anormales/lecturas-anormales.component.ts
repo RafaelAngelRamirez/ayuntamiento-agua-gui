@@ -32,6 +32,8 @@ export class LecturasAnormalesComponent implements OnInit {
   impedimentos: Impedimento[] = [];
   incidencias: Incidencia[] = [];
 
+  cadenaBusqueda = "";
+
   chartOptions: ChartOptions = {
     responsive: true,
     layout: {
@@ -63,7 +65,12 @@ export class LecturasAnormalesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.cargar();
+    let intervalo = setInterval(() => {
+      if (this.cadenaBusqueda !== "") {
+        this.cargar(this.cadenaBusqueda);
+        clearInterval(intervalo);
+      }
+    }, 100);
     this.cargarIncidencias();
     this.cargarImpedimentos();
   }
@@ -80,10 +87,10 @@ export class LecturasAnormalesComponent implements OnInit {
     });
   }
 
-  cargar() {
+  cargar(cadena: string) {
     this.cargando = true;
 
-    this.metricasService.lecturasAnormales().subscribe(
+    this.metricasService.lecturasAnormales(cadena).subscribe(
       (datos) => {
         this.datos = datos;
         this.graficaFueraDePromedio(this.datos);
@@ -141,7 +148,7 @@ export class LecturasAnormalesComponent implements OnInit {
   };
 
   excelIncidencias(datos: LecturasAnormales | undefined) {
-    if(!datos) return
+    if (!datos) return;
     let incidencias = datos.incidencias
       .reduce((previus, current) => {
         return previus.concat(current.detalles);
@@ -153,7 +160,7 @@ export class LecturasAnormalesComponent implements OnInit {
   }
 
   excelImpedimentos(datos: LecturasAnormales | undefined) {
-    if(!datos) return
+    if (!datos) return;
     let impedimentos = datos.impedimentos
       .reduce((previus, current) => {
         return previus.concat(current.detalles);
@@ -164,16 +171,17 @@ export class LecturasAnormalesComponent implements OnInit {
   }
 
   excelFueraDePromedio(datos: LecturasAnormales | undefined) {
-    if(!datos) return
-    let d: any[] = datos.fueraDePromedio.reduce((previus, current) => {
-      return previus.concat(
-        current.detalles.map((x: any) => {
-          x["ruta"] = current._id;
-          return x
-        })
-      );
-    }, new Array())
-    .map((x) => this.convertirFechas(x));
+    if (!datos) return;
+    let d: any[] = datos.fueraDePromedio
+      .reduce((previus, current) => {
+        return previus.concat(
+          current.detalles.map((x: any) => {
+            x["ruta"] = current._id;
+            return x;
+          })
+        );
+      }, new Array())
+      .map((x) => this.convertirFechas(x));
 
     this.excelService.exportAsExcelFile(d, "FUERA_DE_PROMEDIO");
   }

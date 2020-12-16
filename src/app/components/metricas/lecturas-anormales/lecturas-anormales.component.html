@@ -27,6 +27,8 @@
   </ul>
 </div>
 
+<app-filtros-metricas (cadena)="cadenaBusqueda = $event"></app-filtros-metricas>
+
 <ng-container *ngIf="!cargando; else cargaTemplate">
   <div class="chart">
     <canvas
@@ -52,7 +54,11 @@
 <hr />
 
 <small>
-  <a class="text-muted" (click)="this.cargar()" href="javascript:void(0)">
+  <a
+    class="text-muted"
+    (click)="cargar(cadenaBusqueda)"
+    href="javascript:void(0)"
+  >
     <i [ngClass]="{ 'fa-spin': cargando }" class="fas fa-sync"></i>
     Recargar
   </a>
