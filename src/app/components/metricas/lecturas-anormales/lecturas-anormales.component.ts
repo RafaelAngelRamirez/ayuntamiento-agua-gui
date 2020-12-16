@@ -36,14 +36,16 @@ export class LecturasAnormalesComponent implements OnInit {
 
   chartOptions: ChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     layout: {
-      padding: 130,
+      // padding: 130,
     },
     legend: {
-      position: "right",
+      position: "bottom",
       display: true,
       labels: {
         fontColor: "#555",
+        usePointStyle: true,
       },
     },
   };
@@ -52,7 +54,7 @@ export class LecturasAnormalesComponent implements OnInit {
   chartType: ChartType = "pie";
   chartLegend = true;
   chartColors = [];
-  chartPlugins = [this.chartPluginsService.outLabels];
+  // chartPlugins = [this.chartPluginsService.outLabels];
 
   constructor(
     private fechaService: FechaService,

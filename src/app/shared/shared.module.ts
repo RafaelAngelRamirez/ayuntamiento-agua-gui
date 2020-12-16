@@ -22,7 +22,7 @@ import { PromedioDeTiempoEntreLecturasComponent } from "../components/metricas/p
 import { DineroRecaudadoComponent } from "../components/metricas/dinero-recaudado/dinero-recaudado.component";
 import { ContratosPendientesTomarLecturaComponent } from "../components/metricas/contratos-pendientes-tomar-lectura/contratos-pendientes-tomar-lectura.component";
 import { LecturasAnormalesComponent } from "../components/metricas/lecturas-anormales/lecturas-anormales.component";
-import "chartjs-plugin-piechart-outlabels";
+// import "chartjs-plugin-piechart-outlabels";
 import { FiltrosMetricasComponent } from '../components/metricas/filtros-metricas/filtros-metricas.component'
 
 

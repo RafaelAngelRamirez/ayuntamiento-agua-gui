@@ -32,6 +32,7 @@
 <ng-container *ngIf="!cargando; else cargaTemplate">
   <div class="chart">
     <canvas
+      style="height: 300px"
       baseChart
       [data]="chartData"
       [labels]="chartLabels"
@@ -39,7 +40,6 @@
       [options]="chartOptions"
       [colors]="chartColors"
       [legend]="chartLegend"
-      [plugins]="chartPlugins"
     >
     </canvas>
   </div>

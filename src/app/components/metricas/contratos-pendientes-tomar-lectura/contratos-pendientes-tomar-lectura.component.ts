@@ -24,14 +24,19 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
 
   chartOptions: ChartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
+
     layout: {
-      padding: 130,
+      // padding: { top: 130 },
+      // margin: { top: 130 },
     },
     legend: {
-      position: "right",
+      fullWidth: true,
+      position: "bottom",
       display: true,
       labels: {
         fontColor: "#555",
+        usePointStyle: true,
       },
     },
   };
@@ -40,7 +45,7 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
   chartType: ChartType = "pie";
   chartLegend = true;
   chartColors = [];
-  chartPlugins = [this.chartPluginsServic.outLabels];
+  // chartPlugins = [this.chartPluginsServic.outLabels];
 
   ngOnInit(): void {
     this.cargar();
@@ -80,7 +85,7 @@ export class ContratosPendientesTomarLecturaComponent implements OnInit {
     this.chartData = datos.rutasPedientesPorTomarLectura.map(
       (x) => x.contratos.length / this.obtenerFaltantesLectura(x._id, datos)
     );
-    this.chartType = "doughnut";
+    this.chartType = "pie";
     this.chartLegend = true;
   }
 
