@@ -2,7 +2,21 @@
   <div class="col-12">
     <div class="card shadow">
       <div class="card-body">
-        <H1>Contrato</H1>
+        <H1
+          >Contrato
+          <a
+            *ngIf="!contrato?.sincronizadoSimapa && contrato?.tomada"
+            (click)="volverATomarLectura()"
+            href="javascript:void(0)"
+            class="btn btn-primary btn-sm"
+            role="button"
+          >
+            <i *ngIf="cargando" class="fas fa-sync fa-spin"></i>
+            <i *ngIf="!cargando" class="fas fa-undo"> </i> Volver a tomar
+            lectura
+          </a>
+        </H1>
+
         <div class="row">
           <ng-container *ngFor="let kv of contrato | keyvalue">
             <span
@@ -24,7 +38,9 @@
   <div class="col-12">
     <div class="card shadow">
       <div class="card-body">
-        <app-lectura-detalle [lectura]="contrato?.lectura"></app-lectura-detalle>
+        <app-lectura-detalle
+          [lectura]="contrato?.lectura"
+        ></app-lectura-detalle>
       </div>
     </div>
   </div>

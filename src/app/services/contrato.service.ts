@@ -34,6 +34,12 @@ export class ContratoService {
   base = URL_BASE("contrato");
   contratos: Contrato[] = [];
 
+  volverATomarLectura(_id: string) {
+    return this.http.put<Contrato>(
+      this.base.concat("/volver-a-tomar-lectura/").concat(_id),{}
+    );
+  }
+
   findAll() {
     return this.http.get<Contrato[]>(this.base.concat("/leer/todo")).pipe(
       map((contratos) => {
@@ -180,6 +186,7 @@ export interface Contrato {
   // lecturas: [Lectura];
   tomada: boolean;
   sincronizada: boolean;
+  sincronizadoSimapa:boolean;
   lectura: Lectura;
 
   latitud: number;
@@ -191,13 +198,11 @@ export interface Lectura {
 
   Contrato: string;
 
-
   vigenciaAnterior: number;
   periodoAnterior: number;
   lecturaAnterior: number;
-  saldoAnterior:number,
-  adeudoAnterior:number
-
+  saldoAnterior: number;
+  adeudoAnterior: number;
 
   Vigencia: string;
   Periodo: string;
