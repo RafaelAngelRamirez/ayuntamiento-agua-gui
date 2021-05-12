@@ -16,7 +16,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^10.2.3",
-    "@angular/cli": "^10.2.0",
+    "@angular/cli": "^11.2.12",
     "@angular/common": "^10.2.3",
     "@angular/compiler": "^10.2.3",
     "@angular/compiler-cli": "^10.2.3",
@@ -52,7 +52,7 @@
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1002.0",
+    "@angular-devkit/build-angular": "^0.1102.12",
     "@angular/language-service": "^10.2.3",
     "@types/chartist": "^0.9.46",
     "@types/jasmine": "~3.3.8",
@@ -63,7 +63,7 @@
     "enhanced-resolve": "^4.3.0",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",
-    "karma": "~5.0.0",
+    "karma": "^6.3.2",
     "karma-chrome-launcher": "~3.1.0",
     "karma-cli": "~1.0.1",
     "karma-coverage-istanbul-reporter": "~3.0.2",
