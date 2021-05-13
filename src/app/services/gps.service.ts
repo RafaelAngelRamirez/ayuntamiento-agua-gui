@@ -23,7 +23,7 @@ export class GpsService {
    */
   errorFATAL = (err: errorFATAL) => {
     console.log("ERROR GPS: ", err)
-    let error = err.err as PositionError;
+    let error = err.err as GeolocationPositionError;
     if (error?.PERMISSION_DENIED === 1)
       this.notiService.toast.error(
         "Es necesario que des permisos de ubicacion para que la aplicacion funcione correctamente. "
@@ -48,13 +48,13 @@ export class GpsService {
   /**
    *Retorna la posicion actual sin hacer ningunga combprobacion sobre el estado del gps. Usuar el catch de esta promesa con `this.errorFATALgps`
    *
-   * @returns {Promise<Position>}
+   * @returns {Promise<GeolocationPosition>}
    * @memberof GpsService
    */
-  findMe(): Promise<Position> {
+  findMe(): Promise<GeolocationPosition> {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
-        (position: Position) => resolve(position),
+        (position: GeolocationPosition) => resolve(position),
         (err) => {
           console.error(err);
           let msj = "Hubo un error obteniendo la ubicacion: " + err.message;
@@ -84,5 +84,5 @@ export class GpsService {
 
 export interface errorFATAL {
   msj: string;
-  err: PositionError;
+  err: GeolocationPositionError;
 }
