@@ -15,7 +15,10 @@
 <div class="col-12">
   <div class="card">
     <div class="card-body">
-      <table class="table">
+      <h1 class="display-1" *ngIf="cargando"  >
+        <i class="fas fa-sync  fa-spin  "></i>
+      </h1>
+      <table class="table" *ngIf="!cargando">
         <thead>
           <tr>
             <th>Usuario</th>
@@ -24,7 +27,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let u of usuarios">
+          <tr *ngFor="let u of usuarios" >
             <td>{{ u.usuario }}</td>
             <td>{{ u.nombre }}</td>
             <td>
