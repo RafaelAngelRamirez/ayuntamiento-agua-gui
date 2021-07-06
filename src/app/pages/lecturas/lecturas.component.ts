@@ -55,7 +55,7 @@ export class LecturasComponent implements OnInit {
   equipoCorrecto() {
     let usuario = this.usuarioService.obtenerUsuario();
     if (usuario.esIphone) return true;
-    if(this.tienePermiso.transform("administrador"))return true
+    // if(this.tienePermiso.transform("administrador"))return true
 
     let equipo = usuario.dispositivo;
     return this.zebraService.selected_device?.uid === equipo;
@@ -69,18 +69,18 @@ export class LecturasComponent implements OnInit {
       )
       .subscribe(
         (termino) => {
-          if (this.tienePermiso.transform("administrador")) {
-            this.contratoService.findByTerm(termino.trim()).subscribe(
-              (contratos) => {
-                this.contratos = contratos;
-                this.cargando = false;
-              },
-              (_) => (this.cargando = false)
-            );
-          } else {
+          // if (this.tienePermiso.transform("administrador")) {
+          //   this.contratoService.findByTerm(termino.trim()).subscribe(
+          //     (contratos) => {
+          //       this.contratos = contratos;
+          //       this.cargando = false;
+          //     },
+          //     (_) => (this.cargando = false)
+          //   );
+          // } else {
             this.contratos = this.contratoService.buscarPorTermino(termino);
             this.cargando = false;
-          }
+          // }
         },
         (_) => (this.cargando = false)
       );
