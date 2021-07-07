@@ -189,7 +189,18 @@ export class TicketImprimirComponent implements OnInit {
     this.generarParaImpresion(this.datos, contrato);
   }
 
+
+  qr = ''
+
   generarParaImpresion(dato: any, contrato: Contrato) {
+
+    let qr = JSON.stringify({
+      contrato:contrato.Contrato,
+      totalAPagar:this.datos.cuenta["Total a pagar"],
+    })
+
+    this.qr = qr
+
     setTimeout(() => {
       let paraTicket = {
         ...this.datos.lectura,
@@ -200,6 +211,8 @@ export class TicketImprimirComponent implements OnInit {
               .concat(" [Observaciones]: ")
               .concat(contrato.lectura.Observaciones?.trim())
           : "",
+
+          qr
       };
 
       this.paraTicket.emit(paraTicket);
