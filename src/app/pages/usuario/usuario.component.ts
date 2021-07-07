@@ -10,18 +10,17 @@ import { Usuario } from "../../models/usuario.model";
 export class UsuarioComponent implements OnInit {
   constructor(private usuarioSerivice: UsuarioService) {}
 
-  cargando: any = {};
+  cargando = false
   usuarios: Usuario[] = [];
 
   ngOnInit(): void {
-    this.cargando["usuarios"] = "Obteniendo usuarios";
+    this.cargando = true
     this.usuarioSerivice.findAll().subscribe(
       (u) => {
         this.usuarios = u;
-
-        delete this.cargando["usuarios"];
+        this.cargando = false
       },
-      (_) => delete this.cargando["usuarios"]
+      (_) => this.cargando = false
     );
   }
 }

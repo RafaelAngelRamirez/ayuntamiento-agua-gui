@@ -65,7 +65,7 @@ export const Approutes: Routes = [
     BrowserModule,
     BrowserAnimationsModule, // required animations module
     HttpClientModule,
-    RouterModule.forRoot(Approutes),
+    RouterModule.forRoot(Approutes, { relativeLinkResolution: 'legacy' }),
     FormsModule,
     ToastrModule.forRoot(), // ToastrModule added
     SharedModule.forRoot(),
